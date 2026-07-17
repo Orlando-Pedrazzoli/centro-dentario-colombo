@@ -1,5 +1,5 @@
 {
- "navbar": {
+  "navbar": {
     "treatments": "Tratamentos",
     "scheduleAppointment": "Agendar Consulta",
     "clinicalTeamLink": "Corpo Clínico",
@@ -10,7 +10,9 @@
     "adminAccess": "Acesso Administrativo",
     "adminMobile": "Acesso Admin",
     "clientArea": "Área do Cliente",
-    "languageLabel": "Idioma / Language"
+    "languageLabel": "Idioma / Language",
+    "emergencies": "Urgências",
+    "emergenciesMobile": "Urgências Dentárias"
   },
   "hero": {
     "badge": "Aberto todos os dias",
@@ -109,7 +111,9 @@
     "privacyPolicy": "Política de Privacidade",
     "cookiePolicy": "Política de Cookies",
     "ersLicensed": "Estabelecimento licenciado pela",
-    "ersEntity": "ERS - Entidade Reguladora da Saúde"
+    "ersEntity": "ERS - Entidade Reguladora da Saúde",
+    "emergencies": "Urgências Dentárias",
+    "openEveryDayShort": "Aberto todos os dias"
   },
   "testimonials": {
     "googleReviews": "Avaliações Google",
@@ -130,7 +134,7 @@
     "ctaDesc": "A nossa equipa está disponível para esclarecer todas as suas dúvidas. Entre em contacto connosco!",
     "ctaCall": "Ligar Agora"
   },
- "clinicalTeam": {
+  "clinicalTeam": {
     "back": "Voltar",
     "heroTitle": "Nosso Corpo Clínico",
     "heroDesc": "Uma equipa de profissionais altamente qualificados e experientes, dedicados a proporcionar os melhores cuidados dentários com tecnologia de ponta e atendimento humanizado.",
@@ -153,19 +157,19 @@
     "footerErs": "Estabelecimento licenciado pela ERS - Licença: 3297/2011"
   },
   "treatmentPage": {
-  "backToTreatments": "Voltar aos Tratamentos",
-  "whatIs": "O que é?",
-  "advantages": "Quais as vantagens?",
-  "importantInfo": "Informação Importante",
-  "ctaTitle": "Interessado neste tratamento?",
-  "ctaDesc": "Agende a sua consulta e comece a transformação do seu sorriso hoje mesmo!",
-  "bookAppointment": "Marcar Consulta",
-  "callNow": "Ligar Agora",
-  "otherTreatments": "Outros Tratamentos",
-  "footerRights": "Todos os direitos reservados.",
-  "footerErs": "Estabelecimento licenciado pela ERS - Licença: 3297/2011",
-  "seoSuffix": "Marque a sua consulta!",
-  "breadcrumbHome": "Início",
-  "breadcrumbTreatments": "Tratamentos"
-}
+    "backToTreatments": "Voltar aos Tratamentos",
+    "whatIs": "O que é?",
+    "advantages": "Quais as vantagens?",
+    "importantInfo": "Informação Importante",
+    "ctaTitle": "Interessado neste tratamento?",
+    "ctaDesc": "Agende a sua consulta e comece a transformação do seu sorriso hoje mesmo!",
+    "bookAppointment": "Marcar Consulta",
+    "callNow": "Ligar Agora",
+    "otherTreatments": "Outros Tratamentos",
+    "footerRights": "Todos os direitos reservados.",
+    "footerErs": "Estabelecimento licenciado pela ERS - Licença: 3297/2011",
+    "seoSuffix": "Marque a sua consulta!",
+    "breadcrumbHome": "Início",
+    "breadcrumbTreatments": "Tratamentos"
+  }
 }

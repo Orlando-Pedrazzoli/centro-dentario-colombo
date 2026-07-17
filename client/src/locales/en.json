@@ -10,7 +10,9 @@
     "adminAccess": "Admin Access",
     "adminMobile": "Admin Access",
     "clientArea": "Client Area",
-    "languageLabel": "Idioma / Language"
+    "languageLabel": "Idioma / Language",
+    "emergencies": "Emergencies",
+    "emergenciesMobile": "Dental Emergencies"
   },
   "hero": {
     "badge": "Open every day",
@@ -109,7 +111,9 @@
     "privacyPolicy": "Privacy Policy",
     "cookiePolicy": "Cookie Policy",
     "ersLicensed": "Establishment licensed by",
-    "ersEntity": "ERS - Health Regulatory Authority"
+    "ersEntity": "ERS - Health Regulatory Authority",
+    "emergencies": "Dental Emergencies",
+    "openEveryDayShort": "Open every day"
   },
   "testimonials": {
     "googleReviews": "Google Reviews",
@@ -130,7 +134,7 @@
     "ctaDesc": "Our team is available to answer all your questions. Get in touch with us!",
     "ctaCall": "Call Now"
   },
- "clinicalTeam": {
+  "clinicalTeam": {
     "back": "Back",
     "heroTitle": "Our Clinical Team",
     "heroDesc": "A team of highly qualified and experienced professionals, dedicated to providing the best dental care with cutting-edge technology and humanized service.",
@@ -153,19 +157,19 @@
     "footerErs": "Establishment licensed by ERS - License: 3297/2011"
   },
   "treatmentPage": {
-  "backToTreatments": "Back to Treatments",
-  "whatIs": "What is it?",
-  "advantages": "What are the advantages?",
-  "importantInfo": "Important Information",
-  "ctaTitle": "Interested in this treatment?",
-  "ctaDesc": "Schedule your appointment and start transforming your smile today!",
-  "bookAppointment": "Book Appointment",
-  "callNow": "Call Now",
-  "otherTreatments": "Other Treatments",
-  "footerRights": "All rights reserved.",
-  "footerErs": "Licensed establishment by ERS - License: 3297/2011",
-  "seoSuffix": "Book your appointment!",
-  "breadcrumbHome": "Home",
-  "breadcrumbTreatments": "Treatments"
-}
+    "backToTreatments": "Back to Treatments",
+    "whatIs": "What is it?",
+    "advantages": "What are the advantages?",
+    "importantInfo": "Important Information",
+    "ctaTitle": "Interested in this treatment?",
+    "ctaDesc": "Schedule your appointment and start transforming your smile today!",
+    "bookAppointment": "Book Appointment",
+    "callNow": "Call Now",
+    "otherTreatments": "Other Treatments",
+    "footerRights": "All rights reserved.",
+    "footerErs": "Licensed establishment by ERS - License: 3297/2011",
+    "seoSuffix": "Book your appointment!",
+    "breadcrumbHome": "Home",
+    "breadcrumbTreatments": "Treatments"
+  }
 }

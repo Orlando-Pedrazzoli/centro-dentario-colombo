@@ -1,8 +1,12 @@
+// client/src/App.tsx
+
 import { Routes, Route, Navigate } from 'react-router';
 import HomePage from './pages/home';
 import TreatmentPage from './pages/TreatmentPage';
 import CorpoClinicoPage from './pages/CorpoClinicoPage';
 import FAQPage from './pages/FAQPage';
+import UrgenciasPage from './pages/UrgenciasPage';
+import NotFoundPage from './pages/NotFoundPage';
 import PoliticaPrivacidadePage from './pages/PoliticaPrivacidadePage';
 import PoliticaCookiesPage from './pages/PoliticaCookiesPage';
 
@@ -33,7 +37,7 @@ const ProtectedAdminRoute = ({ children }: { children: React.ReactNode }) => {
   const token = localStorage.getItem('adminToken');
 
   if (!token) {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to='/admin/login' replace />;
   }
 
   return <>{children}</>;
@@ -45,20 +49,57 @@ export default function App() {
       <Routes>
         {/* ==================== ROTAS PUBLICAS COM LAYOUT ==================== */}
         <Route element={<Layout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/tratamentos/:slug" element={<TreatmentPage />} />
-          <Route path="/corpo-clinico" element={<CorpoClinicoPage />} />
-          <Route path="/faq" element={<FAQPage />} />
-          <Route path="/politica-privacidade" element={<PoliticaPrivacidadePage />} />
-          <Route path="/politica-cookies" element={<PoliticaCookiesPage />} />
+          <Route path='/' element={<HomePage />} />
+          <Route path='/urgencias' element={<UrgenciasPage />} />
+          <Route path='/tratamentos/:slug' element={<TreatmentPage />} />
+          <Route path='/corpo-clinico' element={<CorpoClinicoPage />} />
+          <Route path='/faq' element={<FAQPage />} />
+          <Route
+            path='/politica-privacidade'
+            element={<PoliticaPrivacidadePage />}
+          />
+          <Route path='/politica-cookies' element={<PoliticaCookiesPage />} />
+
+          {/* ---------- Redirects 301 lógicos ----------
+              Variantes que as pessoas escrevem e que outros sites já linkam.
+              Todos apontam para o canónico /urgencias — nunca duplicar a página. */}
+          <Route
+            path='/urgencias-dentarias'
+            element={<Navigate to='/urgencias' replace />}
+          />
+          <Route
+            path='/urgencia-dentaria'
+            element={<Navigate to='/urgencias' replace />}
+          />
+          <Route
+            path='/emergency'
+            element={<Navigate to='/urgencias' replace />}
+          />
+          <Route
+            path='/dental-emergency'
+            element={<Navigate to='/urgencias' replace />}
+          />
+
+          {/* Slugs de tratamentos que o rodapé antigo linkava e não existem */}
+          <Route
+            path='/tratamentos/implantes-dentarios'
+            element={<Navigate to='/tratamentos/implantologia' replace />}
+          />
+          <Route
+            path='/tratamentos/branqueamento-dentario'
+            element={<Navigate to='/tratamentos/estetica-dentaria' replace />}
+          />
+
+          {/* ==================== 404 REAL ==================== */}
+          <Route path='*' element={<NotFoundPage />} />
         </Route>
-        
+
         {/* ==================== ADMIN LOGIN (SEM LAYOUT) ==================== */}
-        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path='/admin/login' element={<AdminLogin />} />
 
         {/* ==================== ROTAS ADMIN (PROTEGIDAS - SEM LAYOUT) ==================== */}
         <Route
-          path="/admin/dashboard"
+          path='/admin/dashboard'
           element={
             <ProtectedAdminRoute>
               <AdminDashboard />
@@ -66,7 +107,7 @@ export default function App() {
           }
         />
         <Route
-          path="/admin/patients"
+          path='/admin/patients'
           element={
             <ProtectedAdminRoute>
               <PatientsPage />
@@ -74,7 +115,7 @@ export default function App() {
           }
         />
         <Route
-          path="/admin/patients/:id"
+          path='/admin/patients/:id'
           element={
             <ProtectedAdminRoute>
               <PatientDetail />
@@ -82,7 +123,7 @@ export default function App() {
           }
         />
         <Route
-          path="/admin/doctors"
+          path='/admin/doctors'
           element={
             <ProtectedAdminRoute>
               <DoctorsPage />
@@ -90,7 +131,7 @@ export default function App() {
           }
         />
         <Route
-          path="/admin/treatments"
+          path='/admin/treatments'
           element={
             <ProtectedAdminRoute>
               <TreatmentsPage />
@@ -98,7 +139,7 @@ export default function App() {
           }
         />
         <Route
-          path="/admin/users"
+          path='/admin/users'
           element={
             <ProtectedAdminRoute>
               <UsersManagement />
@@ -108,7 +149,7 @@ export default function App() {
 
         {/* ==================== ROTAS PATIENT (PROTEGIDAS - SEM LAYOUT) ==================== */}
         <Route
-          path="/patient/portal"
+          path='/patient/portal'
           element={
             <PatientProtectedRoute>
               <PatientPortal />
@@ -116,7 +157,7 @@ export default function App() {
           }
         />
         <Route
-          path="/patient/exams"
+          path='/patient/exams'
           element={
             <PatientProtectedRoute>
               <MyExams />
@@ -124,7 +165,7 @@ export default function App() {
           }
         />
         <Route
-          path="/patient/treatments"
+          path='/patient/treatments'
           element={
             <PatientProtectedRoute>
               <MyTreatments />
@@ -132,16 +173,13 @@ export default function App() {
           }
         />
         <Route
-          path="/patient/invoices"
+          path='/patient/invoices'
           element={
             <PatientProtectedRoute>
               <MyInvoices />
             </PatientProtectedRoute>
           }
         />
-
-        {/* ==================== 404 ==================== */}
-        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
       {/* ==================== COOKIE CONSENT ==================== */}

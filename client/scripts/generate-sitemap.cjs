@@ -1,8 +1,10 @@
+// client/scripts/generate-sitemap.cjs
+
 const fs = require('fs');
 const path = require('path');
 
 const SITE_CONFIG = {
-  baseUrl: 'https://www.centrodentariocolombo.com'
+  baseUrl: 'https://www.centrodentariocolombo.com',
 };
 
 function normalizeUrl(urlPath) {
@@ -14,16 +16,16 @@ function normalizeUrl(urlPath) {
   return `${base}/${cleanPath}`;
 }
 
-// Páginas estáticas (sem noindex)
+// Mantido em sincronia com STATIC_PAGES em src/utils/seoConfig.ts
 const STATIC_PAGES = [
   { path: '/', changefreq: 'weekly', priority: '1.0' },
+  { path: '/urgencias', changefreq: 'weekly', priority: '0.9' },
   { path: '/corpo-clinico', changefreq: 'monthly', priority: '0.8' },
   { path: '/faq', changefreq: 'monthly', priority: '0.6' },
   { path: '/politica-privacidade', changefreq: 'yearly', priority: '0.3' },
-  { path: '/politica-cookies', changefreq: 'yearly', priority: '0.3' }
+  { path: '/politica-cookies', changefreq: 'yearly', priority: '0.3' },
 ];
 
-// Slugs dos tratamentos
 const TREATMENT_SLUGS = [
   'caries',
   'reabilitacao-oral',
@@ -40,44 +42,53 @@ const TREATMENT_SLUGS = [
   'odontopediatria',
   'ortodontia',
   'periodontologia',
-  'prostodontia'
+  'prostodontia',
 ];
+
+function urlEntry({ loc, lastmod, changefreq, priority }) {
+  return [
+    '  <url>',
+    `    <loc>${loc}</loc>`,
+    `    <lastmod>${lastmod}</lastmod>`,
+    `    <changefreq>${changefreq}</changefreq>`,
+    `    <priority>${priority}</priority>`,
+    '  </url>',
+  ].join('\n');
+}
 
 function generateSitemap() {
   const today = new Date().toISOString().split('T')[0];
-  
-  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
-  
-  // Páginas estáticas
-  for (const page of STATIC_PAGES) {
-    xml += '  <url>\n';
-    xml += `    <loc>${normalizeUrl(page.path)}</loc>\n`;
-    xml += `    <lastmod>${today}</lastmod>\n`;
-    xml += `    <changefreq>${page.changefreq}</changefreq>\n`;
-    xml += `    <priority>${page.priority}</priority>\n`;
-    xml += '  </url>\n';
-  }
-  
-  // Páginas de tratamentos
-  for (const slug of TREATMENT_SLUGS) {
-    xml += '  <url>\n';
-    xml += `    <loc>${normalizeUrl(`/tratamentos/${slug}`)}</loc>\n`;
-    xml += `    <lastmod>${today}</lastmod>\n`;
-    xml += '    <changefreq>monthly</changefreq>\n';
-    xml += '    <priority>0.7</priority>\n';
-    xml += '  </url>\n';
-  }
-  
-  xml += '</urlset>';
-  
-  return xml;
+
+  const entries = [
+    ...STATIC_PAGES.map(page =>
+      urlEntry({
+        loc: normalizeUrl(page.path),
+        lastmod: today,
+        changefreq: page.changefreq,
+        priority: page.priority,
+      }),
+    ),
+    ...TREATMENT_SLUGS.map(slug =>
+      urlEntry({
+        loc: normalizeUrl(`/tratamentos/${slug}`),
+        lastmod: today,
+        changefreq: 'monthly',
+        priority: '0.7',
+      }),
+    ),
+  ];
+
+  return [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ...entries,
+    '</urlset>',
+    '',
+  ].join('\n');
 }
 
-// Gerar e guardar
-const sitemap = generateSitemap();
 const outputPath = path.join(__dirname, '..', 'public', 'sitemap.xml');
-fs.writeFileSync(outputPath, sitemap, 'utf-8');
+fs.writeFileSync(outputPath, generateSitemap(), 'utf-8');
 
 console.log(`Sitemap gerado: ${outputPath}`);
 console.log(`Total URLs: ${STATIC_PAGES.length + TREATMENT_SLUGS.length}`);

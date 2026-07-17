@@ -1,36 +1,45 @@
 # =====================================================
-# Centro Dentário Colombo - robots.txt
+# Centro Dentário Colombo
 # https://www.centrodentariocolombo.com
 # =====================================================
 
 User-agent: *
 Allow: /
 
-# Áreas privadas (noindex)
+# Áreas privadas — nunca devem ser rastreadas nem indexadas
 Disallow: /admin
 Disallow: /admin/
 Disallow: /patient
 Disallow: /patient/
 
+# Ficheiro de verificação do Search Console — sem valor de pesquisa
+Disallow: /googleca1f51d61a311fc4.html
+
+# =====================================================
+# Crawlers de IA — permitidos.
+# Uma pesquisa por "dentista de urgência aberto agora em Lisboa" no ChatGPT
+# ou no Perplexity é a mesma intenção de quem liga. Bloquear estes bots
+# retira a clínica dessas respostas sem qualquer ganho.
+# =====================================================
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+# =====================================================
 # Sitemap
+# =====================================================
 Sitemap: https://www.centrodentariocolombo.com/sitemap.xml
-
-# =====================================================
-# Googlebot
-# =====================================================
-User-agent: Googlebot
-Allow: /
-Disallow: /admin
-Disallow: /patient
-
-# =====================================================
-# Google Images
-# =====================================================
-User-agent: Googlebot-Image
-Allow: /
-
-# =====================================================
-# AdsBot
-# =====================================================
-User-agent: AdsBot-Google
-Allow: /

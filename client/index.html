@@ -1,31 +1,93 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-PT">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Preconnect para performance -->
+
+    <!-- Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link rel="dns-prefetch" href="https://images.unsplash.com" />
+
     <!-- Favicon -->
-<link rel="icon" type="image/png" href="/android-chrome-192x192.png" sizes="192x192" />
-<link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
-<link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
-<link rel="shortcut icon" href="/favicon.ico" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-<link rel="manifest" href="/site.webmanifest" />
-<meta name="theme-color" content="#0066cc" />
-    
-    <!-- Meta Tags Padrão (serão sobrescritas pelo react-helmet-async) -->
-    <title>Centro Dentário Colombo | Clínica Dentária em Lisboa</title>
-    <meta name="description" content="Centro Dentário Colombo - Clínica dentária de excelência em Lisboa. Tratamentos de implantologia, ortodontia, estética dentária e muito mais. Marque a sua consulta!" />
-    
-    <!-- Sitemap Reference -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="/android-chrome-192x192.png"
+      sizes="192x192"
+    />
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#14489c" />
+
+    <!--
+      Meta base. Em produção estes valores são substituídos pelo prerender
+      (scripts/prerender.cjs) com o conteúdo real de cada rota, gerado pelo
+      react-helmet-async. Ficam aqui como rede de segurança para o caso de
+      alguma rota nova ainda não estar na lista do prerender.
+    -->
+    <title>Centro Dentário Colombo | Dentista no Colombo, Lisboa</title>
+    <meta
+      name="description"
+      content="Clínica dentária no Centro Comercial Colombo, Lisboa. Aberto todos os dias das 09:00 às 23:00, incluindo fins de semana e feriados. Urgências dentárias, implantologia, ortodontia e estética dentária."
+    />
+    <link rel="canonical" href="https://www.centrodentariocolombo.com" />
+
+    <!-- Open Graph base -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Centro Dentário Colombo" />
+    <meta property="og:url" content="https://www.centrodentariocolombo.com" />
+    <meta
+      property="og:title"
+      content="Centro Dentário Colombo | Dentista no Colombo, Lisboa"
+    />
+    <meta
+      property="og:description"
+      content="Clínica dentária no Centro Comercial Colombo, Lisboa. Aberto todos os dias das 09:00 às 23:00. Urgências dentárias todos os dias."
+    />
+    <meta
+      property="og:image"
+      content="https://www.centrodentariocolombo.com/og-image-v2.jpg"
+    />
+    <meta property="og:locale" content="pt_PT" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Sitemap -->
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!--
+      Conteúdo mínimo para o caso improvável de o JS falhar e o prerender não
+      ter corrido: o telefone e o horário de urgências continuam acessíveis.
+    -->
+    <noscript>
+      <div
+        style="
+          font-family: system-ui, sans-serif;
+          max-width: 640px;
+          margin: 3rem auto;
+          padding: 0 1rem;
+        "
+      >
+        <p><strong>Centro Dentário Colombo</strong></p>
+        <p>
+          Clínica dentária no Centro Comercial Colombo, Piso -1, Loja 507, Av.
+          Lusíada 2, 1500-392 Lisboa.
+        </p>
+        <p>
+          <strong
+            >Urgências dentárias todos os dias, das 09:00 às 23:00.</strong
+          >
+        </p>
+        <p>Telefone: <a href="tel:+351216041355">+351 21 604 13 55</a></p>
+      </div>
+    </noscript>
   </body>
 </html>
