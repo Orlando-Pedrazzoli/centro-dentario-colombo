@@ -90,6 +90,27 @@ export default function App() {
             element={<Navigate to='/tratamentos/estetica-dentaria' replace />}
           />
 
+          {/* ---------- Consolidação de tratamentos redundantes ----------
+              Havia 8 páginas a descrever 4 especialidades. Cada par
+              canibalizava-se no Google. Sobrevive o termo que o doente
+              escreve na pesquisa; o jargão da especialidade redireciona. */}
+          <Route
+            path='/tratamentos/dentisteria'
+            element={<Navigate to='/tratamentos/caries' replace />}
+          />
+          <Route
+            path='/tratamentos/prostodontia'
+            element={<Navigate to='/tratamentos/proteses-dentarias' replace />}
+          />
+          <Route
+            path='/tratamentos/aparelhos-dentarios'
+            element={<Navigate to='/tratamentos/ortodontia' replace />}
+          />
+          <Route
+            path='/tratamentos/criancas'
+            element={<Navigate to='/tratamentos/odontopediatria' replace />}
+          />
+
           {/* ==================== 404 REAL ==================== */}
           <Route path='*' element={<NotFoundPage />} />
         </Route>

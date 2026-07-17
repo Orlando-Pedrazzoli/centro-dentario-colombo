@@ -7,12 +7,14 @@
     "faq": "FAQ",
     "faqMobile": "Perguntas Frequentes",
     "new": "Novo",
-    "adminAccess": "Acesso Administrativo",
-    "adminMobile": "Acesso Admin",
-    "clientArea": "Área do Cliente",
-    "languageLabel": "Idioma / Language",
     "emergencies": "Urgências",
-    "emergenciesMobile": "Urgências Dentárias"
+    "emergenciesMobile": "Urgências Dentárias",
+    "mainNav": "Navegação principal",
+    "call": "Ligar",
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu",
+    "language": "Idioma",
+    "openHours": "Todos os dias, 09:00–23:00"
   },
   "hero": {
     "badge": "Aberto todos os dias",

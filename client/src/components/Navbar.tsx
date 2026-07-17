@@ -1,151 +1,161 @@
 // client/src/components/Navbar.tsx
 
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router';
-import PatientIDModal from './PatientIDModal';
-import PatientUserMenu from './PatientUserMenu';
-import { usePatientAuth } from '../hooks/usePatientAuth';
+import { useState, useEffect, useRef } from 'react';
+import { Link, useLocation } from 'react-router';
 import { useLanguage } from '../contexts/LanguageContext';
-import { treatments } from '../data/services-data';
+import { getTreatments } from '../data/services-data';
+import { SITE_CONFIG } from '../utils/seoConfig';
 
-interface Language {
-  name: string;
-  flag: string;
-}
+const { business } = SITE_CONFIG;
+const TEL_HREF = `tel:${business.telephone}`;
 
-interface Languages {
-  pt: Language;
-  en: Language;
-}
-
-const languages: Languages = {
-  pt: { name: 'Português', flag: '🇵🇹' },
-  en: { name: 'English', flag: '🇺🇸' },
-};
+/**
+ * Rotas com hero escuro, onde a barra pode ficar transparente no topo.
+ * Em todas as outras é sólida desde o início — antes disto, a /corpo-clinico
+ * tinha texto branco sobre fundo branco: navegação invisível.
+ */
+const OVERLAY_ROUTES = ['/', '/urgencias'];
 
 export default function Navbar() {
-  const { isAuthenticated } = usePatientAuth();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [treatmentsDropdownOpen, setTreatmentsDropdownOpen] = useState(false);
-  const [showPatientModal, setShowPatientModal] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false);
-  const {
-    language: currentLanguage,
-    setLanguage: setCurrentLanguage,
-    t,
-  } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
+  const { pathname } = useLocation();
 
-  // Detectar scroll para mudar navbar
+  // Antes usava a lista `treatments`, que é só PT: em inglês o dropdown
+  // mostrava títulos portugueses.
+  const treatments = getTreatments(language);
+
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [treatmentsOpen, setTreatmentsOpen] = useState(false);
+  const [mobileTreatmentsOpen, setMobileTreatmentsOpen] = useState(false);
+
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const isOverlayRoute = OVERLAY_ROUTES.includes(pathname);
+  const solid = !isOverlayRoute || scrolled;
+
   useEffect(() => {
-    const handleScroll = () => {
-      const isScrolled = window.scrollY > 50;
-      if (isScrolled !== scrolled) {
-        setScrolled(isScrolled);
+    if (!isOverlayRoute) {
+      setScrolled(false);
+      return;
+    }
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [isOverlayRoute]);
+
+  // Fechar tudo ao mudar de página — senão o drawer fica aberto sobre o destino.
+  useEffect(() => {
+    setMenuOpen(false);
+    setTreatmentsOpen(false);
+    setMobileTreatmentsOpen(false);
+  }, [pathname]);
+
+  // Escape fecha e devolve o foco ao botão que abriu.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      if (menuOpen) {
+        setMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
+      setTreatmentsOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
+
+  // Bloquear o scroll do body com o drawer aberto.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    panelRef.current?.focus();
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [menuOpen]);
+
+  // Clique fora fecha o dropdown de tratamentos.
+  useEffect(() => {
+    if (!treatmentsOpen) return;
+    const onClick = (e: MouseEvent) => {
+      if (!dropdownRef.current?.contains(e.target as Node)) {
+        setTreatmentsOpen(false);
       }
     };
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
+  }, [treatmentsOpen]);
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [scrolled]);
+  const half = Math.ceil(treatments.length / 2);
+  const columns = [treatments.slice(0, half), treatments.slice(half)];
 
-  // Função para scroll suave ao topo
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  // Dividir tratamentos em 2 colunas para o dropdown
-  const halfLength = Math.ceil(treatments.length / 2);
-  const column1 = treatments.slice(0, halfLength);
-  const column2 = treatments.slice(halfLength);
-
-  // Função para trocar idioma
-  const handleLanguageChange = (lang: 'pt' | 'en') => {
-    setCurrentLanguage(lang);
-    setLanguageDropdownOpen(false);
-  };
+  const linkColor = solid
+    ? 'text-gray-700 hover:text-[#14489c]'
+    : 'text-white/90 hover:text-white';
 
   return (
     <>
-      {/* Modal de Login do Paciente */}
-      {showPatientModal && (
-        <PatientIDModal onClose={() => setShowPatientModal(false)} />
-      )}
-
-      {/* Navbar */}
       <nav
-        className={`fixed w-full top-0 z-50 transition-all duration-300 ${
-          scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
+        aria-label={t('navbar.mainNav')}
+        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
+          solid
+            ? 'bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm'
+            : 'bg-transparent'
         }`}
       >
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex justify-between items-center h-16 sm:h-20'>
-            {/* Logo + Texto - Responsivo */}
-            {/* Logo + Texto - Melhorado para Mobile */}
-            <div className='flex-shrink-0 min-w-0 max-w-[75%] sm:max-w-none'>
-              <Link
-                to='/'
-                onClick={scrollToTop}
-                className='flex items-center gap-3 sm:gap-3.5 md:gap-4 group cursor-pointer'
+          <div className='flex items-center justify-between h-16 lg:h-20 gap-4'>
+            {/* ---------- Logo ---------- */}
+            <Link
+              to='/'
+              className='flex items-center gap-2.5 min-w-0 group'
+              aria-label={SITE_CONFIG.siteName}
+            >
+              <img
+                src='/logo-colombo-nav.png'
+                alt=''
+                className='h-9 sm:h-10 lg:h-12 w-auto flex-shrink-0 transition-transform group-hover:scale-105'
+              />
+              <span
+                className={`font-semibold tracking-tight leading-none truncate text-[13px] sm:text-base lg:text-lg ${
+                  solid
+                    ? 'bg-gradient-to-r from-[#14489c] to-[#006bb3] bg-clip-text text-transparent'
+                    : 'text-white drop-shadow'
+                }`}
               >
-                <img
-                  src='/logo-colombo-nav.png'
-                  alt='Centro Dentário Colombo Logo'
-                  className='
-        h-12 
-        sm:h-11 
-        md:h-12 
-        lg:h-14 
-        xl:h-16 
-        w-auto 
-        transition-transform 
-        group-hover:scale-105 
-        flex-shrink-0
-      '
-                />
-                <span
-                  className={`font-semibold leading-tight tracking-tight transition-all
-        text-sm
-        sm:text-base
-        md:text-lg
-        lg:text-xl
-        xl:text-2xl
-        ${
-          scrolled
-            ? 'bg-gradient-to-r from-[#14489c] to-[#006bb3] bg-clip-text text-transparent'
-            : 'text-white drop-shadow-lg'
-        }
-      `}
-                >
-                  Centro Dentário Colombo
-                </span>
-              </Link>
-            </div>
+                Centro Dentário Colombo
+              </span>
+            </Link>
 
-            {/* Desktop Menu */}
-            <div className='hidden lg:flex items-center space-x-6 xl:space-x-8'>
-              {/* Dropdown Tratamentos */}
+            {/* ---------- Links desktop ---------- */}
+            <div className='hidden lg:flex items-center gap-1'>
               <div
+                ref={dropdownRef}
                 className='relative'
-                onMouseEnter={() => setTreatmentsDropdownOpen(true)}
-                onMouseLeave={() => setTreatmentsDropdownOpen(false)}
+                onMouseEnter={() => setTreatmentsOpen(true)}
+                onMouseLeave={() => setTreatmentsOpen(false)}
               >
                 <button
-                  onClick={() =>
-                    setTreatmentsDropdownOpen(!treatmentsDropdownOpen)
-                  }
-                  className={`transition-all font-medium flex items-center gap-1 py-2 text-sm xl:text-base ${
-                    scrolled
-                      ? 'text-gray-700 hover:text-blue-600'
-                      : 'text-white hover:text-blue-300'
-                  }`}
+                  type='button'
+                  onClick={() => setTreatmentsOpen(v => !v)}
+                  aria-expanded={treatmentsOpen}
+                  aria-controls='menu-tratamentos'
+                  className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${linkColor}`}
                 >
                   {t('navbar.treatments')}
                   <svg
-                    className={`w-4 h-4 transition-transform ${treatmentsDropdownOpen ? 'rotate-180' : ''}`}
+                    className={`w-4 h-4 transition-transform ${
+                      treatmentsOpen ? 'rotate-180' : ''
+                    }`}
                     fill='none'
                     viewBox='0 0 24 24'
                     stroke='currentColor'
+                    aria-hidden='true'
                   >
                     <path
                       strokeLinecap='round'
@@ -156,499 +166,408 @@ export default function Navbar() {
                   </svg>
                 </button>
 
-                {/* Dropdown Menu - 2 Colunas */}
-                {treatmentsDropdownOpen && (
-                  <div className='absolute top-full left-0 pt-2 w-[600px] z-50'>
-                    <div className='bg-white rounded-xl shadow-2xl border border-gray-100 py-6 px-4 animate-fadeIn'>
-                      <div className='grid grid-cols-2 gap-x-8 gap-y-2'>
-                        {/* Coluna 1 */}
-                        <div className='space-y-1'>
-                          {column1.map(treatment => (
-                            <Link
-                              key={treatment.id}
-                              to={`/tratamentos/${treatment.slug}`}
-                              onClick={() => {
-                                setTreatmentsDropdownOpen(false);
-                                window.scrollTo(0, 0);
-                              }}
-                              className='block px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition group'
-                            >
-                              <div className='flex items-center gap-3'>
-                                <span className='w-2 h-2 bg-blue-600 rounded-full group-hover:scale-125 transition'></span>
-                                <span className='font-medium'>
+                {treatmentsOpen && (
+                  <div
+                    id='menu-tratamentos'
+                    className='absolute top-full left-1/2 -translate-x-1/2 pt-3 w-[620px]'
+                  >
+                    <div className='bg-white rounded-2xl shadow-2xl border border-gray-100 p-4'>
+                      <div className='grid grid-cols-2 gap-x-4'>
+                        {columns.map((column, i) => (
+                          <ul key={i} className='space-y-0.5'>
+                            {column.map(treatment => (
+                              <li key={treatment.id}>
+                                <Link
+                                  to={`/tratamentos/${treatment.slug}`}
+                                  className='flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-blue-50 hover:text-[#14489c] transition-colors'
+                                >
+                                  <span className='w-1.5 h-1.5 rounded-full bg-[#006bb3] flex-shrink-0' />
                                   {treatment.title}
-                                </span>
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
-
-                        {/* Coluna 2 */}
-                        <div className='space-y-1'>
-                          {column2.map(treatment => (
-                            <Link
-                              key={treatment.id}
-                              to={`/tratamentos/${treatment.slug}`}
-                              onClick={() => {
-                                setTreatmentsDropdownOpen(false);
-                                window.scrollTo(0, 0);
-                              }}
-                              className='block px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition group'
-                            >
-                              <div className='flex items-center gap-3'>
-                                <span className='w-2 h-2 bg-blue-600 rounded-full group-hover:scale-125 transition'></span>
-                                <span className='font-medium'>
-                                  {treatment.title}
-                                </span>
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Footer do Dropdown */}
-                      <div className='mt-4 pt-4 border-t border-gray-200'>
-                        <a
-                          href='/#contacto'
-                          onClick={() => setTreatmentsDropdownOpen(false)}
-                          className='block text-center bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition font-semibold'
-                        >
-                          {t('navbar.scheduleAppointment')}
-                        </a>
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        ))}
                       </div>
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Urgências — link direto, sempre visível.
-                  É a página de maior intenção de conversão do site. */}
-              <Link
-                to='/urgencias'
-                onClick={() => window.scrollTo(0, 0)}
-                className={`transition-all font-semibold text-sm xl:text-base whitespace-nowrap flex items-center gap-1.5 ${
-                  scrolled
-                    ? 'text-red-600 hover:text-red-700'
-                    : 'text-white hover:text-red-200'
-                }`}
-              >
-                <span className='w-2 h-2 bg-red-500 rounded-full animate-pulse'></span>
-                {t('navbar.emergencies')}
-              </Link>
-
               <Link
                 to='/corpo-clinico'
-                onClick={() => window.scrollTo(0, 0)}
-                className={`transition-all font-medium text-sm xl:text-base whitespace-nowrap ${
-                  scrolled
-                    ? 'text-gray-700 hover:text-blue-600'
-                    : 'text-white hover:text-blue-300'
-                }`}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${linkColor}`}
               >
                 {t('navbar.clinicalTeamLink')}
               </Link>
-
-              <a
-                href='/#contacto'
-                className={`transition-all font-medium text-sm xl:text-base ${
-                  scrolled
-                    ? 'text-gray-700 hover:text-blue-600'
-                    : 'text-white hover:text-blue-300'
-                }`}
-              >
-                {t('navbar.contact')}
-              </a>
-
               <Link
                 to='/faq'
-                onClick={() => window.scrollTo(0, 0)}
-                className={`transition-all font-medium text-sm xl:text-base ${
-                  scrolled
-                    ? 'text-gray-700 hover:text-blue-600'
-                    : 'text-white hover:text-blue-300'
-                }`}
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${linkColor}`}
               >
                 {t('navbar.faq')}
               </Link>
+              <a
+                href='/#contacto'
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${linkColor}`}
+              >
+                {t('navbar.contact')}
+              </a>
+            </div>
 
-              {/* Ícone Admin Discreto */}
+            {/* ---------- Ações desktop ---------- */}
+            <div className='hidden lg:flex items-center gap-3'>
+              <LanguageToggle
+                language={language}
+                setLanguage={setLanguage}
+                solid={solid}
+                label={t('navbar.language')}
+              />
+
+              <a
+                href={TEL_HREF}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${linkColor}`}
+              >
+                <PhoneIcon className='w-4 h-4' />
+                <span className='hidden xl:inline'>
+                  {business.telephoneDisplay}
+                </span>
+                <span className='xl:hidden'>{t('navbar.call')}</span>
+              </a>
+
+              {/* Urgências é o CTA primário: é o caminho de maior intenção do
+                  site e o único que responde a "estão abertos agora?". */}
               <Link
-                to='/admin/login'
-                onClick={() => window.scrollTo(0, 0)}
-                className={`transition-all p-2 ${
-                  scrolled
-                    ? 'text-gray-400 hover:text-blue-600'
-                    : 'text-white/70 hover:text-white'
+                to='/urgencias'
+                className='flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-full text-sm font-semibold shadow-lg shadow-red-600/20 transition-colors'
+              >
+                <span className='relative flex h-2 w-2'>
+                  <span className='motion-safe:animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-60' />
+                  <span className='relative inline-flex rounded-full h-2 w-2 bg-white' />
+                </span>
+                {t('navbar.emergencies')}
+              </Link>
+            </div>
+
+            {/* ---------- Ações mobile ---------- */}
+            {/* O telefone fica sempre visível: quem tem dor não deve ter de
+                abrir um menu para ligar. Alvos de 44px. */}
+            <div className='flex lg:hidden items-center gap-1'>
+              <a
+                href={TEL_HREF}
+                aria-label={`${t('navbar.call')} ${business.telephoneDisplay}`}
+                className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${
+                  solid
+                    ? 'text-[#14489c] hover:bg-blue-50'
+                    : 'text-white hover:bg-white/10'
                 }`}
-                title={t('navbar.adminAccess')}
+              >
+                <PhoneIcon className='w-5 h-5' />
+              </a>
+
+              <button
+                ref={menuButtonRef}
+                type='button'
+                onClick={() => setMenuOpen(true)}
+                aria-label={t('navbar.openMenu')}
+                aria-expanded={menuOpen}
+                aria-controls='menu-mobile'
+                className={`flex items-center justify-center w-11 h-11 rounded-full transition-colors ${
+                  solid
+                    ? 'text-gray-700 hover:bg-gray-100'
+                    : 'text-white hover:bg-white/10'
+                }`}
               >
                 <svg
-                  className='w-5 h-5'
+                  className='w-6 h-6'
                   fill='none'
                   viewBox='0 0 24 24'
                   stroke='currentColor'
+                  aria-hidden='true'
                 >
                   <path
                     strokeLinecap='round'
                     strokeLinejoin='round'
                     strokeWidth={2}
-                    d='M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z'
+                    d='M4 7h16M4 12h16M4 17h16'
                   />
-                </svg>
-              </Link>
-
-              {/* Área do Cliente */}
-              {isAuthenticated ? (
-                <PatientUserMenu />
-              ) : (
-                <button
-                  onClick={() => setShowPatientModal(true)}
-                  className={`px-4 xl:px-6 py-2 xl:py-2.5 rounded-full transition-all font-semibold shadow-lg hover:scale-105 transform duration-300 text-sm xl:text-base whitespace-nowrap ${
-                    scrolled
-                      ? 'bg-blue-600 text-white hover:bg-blue-700'
-                      : 'bg-white text-blue-600 hover:bg-blue-50'
-                  }`}
-                >
-                  {t('navbar.clientArea')}
-                </button>
-              )}
-
-              {/* Language Selector */}
-              <div
-                className='relative'
-                onMouseEnter={() => setLanguageDropdownOpen(true)}
-                onMouseLeave={() => setLanguageDropdownOpen(false)}
-              >
-                <button
-                  onClick={() => setLanguageDropdownOpen(!languageDropdownOpen)}
-                  className={`transition-all flex items-center gap-1 py-2 px-2 rounded-lg ${
-                    scrolled
-                      ? 'text-gray-700 hover:bg-gray-100'
-                      : 'text-white hover:bg-white/10'
-                  }`}
-                  title={`Idioma: ${languages[currentLanguage].name}`}
-                >
-                  <span className='text-xl xl:text-2xl'>
-                    {languages[currentLanguage].flag}
-                  </span>
-                  <svg
-                    className={`w-4 h-4 transition-transform ${languageDropdownOpen ? 'rotate-180' : ''}`}
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    stroke='currentColor'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M19 9l-7 7-7-7'
-                    />
-                  </svg>
-                </button>
-
-                {/* Language Dropdown */}
-                {languageDropdownOpen && (
-                  <div className='absolute top-full right-0 pt-2 w-48 z-50'>
-                    <div className='bg-white rounded-xl shadow-2xl border border-gray-100 py-2 animate-fadeIn'>
-                      <button
-                        onClick={() => handleLanguageChange('pt')}
-                        className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-blue-50 transition ${
-                          currentLanguage === 'pt' ? 'bg-blue-50' : ''
-                        }`}
-                      >
-                        <span className='text-2xl'>{languages.pt.flag}</span>
-                        <span
-                          className={`font-medium ${
-                            currentLanguage === 'pt'
-                              ? 'text-blue-600'
-                              : 'text-gray-700'
-                          }`}
-                        >
-                          {languages.pt.name}
-                        </span>
-                        {currentLanguage === 'pt' && (
-                          <svg
-                            className='w-5 h-5 ml-auto text-blue-600'
-                            fill='currentColor'
-                            viewBox='0 0 20 20'
-                          >
-                            <path
-                              fillRule='evenodd'
-                              d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'
-                              clipRule='evenodd'
-                            />
-                          </svg>
-                        )}
-                      </button>
-                      <button
-                        onClick={() => handleLanguageChange('en')}
-                        className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-blue-50 transition ${
-                          currentLanguage === 'en' ? 'bg-blue-50' : ''
-                        }`}
-                      >
-                        <span className='text-2xl'>{languages.en.flag}</span>
-                        <span
-                          className={`font-medium ${
-                            currentLanguage === 'en'
-                              ? 'text-blue-600'
-                              : 'text-gray-700'
-                          }`}
-                        >
-                          {languages.en.name}
-                        </span>
-                        {currentLanguage === 'en' && (
-                          <svg
-                            className='w-5 h-5 ml-auto text-blue-600'
-                            fill='currentColor'
-                            viewBox='0 0 20 20'
-                          >
-                            <path
-                              fillRule='evenodd'
-                              d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'
-                              clipRule='evenodd'
-                            />
-                          </svg>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className='lg:hidden flex items-center gap-2'>
-              {/* Language selector mobile - compacto */}
-              <button
-                onClick={() => setLanguageDropdownOpen(!languageDropdownOpen)}
-                className={`transition-all p-1.5 rounded-lg ${
-                  scrolled
-                    ? 'text-gray-700 hover:bg-gray-100'
-                    : 'text-white hover:bg-white/10'
-                }`}
-              >
-                <span className='text-lg'>
-                  {languages[currentLanguage].flag}
-                </span>
-              </button>
-
-              {/* Menu hamburger */}
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className={`transition-all p-1.5 ${
-                  scrolled
-                    ? 'text-gray-700 hover:text-blue-600'
-                    : 'text-white hover:text-blue-300'
-                }`}
-              >
-                <svg
-                  className='h-6 w-6'
-                  fill='none'
-                  viewBox='0 0 24 24'
-                  stroke='currentColor'
-                >
-                  {mobileMenuOpen ? (
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M6 18L18 6M6 6l12 12'
-                    />
-                  ) : (
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M4 6h16M4 12h16M4 18h16'
-                    />
-                  )}
                 </svg>
               </button>
             </div>
           </div>
-
-          {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div className='lg:hidden pb-4 bg-white/95 backdrop-blur-md rounded-b-2xl shadow-xl'>
-              <div className='flex flex-col space-y-3 px-4'>
-                {/* Urgências em primeiro no mobile: quem tem dor abre o menu
-                    e deve encontrar isto sem procurar. */}
-                <Link
-                  to='/urgencias'
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    window.scrollTo(0, 0);
-                  }}
-                  className='flex items-center gap-2 text-red-600 hover:text-red-700 transition py-2 font-semibold'
-                >
-                  <span className='w-2 h-2 bg-red-500 rounded-full animate-pulse'></span>
-                  {t('navbar.emergenciesMobile')}
-                </Link>
-
-                {/* href absoluto: "#tratamentos" só funcionava dentro da home */}
-                <a
-                  href='/#tratamentos'
-                  className='text-gray-700 hover:text-blue-600 transition py-2 font-medium'
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t('navbar.treatments')}
-                </a>
-                <Link
-                  to='/corpo-clinico'
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    window.scrollTo(0, 0);
-                  }}
-                  className='text-gray-700 hover:text-blue-600 transition py-2 font-medium'
-                >
-                  {t('navbar.clinicalTeamLink')}
-                </Link>
-                <a
-                  href='/#contacto'
-                  className='text-gray-700 hover:text-blue-600 transition py-2 font-medium'
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t('navbar.contact')}
-                </a>
-                <Link
-                  to='/faq'
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    window.scrollTo(0, 0);
-                  }}
-                  className='text-gray-700 hover:text-blue-600 transition py-2 font-medium flex items-center gap-2'
-                >
-                  {t('navbar.faqMobile')}
-                  <span className='text-[10px] text-white bg-blue-600 rounded px-1.5 py-0.5 font-medium'>
-                    {t('navbar.new')}
-                  </span>
-                </Link>
-
-                {/* Language Selector Mobile */}
-                <div className='border-t pt-3'>
-                  <div className='text-gray-500 text-sm font-medium mb-2 px-2'>
-                    {t('navbar.languageLabel')}
-                  </div>
-                  <div className='flex gap-2'>
-                    <button
-                      onClick={() => {
-                        handleLanguageChange('pt');
-                        setMobileMenuOpen(false);
-                      }}
-                      className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg transition ${
-                        currentLanguage === 'pt'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                      title='Português'
-                    >
-                      <span className='text-xl'>{languages.pt.flag}</span>
-                      <span className='text-sm font-medium'>PT</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        handleLanguageChange('en');
-                        setMobileMenuOpen(false);
-                      }}
-                      className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg transition ${
-                        currentLanguage === 'en'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                      title='English'
-                    >
-                      <span className='text-xl'>{languages.en.flag}</span>
-                      <span className='text-sm font-medium'>EN</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Ícone Admin Mobile */}
-                <Link
-                  to='/admin/login'
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    window.scrollTo(0, 0);
-                  }}
-                  className='flex items-center gap-2 text-gray-700 hover:text-blue-600 transition py-2 font-medium'
-                >
-                  <svg
-                    className='w-5 h-5'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    stroke='currentColor'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z'
-                    />
-                  </svg>
-                  {t('navbar.adminMobile')}
-                </Link>
-
-                {/* Área do Cliente Mobile */}
-                {isAuthenticated ? (
-                  <div className='border-t pt-4'>
-                    <PatientUserMenu />
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setShowPatientModal(true);
-                    }}
-                    className='bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition text-center font-semibold w-full mt-2'
-                  >
-                    {t('navbar.clientArea')}
-                  </button>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Language Dropdown Mobile (quando clica na bandeira) */}
-          {languageDropdownOpen && (
-            <div className='lg:hidden absolute top-full right-3 mt-1 w-40 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 z-50'>
-              <button
-                onClick={() => {
-                  handleLanguageChange('pt');
-                }}
-                className={`w-full flex items-center gap-2 px-3 py-2 hover:bg-blue-50 transition ${
-                  currentLanguage === 'pt' ? 'bg-blue-50' : ''
-                }`}
-              >
-                <span className='text-xl'>{languages.pt.flag}</span>
-                <span
-                  className={`text-sm font-medium ${
-                    currentLanguage === 'pt' ? 'text-blue-600' : 'text-gray-700'
-                  }`}
-                >
-                  {languages.pt.name}
-                </span>
-              </button>
-              <button
-                onClick={() => {
-                  handleLanguageChange('en');
-                }}
-                className={`w-full flex items-center gap-2 px-3 py-2 hover:bg-blue-50 transition ${
-                  currentLanguage === 'en' ? 'bg-blue-50' : ''
-                }`}
-              >
-                <span className='text-xl'>{languages.en.flag}</span>
-                <span
-                  className={`text-sm font-medium ${
-                    currentLanguage === 'en' ? 'text-blue-600' : 'text-gray-700'
-                  }`}
-                >
-                  {languages.en.name}
-                </span>
-              </button>
-            </div>
-          )}
         </div>
       </nav>
+
+      {/* ==================== DRAWER MOBILE ==================== */}
+      {menuOpen && (
+        <div className='lg:hidden fixed inset-0 z-[60]'>
+          <div
+            className='absolute inset-0 bg-gray-900/50 backdrop-blur-sm'
+            onClick={() => setMenuOpen(false)}
+            aria-hidden='true'
+          />
+
+          <div
+            ref={panelRef}
+            id='menu-mobile'
+            role='dialog'
+            aria-modal='true'
+            aria-label={t('navbar.mainNav')}
+            tabIndex={-1}
+            className='absolute inset-y-0 right-0 w-full max-w-sm bg-white shadow-2xl flex flex-col outline-none'
+          >
+            <div className='flex items-center justify-between h-16 px-4 border-b border-gray-100 flex-shrink-0'>
+              <span className='font-semibold text-transparent bg-clip-text bg-gradient-to-r from-[#14489c] to-[#006bb3]'>
+                Centro Dentário Colombo
+              </span>
+              <button
+                type='button'
+                onClick={() => {
+                  setMenuOpen(false);
+                  menuButtonRef.current?.focus();
+                }}
+                aria-label={t('navbar.closeMenu')}
+                className='flex items-center justify-center w-11 h-11 -mr-2 rounded-full text-gray-500 hover:bg-gray-100 transition-colors'
+              >
+                <svg
+                  className='w-6 h-6'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  stroke='currentColor'
+                  aria-hidden='true'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth={2}
+                    d='M6 18L18 6M6 6l12 12'
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <div className='flex-1 overflow-y-auto overscroll-contain px-4 py-5'>
+              {/* Urgências primeiro e como cartão: quem abre este menu com dor
+                  tem de encontrar isto sem procurar. */}
+              <Link
+                to='/urgencias'
+                className='flex items-start gap-3 bg-red-50 border border-red-200 rounded-2xl p-4 mb-5'
+              >
+                <span className='relative flex h-2.5 w-2.5 mt-1.5 flex-shrink-0'>
+                  <span className='motion-safe:animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-60' />
+                  <span className='relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600' />
+                </span>
+                <span className='min-w-0'>
+                  <span className='block font-bold text-red-700'>
+                    {t('navbar.emergenciesMobile')}
+                  </span>
+                  <span className='block text-sm text-red-900/70 mt-0.5'>
+                    {t('navbar.openHours')}
+                  </span>
+                </span>
+              </Link>
+
+              <ul className='space-y-1'>
+                <li>
+                  <button
+                    type='button'
+                    onClick={() => setMobileTreatmentsOpen(v => !v)}
+                    aria-expanded={mobileTreatmentsOpen}
+                    aria-controls='menu-mobile-tratamentos'
+                    className='w-full flex items-center justify-between px-3 py-3.5 rounded-xl text-gray-900 font-medium hover:bg-gray-50 transition-colors'
+                  >
+                    {t('navbar.treatments')}
+                    <svg
+                      className={`w-5 h-5 text-gray-400 transition-transform ${
+                        mobileTreatmentsOpen ? 'rotate-180' : ''
+                      }`}
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      stroke='currentColor'
+                      aria-hidden='true'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        strokeWidth={2}
+                        d='M19 9l-7 7-7-7'
+                      />
+                    </svg>
+                  </button>
+
+                  <ul
+                    id='menu-mobile-tratamentos'
+                    hidden={!mobileTreatmentsOpen}
+                    className='mt-1 ml-3 pl-3 border-l border-gray-200 space-y-0.5'
+                  >
+                    {treatments.map(treatment => (
+                      <li key={treatment.id}>
+                        <Link
+                          to={`/tratamentos/${treatment.slug}`}
+                          className='block px-3 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-blue-50 hover:text-[#14489c] transition-colors'
+                        >
+                          {treatment.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+
+                <li>
+                  <Link
+                    to='/corpo-clinico'
+                    className='block px-3 py-3.5 rounded-xl text-gray-900 font-medium hover:bg-gray-50 transition-colors'
+                  >
+                    {t('navbar.clinicalTeamLink')}
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to='/faq'
+                    className='block px-3 py-3.5 rounded-xl text-gray-900 font-medium hover:bg-gray-50 transition-colors'
+                  >
+                    {t('navbar.faqMobile')}
+                  </Link>
+                </li>
+                <li>
+                  <a
+                    href='/#contacto'
+                    onClick={() => setMenuOpen(false)}
+                    className='block px-3 py-3.5 rounded-xl text-gray-900 font-medium hover:bg-gray-50 transition-colors'
+                  >
+                    {t('navbar.contact')}
+                  </a>
+                </li>
+              </ul>
+
+              <div className='mt-6 pt-5 border-t border-gray-100'>
+                <p className='text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2.5 px-3'>
+                  {t('navbar.language')}
+                </p>
+                <div className='px-3'>
+                  <LanguageToggle
+                    language={language}
+                    setLanguage={setLanguage}
+                    solid
+                    label={t('navbar.language')}
+                    size='lg'
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className='border-t border-gray-100 p-4 flex-shrink-0'>
+              <a
+                href={TEL_HREF}
+                className='flex items-center justify-center gap-2.5 w-full bg-[#14489c] hover:bg-[#006bb3] text-white py-3.5 rounded-full font-semibold transition-colors'
+              >
+                <PhoneIcon className='w-5 h-5' />
+                {business.telephoneDisplay}
+              </a>
+              <p className='text-center text-xs text-gray-500 mt-3'>
+                {t('navbar.openHours')}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </>
+  );
+}
+
+// ============================================
+// Toggle de idioma
+// ============================================
+/**
+ * Texto, não bandeiras. Bandeira é país, não língua: a portuguesa exclui os
+ * brasileiros que também usam o site, e a dos EUA para "inglês" é arbitrária.
+ * O atributo lang em cada botão faz com que os leitores de ecrã pronunciem
+ * cada opção na língua certa.
+ */
+function LanguageToggle({
+  language,
+  setLanguage,
+  solid,
+  label,
+  size = 'sm',
+}: {
+  language: 'pt' | 'en';
+  setLanguage: (lang: 'pt' | 'en') => void;
+  solid: boolean;
+  label: string;
+  size?: 'sm' | 'lg';
+}) {
+  const options: Array<{ code: 'pt' | 'en'; name: string }> = [
+    { code: 'pt', name: 'Português' },
+    { code: 'en', name: 'English' },
+  ];
+
+  const big = size === 'lg';
+
+  return (
+    <div
+      role='group'
+      aria-label={label}
+      className={`relative inline-flex items-center rounded-full p-0.5 ${
+        big ? 'w-full' : ''
+      } ${solid ? 'bg-gray-100' : 'bg-white/15 backdrop-blur-sm'}`}
+    >
+      <span
+        aria-hidden='true'
+        className='absolute top-0.5 bottom-0.5 left-0.5 w-[calc(50%-2px)] rounded-full bg-white shadow-sm transition-transform duration-200 motion-reduce:transition-none'
+        style={{
+          transform:
+            language === 'en'
+              ? 'translateX(calc(100% + 2px))'
+              : 'translateX(0)',
+        }}
+      />
+      {options.map(option => {
+        const active = language === option.code;
+        return (
+          <button
+            key={option.code}
+            type='button'
+            lang={option.code}
+            onClick={() => setLanguage(option.code)}
+            aria-pressed={active}
+            title={option.name}
+            className={`relative z-10 rounded-full font-semibold transition-colors ${
+              big ? 'flex-1 px-4 py-2.5 text-sm' : 'px-2.5 py-1 text-xs'
+            } ${
+              active
+                ? 'text-[#14489c]'
+                : solid
+                  ? 'text-gray-500 hover:text-gray-700'
+                  : 'text-white/80 hover:text-white'
+            }`}
+          >
+            {option.code.toUpperCase()}
+            <span className='sr-only'> — {option.name}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// ============================================
+// Ícone
+// ============================================
+function PhoneIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill='none'
+      viewBox='0 0 24 24'
+      stroke='currentColor'
+      aria-hidden='true'
+    >
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth={2}
+        d='M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z'
+      />
+    </svg>
   );
 }

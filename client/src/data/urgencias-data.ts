@@ -86,7 +86,7 @@ const urgenciasPT: UrgenciasContent = {
       level: 'mesmo-dia',
       whatWeDo:
         'Avaliamos se a fratura atingiu o nervo. Protegemos o dente e restauramos a forma e a função — muitas vezes numa só sessão.',
-      relatedSlug: 'dentisteria',
+      relatedSlug: 'caries',
     },
     {
       id: 'coroa-caida',
@@ -95,7 +95,7 @@ const urgenciasPT: UrgenciasContent = {
       level: 'mesmo-dia',
       whatWeDo:
         'Guarde a peça e traga-a consigo. Na maioria dos casos é possível recimentar a coroa original no mesmo dia, sem custo de refazer.',
-      relatedSlug: 'prostodontia',
+      relatedSlug: 'proteses-dentarias',
     },
     {
       id: 'protese-partida',
@@ -322,7 +322,7 @@ const urgenciasEN: UrgenciasContent = {
       level: 'mesmo-dia',
       whatWeDo:
         'We check whether the fracture reached the nerve, protect the tooth and rebuild its shape and function — often in a single session.',
-      relatedSlug: 'dentisteria',
+      relatedSlug: 'caries',
     },
     {
       id: 'coroa-caida',
@@ -332,7 +332,7 @@ const urgenciasEN: UrgenciasContent = {
       level: 'mesmo-dia',
       whatWeDo:
         'Keep the piece and bring it with you. In most cases we can re-cement the original crown the same day, with no need to remake it.',
-      relatedSlug: 'prostodontia',
+      relatedSlug: 'proteses-dentarias',
     },
     {
       id: 'protese-partida',

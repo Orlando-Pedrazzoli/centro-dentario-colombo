@@ -50,12 +50,9 @@ const STATIC_ROUTES = [
 const TREATMENT_SLUGS = [
   'caries',
   'reabilitacao-oral',
-  'aparelhos-dentarios',
-  'criancas',
   'proteses-dentarias',
   'estetica-dentaria',
   'cirurgia-oral',
-  'dentisteria',
   'endodontia',
   'implantologia',
   'medicina-oral',
@@ -63,7 +60,6 @@ const TREATMENT_SLUGS = [
   'odontopediatria',
   'ortodontia',
   'periodontologia',
-  'prostodontia',
 ];
 
 const ROUTES = [

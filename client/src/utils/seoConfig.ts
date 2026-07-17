@@ -107,12 +107,9 @@ export function isClinicOpenNow(now: Date = new Date()): boolean {
 export const TREATMENT_SLUGS = [
   'caries',
   'reabilitacao-oral',
-  'aparelhos-dentarios',
-  'criancas',
   'proteses-dentarias',
   'estetica-dentaria',
   'cirurgia-oral',
-  'dentisteria',
   'endodontia',
   'implantologia',
   'medicina-oral',
@@ -120,7 +117,6 @@ export const TREATMENT_SLUGS = [
   'odontopediatria',
   'ortodontia',
   'periodontologia',
-  'prostodontia',
 ];
 
 /**
