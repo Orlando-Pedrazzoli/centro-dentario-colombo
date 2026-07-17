@@ -17,7 +17,16 @@
  * ficheiros tem precedência sobre os rewrites), por isso o crawler recebe HTML
  * completo à primeira. Para o utilizador nada muda: o React hidrata por cima.
  *
- * Requer: npm i -D puppeteer
+ * DOIS BROWSERS, PORQUÊ:
+ * Localmente usamos o `puppeteer`, que traz o seu próprio Chromium e funciona
+ * em Windows/macOS sem mais nada. No Vercel isso rebenta com
+ * "libnspr4.so: cannot open shared object file": a imagem de build é Amazon
+ * Linux e não traz as bibliotecas de sistema do Chromium (NSPR/NSS). Não há
+ * configuração do Puppeteer que resolva — os ficheiros não existem na máquina.
+ * Por isso, no Vercel usamos `@sparticuz/chromium`, um Chromium compilado com
+ * essas bibliotecas embutidas, através do `puppeteer-core`.
+ *
+ * Requer: npm i -D puppeteer puppeteer-core @sparticuz/chromium
  * Correr depois do build: node scripts/prerender.cjs
  */
 
@@ -111,12 +120,38 @@ function startServer() {
   });
 }
 
-async function prerender() {
-  if (!fs.existsSync(path.join(DIST, 'index.html'))) {
-    console.error(
-      '[prerender] dist/index.html não existe. Corra o vite build primeiro.',
-    );
-    process.exit(1);
+/**
+ * Arranca o Chromium certo para o ambiente certo.
+ * O Vercel define VERCEL=1 em todos os builds.
+ */
+async function launchBrowser() {
+  const onVercel = Boolean(process.env.VERCEL);
+
+  if (onVercel) {
+    let chromium, puppeteerCore;
+    try {
+      chromium = require('@sparticuz/chromium');
+      puppeteerCore = require('puppeteer-core');
+    } catch (err) {
+      console.error(
+        '[prerender] em ambiente Vercel são precisos @sparticuz/chromium e puppeteer-core.\n' +
+          '            npm i -D @sparticuz/chromium puppeteer-core',
+      );
+      process.exit(1);
+    }
+
+    // Sem WebGL: não precisamos de gráficos para gravar HTML e poupa arranque.
+    chromium.setGraphicsMode = false;
+
+    const executablePath = await chromium.executablePath();
+    console.log(`[prerender] Chromium serverless em ${executablePath}`);
+
+    return puppeteerCore.launch({
+      args: [...chromium.args, '--disable-dev-shm-usage'],
+      executablePath,
+      headless: true,
+      defaultViewport: { width: 1280, height: 900 },
+    });
   }
 
   let puppeteer;
@@ -129,10 +164,8 @@ async function prerender() {
     process.exit(1);
   }
 
-  const server = await startServer();
-  console.log(`[prerender] servidor local em http://localhost:${PORT}`);
-
-  const browser = await puppeteer.launch({
+  console.log('[prerender] Chromium local (puppeteer)');
+  return puppeteer.launch({
     headless: 'new',
     args: [
       '--no-sandbox',
@@ -140,6 +173,20 @@ async function prerender() {
       '--disable-dev-shm-usage',
     ],
   });
+}
+
+async function prerender() {
+  if (!fs.existsSync(path.join(DIST, 'index.html'))) {
+    console.error(
+      '[prerender] dist/index.html não existe. Corra o vite build primeiro.',
+    );
+    process.exit(1);
+  }
+
+  const server = await startServer();
+  console.log(`[prerender] servidor local em http://localhost:${PORT}`);
+
+  const browser = await launchBrowser();
 
   let ok = 0;
   let failed = 0;
