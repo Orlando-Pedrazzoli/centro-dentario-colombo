@@ -52,7 +52,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href='https://www.instagram.com/centrodentariocolombo'
+                href='https://www.instagram.com/centrodentario_colombo'
                 target='_blank'
                 rel='noopener noreferrer'
                 className='w-10 h-10 bg-gray-800 hover:bg-gradient-to-br hover:from-purple-600 hover:via-pink-500 hover:to-orange-400 rounded-full flex items-center justify-center transition-all duration-300'

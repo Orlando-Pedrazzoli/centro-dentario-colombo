@@ -14,7 +14,7 @@ const TEL_HREF = `tel:${business.telephone}`;
  * Em todas as outras é sólida desde o início — antes disto, a /corpo-clinico
  * tinha texto branco sobre fundo branco: navegação invisível.
  */
-const OVERLAY_ROUTES = ['/', '/urgencias'];
+const OVERLAY_ROUTES = ['/', '/urgencias', '/corpo-clinico'];
 
 export default function Navbar() {
   const { language, setLanguage, t } = useLanguage();

@@ -158,7 +158,9 @@
     "ctaCall": "Ligar Agora",
     "ctaEmail": "Enviar Email",
     "footerRights": "Todos os direitos reservados.",
-    "footerErs": "Estabelecimento licenciado pela ERS - Licença: 3297/2011"
+    "footerErs": "Estabelecimento licenciado pela ERS - Licença: 3297/2011",
+    "filterAll": "Todos",
+    "filterLabel": "Filtrar por especialidade"
   },
   "treatmentPage": {
     "backToTreatments": "Voltar aos Tratamentos",

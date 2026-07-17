@@ -1,31 +1,98 @@
 // client/src/pages/CorpoClinicoPage.tsx
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router';
+import {
+  Share2,
+  Link2,
+  Check,
+  Phone,
+  Mail,
+  Languages as LanguagesIcon,
+} from 'lucide-react';
 import { SEO } from '../components/SEO';
-import { BreadcrumbJsonLd } from '../components/JsonLd';
+import { BreadcrumbJsonLd, DoctorsJsonLd } from '../components/JsonLd';
 import { getDoctors } from '../data/doctors-data';
 import type { Doctor } from '../data/doctors-data';
 import { useLanguage } from '../contexts/LanguageContext';
+import Reveal from '../components/ui/Reveal';
+
+// ============================================
+// Ícones de marca (sem equivalente lucide)
+// ============================================
+
+const WhatsAppIcon = ({ className = 'w-5 h-5' }: { className?: string }) => (
+  <svg
+    className={className}
+    fill='currentColor'
+    viewBox='0 0 24 24'
+    aria-hidden='true'
+  >
+    <path d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z' />
+  </svg>
+);
+
+const FacebookIcon = () => (
+  <svg
+    className='w-5 h-5 text-primary-600'
+    fill='currentColor'
+    viewBox='0 0 24 24'
+    aria-hidden='true'
+  >
+    <path d='M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z' />
+  </svg>
+);
+
+const LinkedInIcon = () => (
+  <svg
+    className='w-5 h-5 text-primary-700'
+    fill='currentColor'
+    viewBox='0 0 24 24'
+    aria-hidden='true'
+  >
+    <path d='M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z' />
+  </svg>
+);
+
+const XIcon = () => (
+  <svg
+    className='w-5 h-5 text-gray-900'
+    fill='currentColor'
+    viewBox='0 0 24 24'
+    aria-hidden='true'
+  >
+    <path d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' />
+  </svg>
+);
 
 export default function CorpoClinicoPage() {
   const { language, t } = useLanguage();
-  // Estado para controlar qual card está expandido
+
   const [expandedBio, setExpandedBio] = useState<string | null>(null);
-  // Estado para controlar qual menu de share está aberto
   const [shareMenuOpen, setShareMenuOpen] = useState<string | null>(null);
-  // Ref para fechar menu ao clicar fora
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [activeSpecialty, setActiveSpecialty] = useState<string | null>(null);
   const shareMenuRef = useRef<HTMLDivElement>(null);
 
-  // Obter dados dos médicos no idioma correto
   const doctors = getDoctors(language);
 
-  // Scroll to top quando a página carregar
+  // Lista de especialidades únicas para os chips de filtro
+  const specialties = useMemo(() => {
+    const set = new Set<string>();
+    doctors.forEach(d => d.specialties.forEach(s => set.add(s)));
+    return Array.from(set).sort((a, b) => a.localeCompare(b, language));
+  }, [doctors, language]);
+
+  const filteredDoctors = activeSpecialty
+    ? doctors.filter(d => d.specialties.includes(activeSpecialty))
+    : doctors;
+
+  // Instantâneo — o scroll suave no mount fazia a página "deslizar" ao entrar
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo(0, 0);
   }, []);
 
-  // Fechar menu de share ao clicar fora
+  // Fechar menu de share ao clicar fora ou com Escape
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -35,23 +102,24 @@ export default function CorpoClinicoPage() {
         setShareMenuOpen(null);
       }
     };
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setShareMenuOpen(null);
+    };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
   }, []);
 
-  // Função para gerar URL de partilha do médico
-  const getDoctorShareUrl = (doctor: Doctor) => {
-    const baseUrl = window.location.origin;
-    return `${baseUrl}/corpo-clinico#${doctor.id}`;
-  };
+  const getDoctorShareUrl = (doctor: Doctor) =>
+    `${window.location.origin}/corpo-clinico#${doctor.id}`;
 
-  // Função para gerar texto de partilha
-  const getShareText = (doctor: Doctor) => {
-    return `${t('clinicalTeam.shareText')} ${doctor.title} ${doctor.name} - ${doctor.specialties.join(', ')} ${t('clinicalTeam.shareTextSuffix')}`;
-  };
+  const getShareText = (doctor: Doctor) =>
+    `${t('clinicalTeam.shareText')} ${doctor.title} ${doctor.name} - ${doctor.specialties.join(', ')} ${t('clinicalTeam.shareTextSuffix')}`;
 
-  // Funções de partilha para cada rede social
   const shareOnWhatsApp = (doctor: Doctor) => {
     const text = encodeURIComponent(
       `${getShareText(doctor)}\n\n${getDoctorShareUrl(doctor)}`,
@@ -91,29 +159,29 @@ export default function CorpoClinicoPage() {
     setShareMenuOpen(null);
   };
 
+  // Sem alert(): o item do menu mostra "✓ copiado" e fecha sozinho
   const copyLink = async (doctor: Doctor) => {
+    const url = getDoctorShareUrl(doctor);
     try {
-      await navigator.clipboard.writeText(getDoctorShareUrl(doctor));
-      alert(t('clinicalTeam.linkCopied'));
-    } catch (err) {
-      // Fallback para browsers antigos
+      await navigator.clipboard.writeText(url);
+    } catch {
       const textArea = document.createElement('textarea');
-      textArea.value = getDoctorShareUrl(doctor);
+      textArea.value = url;
       document.body.appendChild(textArea);
       textArea.select();
       document.execCommand('copy');
       document.body.removeChild(textArea);
-      alert(t('clinicalTeam.linkCopied'));
     }
-    setShareMenuOpen(null);
+    setCopiedId(doctor.id);
+    window.setTimeout(() => {
+      setCopiedId(null);
+      setShareMenuOpen(null);
+    }, 1500);
   };
 
-  // Toggle menu de share
-  const toggleShareMenu = (doctorId: string) => {
+  const toggleShareMenu = (doctorId: string) =>
     setShareMenuOpen(shareMenuOpen === doctorId ? null : doctorId);
-  };
 
-  // Função para abrir WhatsApp com mensagem personalizada
   const openWhatsApp = (doctor: Doctor) => {
     const phoneNumber = '351933522580';
     const specialtiesText = doctor.specialties.join(' | ');
@@ -123,14 +191,11 @@ export default function CorpoClinicoPage() {
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
 
-  // Toggle bio expandida
-  const toggleBio = (doctorId: string) => {
+  const toggleBio = (doctorId: string) =>
     setExpandedBio(expandedBio === doctorId ? null : doctorId);
-  };
 
   return (
     <div className='min-h-screen bg-white'>
-      {/* SEO Meta Tags */}
       <SEO
         title='Corpo Clínico'
         description='Conheça a equipa de médicos dentistas do Centro Dentário Colombo. Profissionais especializados em implantologia, ortodontia, estética dentária e mais. Marque a sua consulta!'
@@ -138,333 +203,329 @@ export default function CorpoClinicoPage() {
         path='/corpo-clinico'
       />
 
-      {/* JSON-LD Structured Data */}
       <BreadcrumbJsonLd
         items={[
           { name: 'Início', path: '/' },
           { name: 'Corpo Clínico', path: '/corpo-clinico' },
         ]}
       />
+      {/* Person por médico — indexável graças ao prerender */}
+      <DoctorsJsonLd doctors={doctors} />
 
-      {/* Navbar vem do Layout — a nav simplificada que existia aqui
-          escondia o resto da navegação e duplicava a barra global. */}
+      {/* Navbar vem do Layout. Esta rota está em OVERLAY_ROUTES:
+          a barra fica transparente sobre o hero escuro. */}
 
-      {/* Banner Hero - Fullwidth com Imagem */}
-      <section className='relative h-[500px] flex items-center justify-center overflow-hidden mt-20'>
-        {/* Imagem de fundo */}
-        <div className='absolute inset-0 z-0'>
-          <img
-            src='https://images.pexels.com/photos/305565/pexels-photo-305565.jpeg'
-            alt='Equipa médica Centro Dentário Colombo'
-            className='w-full h-full object-cover'
-          />
-          {/* Overlay sutil apenas na parte inferior para legibilidade */}
-          <div className='absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent'></div>
-        </div>
+      {/* ============ HERO ============ */}
+      {/* Gradiente da marca em vez da antiga foto stock do Pexels — numa
+          página de confiança, uma equipa genérica de banco de imagens
+          prejudica mais do que ajuda. Quando houver uma foto real da
+          equipa, entra aqui como bg-image com o mesmo overlay. */}
+      <header className='relative bg-gradient-to-br from-primary-900 via-primary-700 to-primary-500 pt-32 pb-16 sm:pt-40 sm:pb-20 overflow-hidden'>
+        {/* Textura subtil */}
+        <div
+          className='absolute inset-0 opacity-[0.06]'
+          aria-hidden='true'
+          style={{
+            backgroundImage:
+              'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
+            backgroundSize: '28px 28px',
+          }}
+        ></div>
 
-        {/* Conteúdo do Banner */}
-        <div className='relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white'>
+        <div className='relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center'>
+          <p className='animate-fade-up text-primary-200 font-semibold uppercase tracking-widest text-xs sm:text-sm mb-4'>
+            {t('clinicalTeam.sectionDesc')}
+          </p>
           <h1
-            className='text-5xl md:text-6xl font-bold mb-6 text-white'
-            style={{ textShadow: '2px 4px 8px rgba(0,0,0,0.5)' }}
+            className='animate-fade-up text-[clamp(2.25rem,4vw+1rem,3.75rem)] leading-[1.1] tracking-tight font-extrabold text-white mb-5'
+            style={{ animationDelay: '120ms' }}
           >
             {t('clinicalTeam.heroTitle')}
           </h1>
           <p
-            className='text-xl md:text-2xl text-white max-w-3xl mx-auto mb-8'
-            style={{ textShadow: '1px 2px 6px rgba(0,0,0,0.6)' }}
+            className='animate-fade-up text-lead text-primary-100 max-w-3xl mx-auto'
+            style={{ animationDelay: '240ms' }}
           >
             {t('clinicalTeam.heroDesc')}
           </p>
-        </div>
-      </section>
 
-      {/* Doctors Grid - Cards com Avatar Circular */}
-      <section className='py-20 px-4 bg-gradient-to-b from-gray-50 to-white'>
-        <div className='max-w-7xl mx-auto'>
-          {/* Título da Seção */}
-          <div className='text-center mb-16'>
-            <h2 className='text-4xl font-bold text-gray-900 mb-4'>
-              {t('clinicalTeam.sectionTitle')}
-            </h2>
-            <p className='text-xl text-gray-600 max-w-2xl mx-auto'>
-              {t('clinicalTeam.sectionDesc')}
-            </p>
+          {/* Mini-stats da equipa */}
+          <div
+            className='animate-fade-up mt-8 flex flex-wrap justify-center gap-x-8 gap-y-3 text-primary-100 text-sm font-semibold'
+            style={{ animationDelay: '360ms' }}
+          >
+            <span>
+              {doctors.length}{' '}
+              {language === 'en' ? 'professionals' : 'profissionais'}
+            </span>
+            <span
+              aria-hidden='true'
+              className='hidden sm:inline text-primary-300'
+            >
+              •
+            </span>
+            <span>
+              {specialties.length}{' '}
+              {language === 'en' ? 'specialties' : 'especialidades'}
+            </span>
+            <span
+              aria-hidden='true'
+              className='hidden sm:inline text-primary-300'
+            >
+              •
+            </span>
+            <span>PT · EN</span>
           </div>
+        </div>
+      </header>
 
-          {/* Grid de Médicos - 3 colunas */}
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
-            {doctors.map(doctor => {
+      {/* ============ GRID DE MÉDICOS ============ */}
+      <section className='py-16 md:py-20 px-4 bg-gradient-to-b from-gray-50 to-white'>
+        <div className='max-w-7xl mx-auto'>
+          {/* Filtro por especialidade */}
+          <Reveal className='mb-12'>
+            <p className='text-sm font-bold tracking-widest uppercase text-gray-500 mb-4 text-center'>
+              {t('clinicalTeam.filterLabel')}
+            </p>
+            <div
+              className='flex flex-wrap justify-center gap-2'
+              role='group'
+              aria-label={t('clinicalTeam.filterLabel')}
+            >
+              <button
+                type='button'
+                onClick={() => setActiveSpecialty(null)}
+                aria-pressed={activeSpecialty === null}
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                  activeSpecialty === null
+                    ? 'bg-primary-600 text-white shadow-cta'
+                    : 'bg-white text-gray-700 border border-gray-200 hover:border-primary-300 hover:text-primary-600'
+                }`}
+              >
+                {t('clinicalTeam.filterAll')}
+              </button>
+              {specialties.map(specialty => (
+                <button
+                  key={specialty}
+                  type='button'
+                  onClick={() =>
+                    setActiveSpecialty(
+                      activeSpecialty === specialty ? null : specialty,
+                    )
+                  }
+                  aria-pressed={activeSpecialty === specialty}
+                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                    activeSpecialty === specialty
+                      ? 'bg-primary-600 text-white shadow-cta'
+                      : 'bg-white text-gray-700 border border-gray-200 hover:border-primary-300 hover:text-primary-600'
+                  }`}
+                >
+                  {specialty}
+                </button>
+              ))}
+            </div>
+          </Reveal>
+
+          {/* Grid — key no wrapper força re-animação suave ao filtrar */}
+          <div
+            key={activeSpecialty ?? 'all'}
+            className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'
+          >
+            {filteredDoctors.map((doctor, i) => {
               const isExpanded = expandedBio === doctor.id;
-              const bioLength = doctor.bio.length;
-              const needsExpand = bioLength > 150;
+              const needsExpand = doctor.bio.length > 150;
 
               return (
-                <div
-                  key={doctor.id}
-                  id={doctor.id}
-                  className='bg-white rounded-3xl shadow-lg overflow-hidden p-6 text-center border border-gray-100 flex flex-col relative'
-                >
-                  {/* Botão de Share */}
+                <Reveal key={doctor.id} delay={(i % 3) * 90}>
                   <div
-                    className='absolute top-4 right-4'
-                    ref={shareMenuOpen === doctor.id ? shareMenuRef : null}
+                    id={doctor.id}
+                    className='h-full bg-white rounded-3xl shadow-card hover:shadow-card-hover transition-shadow duration-300 overflow-hidden p-6 text-center border border-gray-100 flex flex-col relative'
                   >
-                    <button
-                      onClick={() => toggleShareMenu(doctor.id)}
-                      className='w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-blue-100 hover:text-blue-600 transition-colors'
-                      aria-label={t('clinicalTeam.share')}
+                    {/* Botão de Share */}
+                    <div
+                      className='absolute top-4 right-4'
+                      ref={shareMenuOpen === doctor.id ? shareMenuRef : null}
                     >
-                      <svg
-                        className='w-5 h-5'
-                        fill='none'
-                        viewBox='0 0 24 24'
-                        stroke='currentColor'
+                      <button
+                        onClick={() => toggleShareMenu(doctor.id)}
+                        className='w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-primary-100 hover:text-primary-600 transition-colors'
+                        aria-label={t('clinicalTeam.share')}
+                        aria-expanded={shareMenuOpen === doctor.id}
                       >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth={2}
-                          d='M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z'
-                        />
-                      </svg>
-                    </button>
+                        <Share2 className='w-4 h-4' aria-hidden='true' />
+                      </button>
 
-                    {/* Menu de Share */}
-                    {shareMenuOpen === doctor.id && (
-                      <div className='absolute right-0 top-11 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-10 min-w-[180px]'>
-                        <button
-                          onClick={() => shareOnWhatsApp(doctor)}
-                          className='w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3'
-                        >
-                          <svg
-                            className='w-5 h-5 text-green-500'
-                            fill='currentColor'
-                            viewBox='0 0 24 24'
+                      {shareMenuOpen === doctor.id && (
+                        <div className='absolute right-0 top-11 bg-white rounded-xl shadow-card-hover border border-gray-100 py-2 z-10 min-w-[180px] animate-fadeIn'>
+                          <button
+                            onClick={() => shareOnWhatsApp(doctor)}
+                            className='w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3'
                           >
-                            <path d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z' />
-                          </svg>
-                          WhatsApp
-                        </button>
-                        <button
-                          onClick={() => shareOnFacebook(doctor)}
-                          className='w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3'
-                        >
-                          <svg
-                            className='w-5 h-5 text-blue-600'
-                            fill='currentColor'
-                            viewBox='0 0 24 24'
+                            <WhatsAppIcon className='w-5 h-5 text-green-500' />
+                            WhatsApp
+                          </button>
+                          <button
+                            onClick={() => shareOnFacebook(doctor)}
+                            className='w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3'
                           >
-                            <path d='M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z' />
-                          </svg>
-                          Facebook
-                        </button>
-                        <button
-                          onClick={() => shareOnLinkedIn(doctor)}
-                          className='w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3'
-                        >
-                          <svg
-                            className='w-5 h-5 text-blue-700'
-                            fill='currentColor'
-                            viewBox='0 0 24 24'
+                            <FacebookIcon />
+                            Facebook
+                          </button>
+                          <button
+                            onClick={() => shareOnLinkedIn(doctor)}
+                            className='w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3'
                           >
-                            <path d='M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z' />
-                          </svg>
-                          LinkedIn
-                        </button>
-                        <button
-                          onClick={() => shareOnTwitter(doctor)}
-                          className='w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3'
-                        >
-                          <svg
-                            className='w-5 h-5 text-black'
-                            fill='currentColor'
-                            viewBox='0 0 24 24'
+                            <LinkedInIcon />
+                            LinkedIn
+                          </button>
+                          <button
+                            onClick={() => shareOnTwitter(doctor)}
+                            className='w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3'
                           >
-                            <path d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' />
-                          </svg>
-                          X (Twitter)
-                        </button>
-                        <hr className='my-2 border-gray-100' />
-                        <button
-                          onClick={() => copyLink(doctor)}
-                          className='w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3'
-                        >
-                          <svg
-                            className='w-5 h-5 text-gray-500'
-                            fill='none'
-                            viewBox='0 0 24 24'
-                            stroke='currentColor'
+                            <XIcon />X (Twitter)
+                          </button>
+                          <hr className='my-2 border-gray-100' />
+                          <button
+                            onClick={() => copyLink(doctor)}
+                            className='w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3'
                           >
-                            <path
-                              strokeLinecap='round'
-                              strokeLinejoin='round'
-                              strokeWidth={2}
-                              d='M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z'
+                            {copiedId === doctor.id ? (
+                              <>
+                                <Check
+                                  className='w-5 h-5 text-green-600'
+                                  aria-hidden='true'
+                                />
+                                <span className='text-green-700 font-medium'>
+                                  {t('clinicalTeam.linkCopied')}
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                <Link2
+                                  className='w-5 h-5 text-gray-500'
+                                  aria-hidden='true'
+                                />
+                                {t('clinicalTeam.copyLink')}
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Avatar circular com ring da marca */}
+                    <div className='relative mx-auto mb-6 flex-shrink-0'>
+                      <div className='w-40 h-40 mx-auto rounded-full bg-gradient-to-br from-primary-400 via-primary-500 to-primary-600 p-1'>
+                        <div className='w-full h-full rounded-full bg-white p-1'>
+                          <div className='w-full h-full rounded-full overflow-hidden bg-gradient-to-br from-primary-100 to-gray-100'>
+                            <img
+                              src={doctor.photo}
+                              alt={`${doctor.title} ${doctor.name}`}
+                              loading='lazy'
+                              decoding='async'
+                              width={152}
+                              height={152}
+                              className='w-full h-full object-cover'
                             />
-                          </svg>
-                          {t('clinicalTeam.copyLink')}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                  {/* Avatar Circular com Ring Azul */}
-                  <div className='relative mx-auto mb-6 flex-shrink-0'>
-                    {/* Ring exterior */}
-                    <div className='w-40 h-40 mx-auto rounded-full bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 p-1'>
-                      <div className='w-full h-full rounded-full bg-white p-1'>
-                        <div className='w-full h-full rounded-full overflow-hidden bg-gradient-to-br from-blue-100 to-gray-100'>
-                          <img
-                            src={doctor.photo}
-                            alt={`${doctor.title} ${doctor.name}`}
-                            className='w-full h-full object-cover'
-                          />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Nome */}
-                  <h3 className='text-xl font-bold text-gray-900 mb-2 flex-shrink-0'>
-                    {doctor.title} {doctor.name}
-                  </h3>
+                    <h3 className='text-xl font-bold text-gray-900 mb-2 flex-shrink-0'>
+                      {doctor.title} {doctor.name}
+                    </h3>
 
-                  {/* Especialidades */}
-                  <div className='flex flex-wrap justify-center gap-2 mb-4 flex-shrink-0 min-h-[60px] items-start'>
-                    {doctor.specialties.map((specialty, idx) => (
-                      <span
-                        key={idx}
-                        className='inline-block bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium'
-                      >
-                        {specialty}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Bio com "Ver mais" */}
-                  <div className='flex-grow mb-4'>
-                    <p
-                      className={`text-gray-600 text-sm leading-relaxed ${!isExpanded && needsExpand ? 'line-clamp-3' : ''}`}
-                    >
-                      {doctor.bio}
-                    </p>
-                    {needsExpand && (
-                      <button
-                        onClick={() => toggleBio(doctor.id)}
-                        className='text-blue-600 text-sm font-medium mt-2 hover:text-blue-800 transition-colors'
-                      >
-                        {isExpanded
-                          ? t('clinicalTeam.viewLess')
-                          : t('clinicalTeam.viewMore')}
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Idiomas */}
-                  {doctor.languages && doctor.languages.length > 1 && (
-                    <div className='flex items-center justify-center gap-2 mb-4 flex-shrink-0'>
-                      <svg
-                        className='w-4 h-4 text-gray-400'
-                        fill='currentColor'
-                        viewBox='0 0 20 20'
-                      >
-                        <path
-                          fillRule='evenodd'
-                          d='M7 2a1 1 0 011 1v1h3a1 1 0 110 2H9.578a18.87 18.87 0 01-1.724 4.78c.29.354.596.696.914 1.026a1 1 0 11-1.44 1.389c-.188-.196-.373-.396-.554-.6a19.098 19.098 0 01-3.107 3.567 1 1 0 01-1.334-1.49 17.087 17.087 0 003.13-3.733 18.992 18.992 0 01-1.487-2.494 1 1 0 111.79-.89c.234.47.489.928.764 1.372.417-.934.752-1.913.997-2.927H3a1 1 0 110-2h3V3a1 1 0 011-1zm6 6a1 1 0 01.894.553l2.991 5.982a.869.869 0 01.02.037l.99 1.98a1 1 0 11-1.79.895L15.383 16h-4.764l-.724 1.447a1 1 0 11-1.788-.894l.99-1.98.019-.038 2.99-5.982A1 1 0 0113 8zm-1.382 6h2.764L13 11.236 11.618 14z'
-                          clipRule='evenodd'
-                        />
-                      </svg>
-                      <span className='text-xs text-gray-500'>
-                        {doctor.languages.join(', ')}
-                      </span>
+                    {/* Especialidades */}
+                    <div className='flex flex-wrap justify-center gap-2 mb-4 flex-shrink-0 min-h-[60px] items-start'>
+                      {doctor.specialties.map((specialty, idx) => (
+                        <span
+                          key={idx}
+                          className='inline-block bg-primary-50 text-primary-700 px-3 py-1 rounded-full text-xs font-medium'
+                        >
+                          {specialty}
+                        </span>
+                      ))}
                     </div>
-                  )}
 
-                  {/* Botão Marcar Consulta */}
-                  <button
-                    onClick={() => openWhatsApp(doctor)}
-                    className='w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-3 px-4 rounded-full flex items-center justify-center gap-2 shadow-md flex-shrink-0 mt-auto'
-                  >
-                    <svg
-                      className='w-5 h-5'
-                      fill='currentColor'
-                      viewBox='0 0 24 24'
+                    {/* Bio com "Ver mais" */}
+                    <div className='flex-grow mb-4'>
+                      <p
+                        className={`text-gray-600 text-sm leading-relaxed ${!isExpanded && needsExpand ? 'line-clamp-3' : ''}`}
+                      >
+                        {doctor.bio}
+                      </p>
+                      {needsExpand && (
+                        <button
+                          onClick={() => toggleBio(doctor.id)}
+                          className='text-primary-600 text-sm font-medium mt-2 hover:text-primary-800 transition-colors'
+                        >
+                          {isExpanded
+                            ? t('clinicalTeam.viewLess')
+                            : t('clinicalTeam.viewMore')}
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Idiomas */}
+                    {doctor.languages && doctor.languages.length > 1 && (
+                      <div className='flex items-center justify-center gap-2 mb-4 flex-shrink-0'>
+                        <LanguagesIcon
+                          className='w-4 h-4 text-gray-400'
+                          aria-hidden='true'
+                        />
+                        <span className='text-xs text-gray-500'>
+                          {doctor.languages.join(', ')}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Marcar Consulta */}
+                    <button
+                      onClick={() => openWhatsApp(doctor)}
+                      className='w-full bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-500 hover:to-primary-600 text-white font-semibold py-3 px-4 rounded-full flex items-center justify-center gap-2 shadow-cta transition-all flex-shrink-0 mt-auto'
                     >
-                      <path d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z' />
-                    </svg>
-                    {t('clinicalTeam.bookAppointment')}
-                  </button>
-                </div>
+                      <WhatsAppIcon />
+                      {t('clinicalTeam.bookAppointment')}
+                    </button>
+                  </div>
+                </Reveal>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className='py-16 px-4 bg-gradient-to-br from-blue-600 to-blue-700 text-white'>
+      {/* ============ CTA ============ */}
+      <section className='py-16 md:py-20 px-4 bg-gradient-to-br from-primary-700 to-primary-900 text-white'>
         <div className='max-w-4xl mx-auto text-center'>
-          <h2 className='text-3xl md:text-4xl font-bold mb-4'>
-            {t('clinicalTeam.ctaTitle')}
-          </h2>
-          <p className='text-xl text-white/90 mb-8'>
-            {t('clinicalTeam.ctaDesc')}
-          </p>
-          <div className='flex flex-wrap gap-4 justify-center'>
-            <a
-              href='tel:+351216041355'
-              className='bg-white text-blue-600 px-8 py-4 rounded-full transition text-lg font-semibold inline-flex items-center shadow-lg'
-            >
-              <svg
-                className='w-5 h-5 mr-2'
-                fill='none'
-                viewBox='0 0 24 24'
-                stroke='currentColor'
+          <Reveal>
+            <h2 className='text-heading mb-4'>{t('clinicalTeam.ctaTitle')}</h2>
+            <p className='text-lead text-primary-100 mb-8'>
+              {t('clinicalTeam.ctaDesc')}
+            </p>
+            <div className='flex flex-wrap gap-4 justify-center'>
+              <a
+                href='tel:+351216041355'
+                className='bg-white text-primary-700 px-8 py-4 rounded-full hover:bg-primary-50 transition text-lg font-semibold inline-flex items-center gap-2 shadow-cta'
               >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z'
-                />
-              </svg>
-              {t('clinicalTeam.ctaCall')}
-            </a>
-            <Link
-              to='/#contacto'
-              className='bg-white/10 backdrop-blur-sm text-white border-2 border-white px-8 py-4 rounded-full transition text-lg font-semibold inline-flex items-center'
-            >
-              <svg
-                className='w-5 h-5 mr-2'
-                fill='none'
-                viewBox='0 0 24 24'
-                stroke='currentColor'
+                <Phone className='w-5 h-5' aria-hidden='true' />
+                {t('clinicalTeam.ctaCall')}
+              </a>
+              <Link
+                to='/#contacto'
+                className='bg-white/10 backdrop-blur-sm text-white border-2 border-white/70 hover:bg-white hover:text-primary-700 px-8 py-4 rounded-full transition text-lg font-semibold inline-flex items-center gap-2'
               >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'
-                />
-              </svg>
-              {t('clinicalTeam.ctaEmail')}
-            </Link>
-          </div>
+                <Mail className='w-5 h-5' aria-hidden='true' />
+                {t('clinicalTeam.ctaEmail')}
+              </Link>
+            </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* Footer Simplificado */}
-      <footer className='bg-gray-900 text-white py-8 px-4'>
-        <div className='max-w-7xl mx-auto text-center'>
-          <p className='text-gray-400'>
-            &copy; 2025 Centro Dentário Colombo.{' '}
-            {t('clinicalTeam.footerRights')}
-          </p>
-          <p className='text-sm text-gray-500 mt-2'>
-            {t('clinicalTeam.footerErs')}
-          </p>
-        </div>
-      </footer>
+      {/* O footer local (com ano fixo "2025") foi removido —
+          o Footer global do Layout já renderiza a seguir. */}
     </div>
   );
 }

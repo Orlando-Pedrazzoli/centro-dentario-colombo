@@ -509,7 +509,7 @@ export default function PoliticaCookiesPage() {
                   Facebook
                 </a>
                 <a
-                  href='https://www.instagram.com/centrodentariocolombo'
+                  href='https://www.instagram.com/centrodentario_colombo'
                   target='_blank'
                   rel='noopener noreferrer'
                   className='flex items-center gap-2 bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 text-white px-4 py-2 rounded-lg hover:opacity-90 transition'

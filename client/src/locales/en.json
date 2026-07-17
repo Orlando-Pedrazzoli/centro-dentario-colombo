@@ -158,7 +158,9 @@
     "ctaCall": "Call Now",
     "ctaEmail": "Send Email",
     "footerRights": "All rights reserved.",
-    "footerErs": "Establishment licensed by ERS - License: 3297/2011"
+    "footerErs": "Establishment licensed by ERS - License: 3297/2011",
+    "filterAll": "All",
+    "filterLabel": "Filter by specialty"
   },
   "treatmentPage": {
     "backToTreatments": "Back to Treatments",

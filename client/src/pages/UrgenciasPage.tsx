@@ -11,6 +11,21 @@ import {
 import { useLanguage } from '../contexts/LanguageContext';
 import { SITE_CONFIG, isClinicOpenNow } from '../utils/seoConfig';
 import { getUrgenciasContent, type UrgencyLevel } from '../data/urgencias-data';
+import Reveal from '../components/ui/Reveal';
+import {
+  Phone,
+  Clock,
+  MapPin,
+  BadgeCheck,
+  Languages,
+  ChevronRight,
+  ChevronDown,
+  Check,
+  X,
+  AlertTriangle,
+  ExternalLink,
+  type LucideIcon,
+} from 'lucide-react';
 
 declare global {
   interface Window {
@@ -33,7 +48,7 @@ const MAPS_HREF = business.socialMedia.googleMaps;
 const LEVEL_STYLES: Record<UrgencyLevel, string> = {
   imediata: 'bg-red-50 text-red-700 border-red-200',
   'mesmo-dia': 'bg-amber-50 text-amber-800 border-amber-200',
-  avaliar: 'bg-blue-50 text-blue-700 border-blue-200',
+  avaliar: 'bg-primary-50 text-primary-700 border-primary-200',
 };
 
 export default function UrgenciasPage() {
@@ -201,12 +216,12 @@ export default function UrgenciasPage() {
       <FaqJsonLd items={content.faq} />
 
       {/* ============ HERO ============ */}
-      <header className='relative bg-gradient-to-br from-[#0b2d63] via-[#14489c] to-[#006bb3] pt-28 pb-16 sm:pt-36 sm:pb-20'>
+      <header className='relative bg-gradient-to-br from-primary-900 via-primary-600 to-primary-500 pt-28 pb-16 sm:pt-36 sm:pb-20'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           {/* Breadcrumb */}
           <nav
             aria-label='Breadcrumb'
-            className='text-sm text-blue-200 mb-6 flex items-center gap-2'
+            className='text-sm text-primary-200 mb-6 flex items-center gap-2'
           >
             <Link to='/' className='hover:text-white transition-colors'>
               {copy.breadcrumbHome}
@@ -217,15 +232,15 @@ export default function UrgenciasPage() {
 
           <div className='grid lg:grid-cols-12 gap-10 items-start'>
             <div className='lg:col-span-7'>
-              <p className='text-blue-300 font-semibold uppercase tracking-widest text-xs sm:text-sm mb-3'>
+              <p className='text-primary-200 font-semibold uppercase tracking-widest text-xs sm:text-sm mb-3'>
                 {copy.eyebrow}
               </p>
 
-              <h1 className='text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-5'>
+              <h1 className='text-[clamp(2rem,3vw+1rem,3rem)] leading-[1.12] tracking-tight font-extrabold text-white mb-5'>
                 {copy.h1}
               </h1>
 
-              <p className='text-base sm:text-lg text-blue-50 leading-relaxed max-w-2xl mb-8'>
+              <p className='text-base sm:text-lg text-primary-100 leading-relaxed max-w-2xl mb-8'>
                 {copy.lead}
               </p>
 
@@ -262,22 +277,9 @@ export default function UrgenciasPage() {
               <div className='flex flex-col sm:flex-row gap-3'>
                 <a
                   href={TEL_HREF}
-                  className='inline-flex items-center justify-center gap-2.5 bg-white text-[#14489c] px-7 py-4 rounded-full font-bold text-base shadow-2xl hover:bg-blue-50 hover:scale-[1.02] transition-all duration-300'
+                  className='inline-flex items-center justify-center gap-2.5 bg-white text-primary-600 px-7 py-4 rounded-full font-bold text-base shadow-cta hover:bg-primary-50 hover:scale-[1.02] transition-all duration-300'
                 >
-                  <svg
-                    className='w-5 h-5'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    stroke='currentColor'
-                    aria-hidden='true'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z'
-                    />
-                  </svg>
+                  <Phone className='w-5 h-5' aria-hidden='true' />
                   {copy.callNow}
                 </a>
 
@@ -285,7 +287,7 @@ export default function UrgenciasPage() {
                   href={isEN ? WHATSAPP_EN : WHATSAPP_PT}
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='inline-flex items-center justify-center gap-2.5 bg-green-500 text-white px-7 py-4 rounded-full font-bold text-base shadow-xl hover:bg-green-600 transition-all duration-300'
+                  className='inline-flex items-center justify-center gap-2.5 bg-green-500 text-white px-7 py-4 rounded-full font-bold text-base shadow-cta hover:bg-green-600 transition-all duration-300'
                 >
                   <svg
                     className='w-5 h-5'
@@ -303,61 +305,14 @@ export default function UrgenciasPage() {
             {/* Cartão de factos — o que o utente precisa de saber em 5 segundos */}
             <div className='lg:col-span-5 w-full'>
               <div className='bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 space-y-5'>
-                <FactRow
-                  label={copy.hours}
-                  sub={copy.hoursSub}
-                  icon={
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'
-                    />
-                  }
-                />
-                <FactRow
-                  label={copy.where}
-                  sub={copy.whereSub}
-                  icon={
-                    <>
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth={2}
-                        d='M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z'
-                      />
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth={2}
-                        d='M15 11a3 3 0 11-6 0 3 3 0 016 0z'
-                      />
-                    </>
-                  }
-                />
+                <FactRow label={copy.hours} sub={copy.hoursSub} icon={Clock} />
+                <FactRow label={copy.where} sub={copy.whereSub} icon={MapPin} />
                 <FactRow
                   label={copy.triage}
                   sub={copy.triageSub}
-                  icon={
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z'
-                    />
-                  }
+                  icon={BadgeCheck}
                 />
-                <FactRow
-                  label={copy.languages}
-                  icon={
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129'
-                    />
-                  }
-                />
+                <FactRow label={copy.languages} icon={Languages} />
               </div>
             </div>
           </div>
@@ -367,66 +322,55 @@ export default function UrgenciasPage() {
       {/* ============ CASOS / TRIAGEM ============ */}
       <section className='py-16 sm:py-20 bg-gray-50'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='max-w-3xl mb-10'>
-            <h2 className='text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4'>
+          <Reveal className='max-w-3xl mb-10'>
+            <h2 className='text-heading text-gray-900 mb-4'>
               {copy.casesTitle}
             </h2>
             <p className='text-gray-600 leading-relaxed'>{copy.casesLead}</p>
-          </div>
+          </Reveal>
 
           <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-5'>
-            {content.cases.map(c => (
-              <article
-                key={c.id}
-                className='bg-white rounded-2xl border border-gray-200 p-6 flex flex-col hover:shadow-lg hover:border-blue-200 transition-all duration-300'
-              >
-                <span
-                  className={`self-start text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border mb-4 ${
-                    LEVEL_STYLES[c.level]
-                  }`}
-                >
-                  {content.levelLabels[c.level]}
-                </span>
+            {content.cases.map((c, i) => (
+              <Reveal key={c.id} delay={(i % 3) * 90}>
+                <article className='h-full bg-white rounded-2xl border border-gray-200 p-6 flex flex-col hover:shadow-card-hover hover:border-primary-200 hover:-translate-y-0.5 transition-all duration-300'>
+                  <span
+                    className={`self-start text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border mb-4 ${
+                      LEVEL_STYLES[c.level]
+                    }`}
+                  >
+                    {content.levelLabels[c.level]}
+                  </span>
 
-                <h3 className='text-lg font-bold text-gray-900 mb-2'>
-                  {c.title}
-                </h3>
-                <p className='text-sm text-gray-600 leading-relaxed mb-4'>
-                  {c.symptom}
-                </p>
-
-                <div className='mt-auto pt-4 border-t border-gray-100'>
-                  <p className='text-[11px] font-bold uppercase tracking-wider text-blue-600 mb-1.5'>
-                    {copy.whatWeDoLabel}
-                  </p>
-                  <p className='text-sm text-gray-700 leading-relaxed'>
-                    {c.whatWeDo}
+                  <h3 className='text-lg font-bold text-gray-900 mb-2'>
+                    {c.title}
+                  </h3>
+                  <p className='text-sm text-gray-600 leading-relaxed mb-4'>
+                    {c.symptom}
                   </p>
 
-                  {c.relatedSlug && (
-                    <Link
-                      to={`/tratamentos/${c.relatedSlug}`}
-                      className='inline-flex items-center gap-1 text-sm font-semibold text-blue-600 hover:text-blue-800 mt-3 transition-colors'
-                    >
-                      {copy.readMore} {c.title.toLowerCase()}
-                      <svg
-                        className='w-3.5 h-3.5'
-                        fill='none'
-                        stroke='currentColor'
-                        viewBox='0 0 24 24'
-                        aria-hidden='true'
+                  <div className='mt-auto pt-4 border-t border-gray-100'>
+                    <p className='text-[11px] font-bold uppercase tracking-wider text-primary-600 mb-1.5'>
+                      {copy.whatWeDoLabel}
+                    </p>
+                    <p className='text-sm text-gray-700 leading-relaxed'>
+                      {c.whatWeDo}
+                    </p>
+
+                    {c.relatedSlug && (
+                      <Link
+                        to={`/tratamentos/${c.relatedSlug}`}
+                        className='inline-flex items-center gap-1 text-sm font-semibold text-primary-600 hover:text-primary-800 mt-3 transition-colors'
                       >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth={2.5}
-                          d='M9 5l7 7-7 7'
+                        {copy.readMore} {c.title.toLowerCase()}
+                        <ChevronRight
+                          className='w-3.5 h-3.5'
+                          aria-hidden='true'
                         />
-                      </svg>
-                    </Link>
-                  )}
-                </div>
-              </article>
+                      </Link>
+                    )}
+                  </div>
+                </article>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -435,31 +379,36 @@ export default function UrgenciasPage() {
       {/* ============ PROTOCOLO ============ */}
       <section className='py-16 sm:py-20 bg-white'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='max-w-3xl mb-10'>
-            <h2 className='text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4'>
+          <Reveal className='max-w-3xl mb-10'>
+            <h2 className='text-heading text-gray-900 mb-4'>
               {copy.protocolTitle}
             </h2>
             <p className='text-gray-600 leading-relaxed'>{copy.protocolLead}</p>
-          </div>
+          </Reveal>
 
-          <ol className='relative border-l-2 border-blue-100 ml-4 sm:ml-6 space-y-8'>
-            {content.protocol.map(step => (
-              <li key={step.order} className='pl-8 sm:pl-10 relative'>
-                <span className='absolute -left-[17px] top-0 flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white text-sm font-bold ring-4 ring-white'>
+          <ol className='relative border-l-2 border-primary-100 ml-4 sm:ml-6 space-y-8'>
+            {content.protocol.map((step, i) => (
+              <Reveal
+                as='li'
+                key={step.order}
+                delay={i * 80}
+                className='pl-8 sm:pl-10 relative'
+              >
+                <span className='absolute -left-[17px] top-0 flex items-center justify-center w-8 h-8 rounded-full bg-primary-600 text-white text-sm font-bold ring-4 ring-white'>
                   {step.order}
                 </span>
                 <div className='flex flex-wrap items-center gap-3 mb-1.5'>
                   <h3 className='text-lg font-bold text-gray-900'>
                     {step.title}
                   </h3>
-                  <span className='text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full'>
+                  <span className='text-xs font-semibold text-primary-700 bg-primary-50 px-2.5 py-1 rounded-full'>
                     {step.duration}
                   </span>
                 </div>
                 <p className='text-gray-600 leading-relaxed max-w-2xl'>
                   {step.description}
                 </p>
-              </li>
+              </Reveal>
             ))}
           </ol>
         </div>
@@ -468,92 +417,67 @@ export default function UrgenciasPage() {
       {/* ============ PRIMEIROS SOCORROS ============ */}
       <section className='py-16 sm:py-20 bg-gray-50'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='max-w-3xl mb-10'>
-            <h2 className='text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4'>
+          <Reveal className='max-w-3xl mb-10'>
+            <h2 className='text-heading text-gray-900 mb-4'>
               {copy.firstAidTitle}
             </h2>
             <p className='text-gray-600 leading-relaxed'>{copy.firstAidLead}</p>
-          </div>
+          </Reveal>
 
           <div className='grid lg:grid-cols-3 gap-5'>
-            {content.firstAid.map(block => (
-              <div
-                key={block.id}
-                className='bg-white rounded-2xl border border-gray-200 p-6'
-              >
-                <h3 className='text-lg font-bold text-gray-900 mb-5'>
-                  {block.title}
-                </h3>
+            {content.firstAid.map((block, i) => (
+              <Reveal key={block.id} delay={i * 90} className='h-full'>
+                <div className='h-full bg-white rounded-2xl border border-gray-200 p-6'>
+                  <h3 className='text-lg font-bold text-gray-900 mb-5'>
+                    {block.title}
+                  </h3>
 
-                <p className='text-[11px] font-bold uppercase tracking-wider text-green-700 mb-2.5'>
-                  {copy.doLabel}
-                </p>
-                <ul className='space-y-2.5 mb-6'>
-                  {block.do.map((item, i) => (
-                    <li key={i} className='flex gap-2.5 text-sm text-gray-700'>
-                      <svg
-                        className='w-4 h-4 text-green-600 flex-shrink-0 mt-0.5'
-                        fill='none'
-                        stroke='currentColor'
-                        viewBox='0 0 24 24'
-                        aria-hidden='true'
+                  <p className='text-[11px] font-bold uppercase tracking-wider text-green-700 mb-2.5'>
+                    {copy.doLabel}
+                  </p>
+                  <ul className='space-y-2.5 mb-6'>
+                    {block.do.map((item, i) => (
+                      <li
+                        key={i}
+                        className='flex gap-2.5 text-sm text-gray-700'
                       >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth={2.5}
-                          d='M5 13l4 4L19 7'
+                        <Check
+                          className='w-4 h-4 text-green-600 flex-shrink-0 mt-0.5'
+                          aria-hidden='true'
                         />
-                      </svg>
-                      <span className='leading-relaxed'>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+                        <span className='leading-relaxed'>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
 
-                <p className='text-[11px] font-bold uppercase tracking-wider text-red-700 mb-2.5'>
-                  {copy.dontLabel}
-                </p>
-                <ul className='space-y-2.5'>
-                  {block.dont.map((item, i) => (
-                    <li key={i} className='flex gap-2.5 text-sm text-gray-700'>
-                      <svg
-                        className='w-4 h-4 text-red-600 flex-shrink-0 mt-0.5'
-                        fill='none'
-                        stroke='currentColor'
-                        viewBox='0 0 24 24'
-                        aria-hidden='true'
+                  <p className='text-[11px] font-bold uppercase tracking-wider text-red-700 mb-2.5'>
+                    {copy.dontLabel}
+                  </p>
+                  <ul className='space-y-2.5'>
+                    {block.dont.map((item, i) => (
+                      <li
+                        key={i}
+                        className='flex gap-2.5 text-sm text-gray-700'
                       >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth={2.5}
-                          d='M6 18L18 6M6 6l12 12'
+                        <X
+                          className='w-4 h-4 text-red-600 flex-shrink-0 mt-0.5'
+                          aria-hidden='true'
                         />
-                      </svg>
-                      <span className='leading-relaxed'>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                        <span className='leading-relaxed'>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Reveal>
             ))}
           </div>
 
           {/* Limite de competência — sinal E-E-A-T e responsabilidade clínica */}
           <div className='mt-8 flex gap-3 bg-red-50 border border-red-200 rounded-xl p-5'>
-            <svg
+            <AlertTriangle
               className='w-5 h-5 text-red-600 flex-shrink-0 mt-0.5'
-              fill='none'
-              stroke='currentColor'
-              viewBox='0 0 24 24'
               aria-hidden='true'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth={2}
-                d='M12 9v2m0 4h.01M5.07 19h13.86a2 2 0 001.74-3L13.74 4a2 2 0 00-3.48 0L3.34 16a2 2 0 001.73 3z'
-              />
-            </svg>
+            />
             <p className='text-sm text-red-900 leading-relaxed'>
               {copy.disclaimer}
             </p>
@@ -566,7 +490,7 @@ export default function UrgenciasPage() {
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='grid lg:grid-cols-2 gap-10 items-center'>
             <div>
-              <h2 className='text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4'>
+              <h2 className='text-heading text-gray-900 mb-4'>
                 {copy.locationTitle}
               </h2>
               <p className='text-gray-600 leading-relaxed mb-7'>
@@ -583,15 +507,15 @@ export default function UrgenciasPage() {
 
               <ul className='space-y-3 mb-8'>
                 <li className='flex items-center gap-3 text-gray-700'>
-                  <span className='w-1.5 h-1.5 bg-blue-600 rounded-full flex-shrink-0' />
+                  <span className='w-1.5 h-1.5 bg-primary-600 rounded-full flex-shrink-0' />
                   {copy.parking}
                 </li>
                 <li className='flex items-center gap-3 text-gray-700'>
-                  <span className='w-1.5 h-1.5 bg-blue-600 rounded-full flex-shrink-0' />
+                  <span className='w-1.5 h-1.5 bg-primary-600 rounded-full flex-shrink-0' />
                   {copy.metro}
                 </li>
                 <li className='flex items-center gap-3 text-gray-700'>
-                  <span className='w-1.5 h-1.5 bg-blue-600 rounded-full flex-shrink-0' />
+                  <span className='w-1.5 h-1.5 bg-primary-600 rounded-full flex-shrink-0' />
                   {copy.hours}
                 </li>
               </ul>
@@ -600,27 +524,14 @@ export default function UrgenciasPage() {
                 href={MAPS_HREF}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='inline-flex items-center gap-2 bg-[#14489c] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#006bb3] transition-colors'
+                className='inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-primary-500 transition-colors'
               >
                 {copy.directions}
-                <svg
-                  className='w-4 h-4'
-                  fill='none'
-                  stroke='currentColor'
-                  viewBox='0 0 24 24'
-                  aria-hidden='true'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14'
-                  />
-                </svg>
+                <ExternalLink className='w-4 h-4' aria-hidden='true' />
               </a>
             </div>
 
-            <div className='rounded-2xl overflow-hidden border border-gray-200 shadow-lg'>
+            <div className='rounded-2xl overflow-hidden border border-gray-200 shadow-card'>
               {/* loading="lazy" para não penalizar o LCP da página */}
               <iframe
                 title={
@@ -644,9 +555,9 @@ export default function UrgenciasPage() {
       {/* ============ FAQ ============ */}
       <section className='py-16 sm:py-20 bg-gray-50'>
         <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <h2 className='text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-10'>
+          <Reveal as='h2' className='text-heading text-gray-900 mb-10'>
             {copy.faqTitle}
-          </h2>
+          </Reveal>
 
           <div className='space-y-3'>
             {content.faq.map((item, index) => {
@@ -667,22 +578,10 @@ export default function UrgenciasPage() {
                       <span className='font-semibold text-gray-900'>
                         {item.question}
                       </span>
-                      <svg
-                        className={`w-5 h-5 text-blue-600 flex-shrink-0 transition-transform ${
-                          expanded ? 'rotate-180' : ''
-                        }`}
-                        fill='none'
-                        stroke='currentColor'
-                        viewBox='0 0 24 24'
+                      <ChevronDown
+                        className={`w-5 h-5 text-primary-600 flex-shrink-0 transition-transform ${expanded ? 'rotate-180' : ''}`}
                         aria-hidden='true'
-                      >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth={2}
-                          d='M19 9l-7 7-7-7'
-                        />
-                      </svg>
+                      />
                     </button>
                   </h3>
                   {/*
@@ -704,17 +603,17 @@ export default function UrgenciasPage() {
       </section>
 
       {/* ============ CTA FINAL ============ */}
-      <section className='py-16 sm:py-20 bg-[#14489c]'>
+      <section className='py-16 sm:py-20 bg-primary-600'>
         <div className='max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center'>
-          <h2 className='text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4'>
-            {copy.finalTitle}
-          </h2>
-          <p className='text-blue-100 leading-relaxed mb-8'>{copy.finalLead}</p>
+          <h2 className='text-heading text-white mb-4'>{copy.finalTitle}</h2>
+          <p className='text-primary-100 leading-relaxed mb-8'>
+            {copy.finalLead}
+          </p>
 
           <div className='flex flex-col sm:flex-row gap-3 justify-center'>
             <a
               href={TEL_HREF}
-              className='inline-flex items-center justify-center gap-2.5 bg-white text-[#14489c] px-8 py-4 rounded-full font-bold shadow-xl hover:bg-blue-50 transition-colors'
+              className='inline-flex items-center justify-center gap-2.5 bg-white text-primary-600 px-8 py-4 rounded-full font-bold shadow-cta hover:bg-primary-50 transition-colors'
             >
               {copy.callNow}
             </a>
@@ -722,42 +621,17 @@ export default function UrgenciasPage() {
               href={isEN ? WHATSAPP_EN : WHATSAPP_PT}
               target='_blank'
               rel='noopener noreferrer'
-              className='inline-flex items-center justify-center gap-2.5 bg-green-500 text-white px-8 py-4 rounded-full font-bold shadow-xl hover:bg-green-600 transition-colors'
+              className='inline-flex items-center justify-center gap-2.5 bg-green-500 text-white px-8 py-4 rounded-full font-bold shadow-cta hover:bg-green-600 transition-colors'
             >
               {copy.whatsapp}
             </a>
           </div>
 
-          <p className='text-blue-200 text-sm mt-6'>{copy.hours}</p>
+          <p className='text-primary-200 text-sm mt-6'>{copy.hours}</p>
         </div>
       </section>
-
-      {/* ============ BARRA FIXA MOBILE ============ */}
-      {/* Quem procura urgência está no telemóvel e com dor: o botão de chamada
-          nunca deve sair do ecrã. pb-20 evita tapar o rodapé. */}
-      <div className='fixed bottom-0 inset-x-0 z-40 sm:hidden bg-white border-t border-gray-200 px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]'>
-        <a
-          href={TEL_HREF}
-          className='flex items-center justify-center gap-2.5 bg-[#14489c] text-white w-full py-3.5 rounded-full font-bold'
-        >
-          <svg
-            className='w-5 h-5'
-            fill='none'
-            viewBox='0 0 24 24'
-            stroke='currentColor'
-            aria-hidden='true'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth={2}
-              d='M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z'
-            />
-          </svg>
-          {business.telephoneDisplay}
-        </a>
-      </div>
-      <div className='h-20 sm:hidden' aria-hidden='true' />
+      {/* A barra fixa mobile é agora a MobileCtaBar global (Layout) —
+          a versão local desta página foi removida para não duplicar. */}
     </div>
   );
 }
@@ -768,26 +642,21 @@ export default function UrgenciasPage() {
 function FactRow({
   label,
   sub,
-  icon,
+  icon: Icon,
 }: {
   label: string;
   sub?: string;
-  icon: React.ReactNode;
+  icon: LucideIcon;
 }) {
   return (
     <div className='flex items-start gap-3.5'>
-      <svg
-        className='w-5 h-5 text-blue-300 flex-shrink-0 mt-0.5'
-        fill='none'
-        stroke='currentColor'
-        viewBox='0 0 24 24'
+      <Icon
+        className='w-5 h-5 text-primary-200 flex-shrink-0 mt-0.5'
         aria-hidden='true'
-      >
-        {icon}
-      </svg>
+      />
       <div>
         <p className='text-white font-semibold text-sm leading-snug'>{label}</p>
-        {sub && <p className='text-blue-200 text-xs mt-0.5'>{sub}</p>}
+        {sub && <p className='text-primary-200 text-xs mt-0.5'>{sub}</p>}
       </div>
     </div>
   );

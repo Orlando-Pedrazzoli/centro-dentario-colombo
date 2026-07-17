@@ -276,3 +276,53 @@ export function FaqJsonLd({ items }: { items: FaqItem[] }) {
     </Helmet>
   );
 }
+
+// ============================================
+// Corpo Clínico — schema Person por médico
+// ============================================
+
+interface DoctorSchemaItem {
+  id: string;
+  name: string;
+  title: string;
+  specialties: string[];
+  photo: string;
+  languages?: string[];
+}
+
+/**
+ * ItemList de Person para a página /corpo-clinico.
+ * Cada médico vira uma entidade Person ligada à clínica via @id —
+ * alimenta pesquisas por nome ("Dra. X dentista lisboa") e reforça
+ * o E-E-A-T da página. Com o prerender, fica no HTML estático.
+ */
+export function DoctorsJsonLd({ doctors }: { doctors: DoctorSchemaItem[] }) {
+  const base = normalizeUrl('');
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    '@id': `${base}/corpo-clinico#equipa`,
+    name: 'Corpo Clínico — Centro Dentário Colombo',
+    itemListElement: doctors.map((doctor, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Person',
+        '@id': `${base}/corpo-clinico#${doctor.id}`,
+        name: `${doctor.title} ${doctor.name}`,
+        jobTitle: doctor.specialties.join(', '),
+        image: `${base}${doctor.photo}`,
+        worksFor: { '@id': `${base}/#clinica` },
+        ...(doctor.languages?.length
+          ? { knowsLanguage: doctor.languages }
+          : {}),
+      },
+    })),
+  };
+
+  return (
+    <Helmet>
+      <script type='application/ld+json'>{JSON.stringify(schema)}</script>
+    </Helmet>
+  );
+}
