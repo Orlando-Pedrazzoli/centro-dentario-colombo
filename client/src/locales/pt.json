@@ -31,7 +31,7 @@
   "about": {
     "sectionTitle": "Sobre Nós",
     "title": "Excelência em Cuidados Dentários no Colombo",
-    "description": "O <strong>Centro Dentário Colombo</strong> é uma moderna clínica dentária localizada no coração do Centro Comercial Colombo. Oferecemos uma ampla gama de tratamentos dentários cosméticos e gerais com equipamentos de última geração.",
+    "description": "é uma moderna clínica dentária localizada no coração do Centro Comercial Colombo. Oferecemos uma ampla gama de tratamentos dentários cosméticos e gerais com equipamentos de última geração.",
     "yearsExp": "Anos de Experiência",
     "feature1Title": "Tecnologia Avançada",
     "feature1Desc": "Equipamentos modernos e técnicas inovadoras",
@@ -54,7 +54,9 @@
     "certified": "Certificado",
     "ctaText": "Precisa de um tratamento específico? Temos a solução ideal para si!",
     "ctaButton": "Marcar Consulta",
-    "ctaCall": "Ligar Agora"
+    "ctaCall": "Ligar Agora",
+    "featuredLabel": "Os mais procurados",
+    "othersLabel": "Todas as especialidades"
   },
   "differentials": {
     "sectionTitle": "Por Que Escolher o Centro Dentário Colombo?",
@@ -173,5 +175,15 @@
     "seoSuffix": "Marque a sua consulta!",
     "breadcrumbHome": "Início",
     "breadcrumbTreatments": "Tratamentos"
+  },
+  "mobileCta": {
+    "call": "Ligar",
+    "whatsapp": "WhatsApp",
+    "book": "Marcar"
+  },
+  "common": {
+    "eyebrowAbout": "A nossa clínica",
+    "eyebrowTreatments": "Especialidades",
+    "eyebrowContact": "Fale connosco"
   }
 }

@@ -31,7 +31,7 @@
   "about": {
     "sectionTitle": "About Us",
     "title": "Excellence in Dental Care at Colombo",
-    "description": "<strong>Centro Dentário Colombo</strong> is a modern dental clinic located in the heart of Colombo Shopping Centre. We offer a wide range of cosmetic and general dental treatments with state-of-the-art equipment.",
+    "description": "is a modern dental clinic located in the heart of Colombo Shopping Centre. We offer a wide range of cosmetic and general dental treatments with state-of-the-art equipment.",
     "yearsExp": "Years of Experience",
     "feature1Title": "Advanced Technology",
     "feature1Desc": "Modern equipment and innovative techniques",
@@ -54,7 +54,9 @@
     "certified": "Certified",
     "ctaText": "Need a specific treatment? We have the ideal solution for you!",
     "ctaButton": "Book Appointment",
-    "ctaCall": "Call Now"
+    "ctaCall": "Call Now",
+    "featuredLabel": "Most popular",
+    "othersLabel": "All specialties"
   },
   "differentials": {
     "sectionTitle": "Why Choose Centro Dentário Colombo?",
@@ -173,5 +175,15 @@
     "seoSuffix": "Book your appointment!",
     "breadcrumbHome": "Home",
     "breadcrumbTreatments": "Treatments"
+  },
+  "mobileCta": {
+    "call": "Call",
+    "whatsapp": "WhatsApp",
+    "book": "Book"
+  },
+  "common": {
+    "eyebrowAbout": "Our clinic",
+    "eyebrowTreatments": "Specialties",
+    "eyebrowContact": "Get in touch"
   }
 }
