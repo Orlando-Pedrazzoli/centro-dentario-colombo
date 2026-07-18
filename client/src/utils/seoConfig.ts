@@ -25,6 +25,9 @@ export const SITE_CONFIG = {
     // NAP oficial — confirmado no Google Business Profile
     telephone: '+351216041355',
     telephoneDisplay: '+351 21 604 13 55',
+    // Linhas de reforço para urgências — mostradas em /urgencias e
+    // publicadas no schema contactPoint. Ordem = ordem de tentativa.
+    emergencyLines: ['+351918565118', '+351929138923', '+351933522580'],
     whatsapp: '351933522580',
     whatsappDisplay: '+351 933 522 580',
     email: 'clinicadentaria.colombo@gmail.com',

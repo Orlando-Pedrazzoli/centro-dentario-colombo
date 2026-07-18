@@ -37,6 +37,11 @@ declare global {
 const { business } = SITE_CONFIG;
 
 const TEL_HREF = `tel:${business.telephone}`;
+
+/** '+351918565118' -> '918 565 118' (formato PT de leitura rápida) */
+const formatLine = (tel: string) =>
+  tel.replace('+351', '').replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
+
 const WHATSAPP_PT = `https://wa.me/${business.whatsapp}?text=${encodeURIComponent(
   'Olá, tenho uma urgência dentária. Podem atender-me hoje?',
 )}`;
@@ -50,6 +55,36 @@ const LEVEL_STYLES: Record<UrgencyLevel, string> = {
   'mesmo-dia': 'bg-amber-50 text-amber-800 border-amber-200',
   avaliar: 'bg-primary-50 text-primary-700 border-primary-200',
 };
+
+/**
+ * Linhas de reforço de urgência.
+ * Padrão UX: 1 CTA primário (linha principal) mantém a decisão simples;
+ * as alternativas ficam SEMPRE visíveis — a queixa real é "ninguém atende",
+ * portanto escondê-las atrás de um clique extra anularia o propósito.
+ */
+function AltLines({ label }: { label: string }) {
+  return (
+    <div className='mt-5'>
+      <p className='text-primary-100 text-sm mb-2.5'>{label}</p>
+      <ul className='flex flex-wrap gap-2' role='list'>
+        {business.emergencyLines.map(line => (
+          <li key={line}>
+            <a
+              href={`tel:${line}`}
+              className='inline-flex items-center gap-1.5 bg-white/10 border border-white/25 rounded-full px-4 py-2 text-white text-sm font-semibold hover:bg-white/20 active:bg-white/25 transition-colors'
+            >
+              <Phone
+                className='w-3.5 h-3.5 text-primary-200'
+                aria-hidden='true'
+              />
+              {formatLine(line)}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 export default function UrgenciasPage() {
   const { language } = useLanguage();
@@ -101,6 +136,7 @@ export default function UrgenciasPage() {
         openNow: 'Open now — come in or call',
         closedNow: 'Closed right now — we open at 09:00',
         callNow: 'Call +351 21 604 13 55',
+        altLinesLabel: 'Line busy or no answer? Try one of our direct lines:',
         whatsapp: 'WhatsApp us',
         hours: 'Every day, 09:00–23:00',
         hoursSub: 'Weekends and public holidays included',
@@ -151,6 +187,8 @@ export default function UrgenciasPage() {
         openNow: 'Aberto agora — venha ou ligue',
         closedNow: 'Fechado neste momento — abrimos às 09:00',
         callNow: 'Ligar +351 21 604 13 55',
+        altLinesLabel:
+          'Linha ocupada ou sem resposta? Ligue para uma linha direta:',
         whatsapp: 'Falar por WhatsApp',
         hours: 'Todos os dias, 09:00–23:00',
         hoursSub: 'Fins de semana e feriados incluídos',
@@ -300,6 +338,8 @@ export default function UrgenciasPage() {
                   {copy.whatsapp}
                 </a>
               </div>
+
+              <AltLines label={copy.altLinesLabel} />
             </div>
 
             {/* Cartão de factos — o que o utente precisa de saber em 5 segundos */}
@@ -625,6 +665,10 @@ export default function UrgenciasPage() {
             >
               {copy.whatsapp}
             </a>
+          </div>
+
+          <div className='max-w-md mx-auto text-left sm:text-center'>
+            <AltLines label={copy.altLinesLabel} />
           </div>
 
           <p className='text-primary-200 text-sm mt-6'>{copy.hours}</p>

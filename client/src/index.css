@@ -74,6 +74,21 @@ section[id] {
     font-size: clamp(1.05rem, 0.5vw + 0.9rem, 1.25rem);
     line-height: 1.6;
   }
+
+  /* ============================================
+     ALTURA DO HERO (homepage)
+     Boas práticas: ~85-90% do viewport em vez de
+     100vh rígido — deixa a secção seguinte "espreitar"
+     (scroll cue) e trava a altura em monitores grandes.
+     svh corrige o salto da barra de endereço em mobile;
+     vh fica como fallback para browsers antigos.
+  ============================================ */
+  .hero-viewport {
+    /* min-height (não height fixo): se o conteúdo crescer num ecrã
+       pequeno, o hero cresce com ele em vez de cortar. */
+    min-height: 88vh;
+    min-height: clamp(560px, 88svh, 920px);
+  }
 }
 
 /* ============================================

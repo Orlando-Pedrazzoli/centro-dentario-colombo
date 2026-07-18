@@ -201,6 +201,16 @@ export function EmergencyServiceJsonLd({
         description,
         url,
         telephone: business.telephone,
+        // Todas as linhas de urgência — a principal primeiro, depois as
+        // de reforço. O Google pode apresentar qualquer uma como contacto.
+        contactPoint: [business.telephone, ...business.emergencyLines].map(
+          phone => ({
+            '@type': 'ContactPoint',
+            telephone: phone,
+            contactType: 'emergency',
+            availableLanguage: ['pt', 'en'],
+          }),
+        ),
         email: business.email,
         address: postalAddress,
         geo: geoCoordinates,

@@ -26,7 +26,14 @@
     "cta2": "Ligar Agora",
     "featureClinicalTeam": "Corpo Clínico",
     "featureFlexible": "Marcações Flexíveis",
-    "featureModern": "Equipamentos Modernos"
+    "featureModern": "Equipamentos Modernos",
+    "openBadge": "Aberto agora — até às 23:00",
+    "closedBadge": "De momento fechado — abrimos às 09:00",
+    "urgencyTitle": "Urgência dentária?",
+    "urgencyDesc": "Sem marcação — triagem à chegada, todos os dias até às 23:00.",
+    "urgencyLink": "Ver urgências",
+    "trustGoogle": "5.0 no Google",
+    "trustLocation": "C.C. Colombo · Piso -1, Loja 507"
   },
   "about": {
     "sectionTitle": "Sobre Nós",

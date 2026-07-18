@@ -26,7 +26,14 @@
     "cta2": "Call Now",
     "featureClinicalTeam": "Clinical Team",
     "featureFlexible": "Flexible Scheduling",
-    "featureModern": "Modern Equipment"
+    "featureModern": "Modern Equipment",
+    "openBadge": "Open now — until 23:00",
+    "closedBadge": "Currently closed — we open at 09:00",
+    "urgencyTitle": "Dental emergency?",
+    "urgencyDesc": "No appointment needed — triage on arrival, every day until 23:00.",
+    "urgencyLink": "See emergencies",
+    "trustGoogle": "5.0 on Google",
+    "trustLocation": "Colombo Centre · Level -1, Unit 507"
   },
   "about": {
     "sectionTitle": "About Us",
