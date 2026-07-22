@@ -4,12 +4,11 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { Phone, Calendar, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-
-const WHATSAPP_URL =
-  'https://wa.me/351933522580?text=Ol%C3%A1!%20Gostaria%20de%20marcar%20uma%20consulta.';
+import { getTreatments } from '../data/services-data';
+import { getWhatsAppUrl } from '../utils/whatsapp';
 
 export default function MobileCtaBar() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { pathname } = useLocation();
   const [visible, setVisible] = useState(false);
 
@@ -25,6 +24,19 @@ export default function MobileCtaBar() {
   }, [hidden]);
 
   if (hidden) return null;
+
+  // WhatsApp contextual: em páginas de tratamento a mensagem pré-preenchida
+  // menciona a especialidade — conversão direta a partir de campanhas.
+  const treatmentSlug = pathname.startsWith('/tratamentos/')
+    ? pathname.split('/')[2]
+    : undefined;
+  const treatment = treatmentSlug
+    ? getTreatments(language).find(tr => tr.slug === treatmentSlug)
+    : undefined;
+  const whatsappUrl = getWhatsAppUrl({
+    treatment: treatment?.title,
+    language: language === 'en' ? 'en' : 'pt',
+  });
 
   const bookHref = pathname === '/' ? '#contacto' : '/#contacto';
 
@@ -48,7 +60,7 @@ export default function MobileCtaBar() {
         </a>
 
         <a
-          href={WHATSAPP_URL}
+          href={whatsappUrl}
           target='_blank'
           rel='noopener noreferrer'
           className={`${linkBase} bg-white text-green-600 active:bg-green-50`}

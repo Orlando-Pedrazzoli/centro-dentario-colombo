@@ -36,8 +36,6 @@ declare global {
 
 const { business } = SITE_CONFIG;
 
-const TEL_HREF = `tel:${business.telephone}`;
-
 /** '+351918565118' -> '918 565 118' (formato PT de leitura rápida) */
 const formatLine = (tel: string) =>
   tel.replace('+351', '').replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
@@ -57,27 +55,80 @@ const LEVEL_STYLES: Record<UrgencyLevel, string> = {
 };
 
 /**
- * Linhas de reforço de urgência.
- * Padrão UX: 1 CTA primário (linha principal) mantém a decisão simples;
- * as alternativas ficam SEMPRE visíveis — a queixa real é "ninguém atende",
- * portanto escondê-las atrás de um clique extra anularia o propósito.
+ * Painel único de linhas de urgência.
+ *
+ * Substitui o padrão anterior (botão "Ligar" + pills pequenas com as linhas
+ * alternativas), que espalhava 4 números por 3 padrões visuais diferentes.
+ * Quem chega em pânico precisa de UMA coisa: todos os números juntos, grandes
+ * e tocáveis. Cada linha é um alvo de toque de ecrã inteiro (>56px), com o
+ * número em destaque — a linha fixa primeiro, os telemóveis a seguir.
  */
-function AltLines({ label }: { label: string }) {
+function EmergencyLinesPanel({
+  title,
+  sub,
+  landlineLabel,
+  mobileLabel,
+}: {
+  title: string;
+  sub: string;
+  landlineLabel: string;
+  mobileLabel: string;
+}) {
+  const lines = [
+    {
+      tel: business.telephone,
+      display: business.telephoneDisplay.replace('+351 ', ''),
+      label: landlineLabel,
+      primary: true,
+    },
+    ...business.emergencyLines.map(line => ({
+      tel: line,
+      display: formatLine(line),
+      label: mobileLabel,
+      primary: false,
+    })),
+  ];
+
   return (
-    <div className='mt-5'>
-      <p className='text-primary-100 text-sm mb-2.5'>{label}</p>
-      <ul className='flex flex-wrap gap-2' role='list'>
-        {business.emergencyLines.map(line => (
-          <li key={line}>
+    <div className='w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden'>
+      <div className='px-5 pt-4 pb-3 border-b border-gray-100'>
+        <p className='text-gray-900 font-bold text-base leading-snug'>
+          {title}
+        </p>
+        <p className='text-gray-500 text-sm mt-0.5'>{sub}</p>
+      </div>
+      <ul role='list' className='divide-y divide-gray-100'>
+        {lines.map(line => (
+          <li key={line.tel}>
             <a
-              href={`tel:${line}`}
-              className='inline-flex items-center gap-1.5 bg-white/10 border border-white/25 rounded-full px-4 py-2 text-white text-sm font-semibold hover:bg-white/20 active:bg-white/25 transition-colors'
+              href={`tel:${line.tel}`}
+              className={`flex items-center gap-4 px-5 py-4 transition-colors ${
+                line.primary
+                  ? 'bg-primary-50 hover:bg-primary-100 active:bg-primary-100'
+                  : 'hover:bg-gray-50 active:bg-gray-100'
+              }`}
             >
-              <Phone
-                className='w-3.5 h-3.5 text-primary-200'
+              <span
+                className={`flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0 ${
+                  line.primary
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-primary-50 text-primary-600'
+                }`}
+              >
+                <Phone className='w-5 h-5' aria-hidden='true' />
+              </span>
+              <span className='flex-1 min-w-0'>
+                <span className='block text-xl font-bold text-gray-900 tabular-nums leading-tight'>
+                  {line.display}
+                </span>
+                <span className='block text-xs font-semibold uppercase tracking-wider text-gray-500 mt-0.5'>
+                  {line.label}
+                </span>
+              </span>
+              <ChevronRight
+                className='w-5 h-5 text-gray-300 flex-shrink-0'
                 aria-hidden='true'
               />
-              {formatLine(line)}
             </a>
           </li>
         ))}
@@ -135,8 +186,10 @@ export default function UrgenciasPage() {
         statusUnknown: 'Open every day, 09:00–23:00',
         openNow: 'Open now — come in or call',
         closedNow: 'Closed right now — we open at 09:00',
-        callNow: 'Call +351 21 604 13 55',
-        altLinesLabel: 'Line busy or no answer? Try one of our direct lines:',
+        linesTitle: 'Emergency lines — call any of them',
+        linesSub: 'If one line is busy, call the next one.',
+        landlineLabel: 'Main line',
+        mobileLabel: 'Direct mobile',
         whatsapp: 'WhatsApp us',
         hours: 'Every day, 09:00–23:00',
         hoursSub: 'Weekends and public holidays included',
@@ -186,9 +239,10 @@ export default function UrgenciasPage() {
         statusUnknown: 'Aberto todos os dias, 09:00–23:00',
         openNow: 'Aberto agora — venha ou ligue',
         closedNow: 'Fechado neste momento — abrimos às 09:00',
-        callNow: 'Ligar +351 21 604 13 55',
-        altLinesLabel:
-          'Linha ocupada ou sem resposta? Ligue para uma linha direta:',
+        linesTitle: 'Linhas de urgência — ligue para qualquer uma',
+        linesSub: 'Se uma linha estiver ocupada, ligue para a seguinte.',
+        landlineLabel: 'Linha principal',
+        mobileLabel: 'Telemóvel direto',
         whatsapp: 'Falar por WhatsApp',
         hours: 'Todos os dias, 09:00–23:00',
         hoursSub: 'Fins de semana e feriados incluídos',
@@ -311,21 +365,23 @@ export default function UrgenciasPage() {
                 </span>
               </div>
 
-              {/* CTAs — telefone acima da dobra, sempre */}
-              <div className='flex flex-col sm:flex-row gap-3'>
-                <a
-                  href={TEL_HREF}
-                  className='inline-flex items-center justify-center gap-2.5 bg-white text-primary-600 px-7 py-4 rounded-full font-bold text-base shadow-cta hover:bg-primary-50 hover:scale-[1.02] transition-all duration-300'
-                >
-                  <Phone className='w-5 h-5' aria-hidden='true' />
-                  {copy.callNow}
-                </a>
+              {/* Painel único com as 4 linhas — o elemento nº1 da página.
+                  Substitui o antigo par botão "Ligar" + pills de linhas
+                  alternativas, que duplicava o número principal na primeira
+                  dobra e escondia as alternativas em alvos de toque pequenos. */}
+              <EmergencyLinesPanel
+                title={copy.linesTitle}
+                sub={copy.linesSub}
+                landlineLabel={copy.landlineLabel}
+                mobileLabel={copy.mobileLabel}
+              />
 
+              <div className='mt-4 max-w-md'>
                 <a
                   href={isEN ? WHATSAPP_EN : WHATSAPP_PT}
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='inline-flex items-center justify-center gap-2.5 bg-green-500 text-white px-7 py-4 rounded-full font-bold text-base shadow-cta hover:bg-green-600 transition-all duration-300'
+                  className='w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-green-500 text-white px-7 py-4 rounded-full font-bold text-base shadow-cta hover:bg-green-600 transition-all duration-300'
                 >
                   <svg
                     className='w-5 h-5'
@@ -338,8 +394,6 @@ export default function UrgenciasPage() {
                   {copy.whatsapp}
                 </a>
               </div>
-
-              <AltLines label={copy.altLinesLabel} />
             </div>
 
             {/* Cartão de factos — o que o utente precisa de saber em 5 segundos */}
@@ -650,26 +704,27 @@ export default function UrgenciasPage() {
             {copy.finalLead}
           </p>
 
-          <div className='flex flex-col sm:flex-row gap-3 justify-center'>
-            <a
-              href={TEL_HREF}
-              className='inline-flex items-center justify-center gap-2.5 bg-white text-primary-600 px-8 py-4 rounded-full font-bold shadow-cta hover:bg-primary-50 transition-colors'
-            >
-              {copy.callNow}
-            </a>
-            <a
-              href={isEN ? WHATSAPP_EN : WHATSAPP_PT}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='inline-flex items-center justify-center gap-2.5 bg-green-500 text-white px-8 py-4 rounded-full font-bold shadow-cta hover:bg-green-600 transition-colors'
-            >
-              {copy.whatsapp}
-            </a>
+          {/* O mesmo painel do hero — quem rolou a página inteira reencontra
+              os 4 números no mesmo formato, sem reaprender o layout. */}
+          <div className='flex justify-center mb-4'>
+            <div className='w-full max-w-md text-left'>
+              <EmergencyLinesPanel
+                title={copy.linesTitle}
+                sub={copy.linesSub}
+                landlineLabel={copy.landlineLabel}
+                mobileLabel={copy.mobileLabel}
+              />
+            </div>
           </div>
 
-          <div className='max-w-md mx-auto text-left sm:text-center'>
-            <AltLines label={copy.altLinesLabel} />
-          </div>
+          <a
+            href={isEN ? WHATSAPP_EN : WHATSAPP_PT}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='inline-flex items-center justify-center gap-2.5 bg-green-500 text-white px-8 py-4 rounded-full font-bold shadow-cta hover:bg-green-600 transition-colors'
+          >
+            {copy.whatsapp}
+          </a>
 
           <p className='text-primary-200 text-sm mt-6'>{copy.hours}</p>
         </div>

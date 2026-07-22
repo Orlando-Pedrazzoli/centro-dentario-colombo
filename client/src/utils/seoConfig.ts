@@ -109,17 +109,15 @@ export function isClinicOpenNow(now: Date = new Date()): boolean {
 // Slugs dos tratamentos (usado no sitemap, prerender e rotas)
 export const TREATMENT_SLUGS = [
   'caries',
-  'reabilitacao-oral',
-  'proteses-dentarias',
   'estetica-dentaria',
-  'cirurgia-oral',
   'endodontia',
   'implantologia',
-  'medicina-oral',
-  'oclusao',
   'odontopediatria',
   'ortodontia',
   'periodontologia',
+  'proteses-dentarias',
+  'higiene-oral',
+  'harmonizacao-orofacial',
 ];
 
 /**

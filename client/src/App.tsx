@@ -1,6 +1,8 @@
 // client/src/App.tsx
 
+import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router';
+import { captureUtmParams } from './utils/whatsapp';
 import HomePage from './pages/home';
 import TreatmentPage from './pages/TreatmentPage';
 import CorpoClinicoPage from './pages/CorpoClinicoPage';
@@ -44,6 +46,12 @@ const ProtectedAdminRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default function App() {
+  // Captura utm_source dos anúncios (Instagram/Facebook) na primeira visita.
+  // A origem é anexada às mensagens de WhatsApp para atribuição de leads.
+  useEffect(() => {
+    captureUtmParams();
+  }, []);
+
   return (
     <>
       <Routes>
@@ -109,6 +117,54 @@ export default function App() {
           <Route
             path='/tratamentos/criancas'
             element={<Navigate to='/tratamentos/odontopediatria' replace />}
+          />
+
+          {/* ---------- Lista oficial de especialidades (Jul/2026) ----------
+              O corpo clínico consolidou a oferta em 10 áreas. As 4 páginas
+              descontinuadas redirecionam para a especialidade remanescente
+              mais próxima — preserva o SEO já indexado e links externos. */}
+          <Route
+            path='/tratamentos/reabilitacao-oral'
+            element={<Navigate to='/tratamentos/proteses-dentarias' replace />}
+          />
+          <Route
+            path='/tratamentos/cirurgia-oral'
+            element={<Navigate to='/tratamentos/implantologia' replace />}
+          />
+          <Route
+            path='/tratamentos/medicina-oral'
+            element={<Navigate to='/tratamentos/caries' replace />}
+          />
+          <Route
+            path='/tratamentos/oclusao'
+            element={<Navigate to='/tratamentos/proteses-dentarias' replace />}
+          />
+
+          {/* ---------- Aliases de campanha (Instagram/Facebook Ads) ----------
+              URLs curtas e memoráveis para anúncios. O termo comercial que o
+              paciente reconhece aponta para a página canónica da especialidade.
+              Ex.: centrodentariocolombo.com/tratamentos/invisalign */}
+          <Route
+            path='/tratamentos/invisalign'
+            element={<Navigate to='/tratamentos/ortodontia' replace />}
+          />
+          <Route
+            path='/tratamentos/facetas'
+            element={<Navigate to='/tratamentos/estetica-dentaria' replace />}
+          />
+          <Route
+            path='/tratamentos/limpeza-dentaria'
+            element={<Navigate to='/tratamentos/higiene-oral' replace />}
+          />
+          <Route
+            path='/tratamentos/destartarizacao'
+            element={<Navigate to='/tratamentos/higiene-oral' replace />}
+          />
+          <Route
+            path='/tratamentos/harmonizacao-facial'
+            element={
+              <Navigate to='/tratamentos/harmonizacao-orofacial' replace />
+            }
           />
 
           {/* ==================== 404 REAL ==================== */}

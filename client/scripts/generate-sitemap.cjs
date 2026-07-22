@@ -28,17 +28,15 @@ const STATIC_PAGES = [
 
 const TREATMENT_SLUGS = [
   'caries',
-  'reabilitacao-oral',
-  'proteses-dentarias',
   'estetica-dentaria',
-  'cirurgia-oral',
   'endodontia',
   'implantologia',
-  'medicina-oral',
-  'oclusao',
   'odontopediatria',
   'ortodontia',
   'periodontologia',
+  'proteses-dentarias',
+  'higiene-oral',
+  'harmonizacao-orofacial',
 ];
 
 function urlEntry({ loc, lastmod, changefreq, priority }) {

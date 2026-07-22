@@ -66,7 +66,7 @@ const urgenciasPT: UrgenciasContent = {
       level: 'imediata',
       whatWeDo:
         'Um abcesso é uma infeção ativa e não se resolve sozinho. Drenamos o foco infecioso, prescrevemos medicação quando indicado e planeamos o tratamento definitivo.',
-      relatedSlug: 'medicina-oral',
+      relatedSlug: 'caries',
     },
     {
       id: 'dente-avulsionado',
@@ -76,7 +76,7 @@ const urgenciasPT: UrgenciasContent = {
       level: 'imediata',
       whatWeDo:
         'É a urgência dentária mais sensível ao tempo. Reimplantamos o dente e ferulizamos. As primeiras duas horas determinam o prognóstico — venha imediatamente com o dente conservado em leite ou soro.',
-      relatedSlug: 'cirurgia-oral',
+      relatedSlug: 'implantologia',
     },
     {
       id: 'dente-partido',
@@ -144,7 +144,7 @@ const urgenciasPT: UrgenciasContent = {
       level: 'mesmo-dia',
       whatWeDo:
         'Controlamos a inflamação (pericoronarite) e avaliamos, por radiografia, se há indicação para extração.',
-      relatedSlug: 'cirurgia-oral',
+      relatedSlug: 'implantologia',
     },
   ],
   protocol: [
@@ -302,7 +302,7 @@ const urgenciasEN: UrgenciasContent = {
       level: 'imediata',
       whatWeDo:
         'An abscess is an active infection and will not clear on its own. We drain it, prescribe medication when indicated, and plan the definitive treatment.',
-      relatedSlug: 'medicina-oral',
+      relatedSlug: 'caries',
     },
     {
       id: 'dente-avulsionado',
@@ -312,7 +312,7 @@ const urgenciasEN: UrgenciasContent = {
       level: 'imediata',
       whatWeDo:
         'This is the most time-critical dental emergency. We replant and splint the tooth. The first two hours decide the outcome — come immediately, keeping the tooth in milk or saline.',
-      relatedSlug: 'cirurgia-oral',
+      relatedSlug: 'implantologia',
     },
     {
       id: 'dente-partido',
@@ -381,7 +381,7 @@ const urgenciasEN: UrgenciasContent = {
       level: 'mesmo-dia',
       whatWeDo:
         'We control the inflammation (pericoronitis) and use an X-ray to assess whether extraction is indicated.',
-      relatedSlug: 'cirurgia-oral',
+      relatedSlug: 'implantologia',
     },
   ],
   protocol: [
