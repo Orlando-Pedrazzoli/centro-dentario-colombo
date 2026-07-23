@@ -1,16 +1,142 @@
-// client/src/pages/TreatmentPage.tsx
+// 📄 client/src/pages/TreatmentPage.tsx
 
+import { useState, useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router';
-import { useEffect } from 'react';
 import { SEO } from '../components/SEO';
-import { TreatmentJsonLd, BreadcrumbJsonLd } from '../components/JsonLd';
+import {
+  TreatmentJsonLd,
+  BreadcrumbJsonLd,
+  FaqJsonLd,
+} from '../components/JsonLd';
 import { getTreatments } from '../data/services-data';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getWhatsAppUrl } from '../utils/whatsapp';
 
+// ============================================
+// Ícones inline (sem dependências extra)
+// ============================================
+function CheckIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill='none'
+      viewBox='0 0 24 24'
+      stroke='currentColor'
+    >
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth={2}
+        d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
+      />
+    </svg>
+  );
+}
+
+function ChevronDownIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill='none'
+      viewBox='0 0 24 24'
+      stroke='currentColor'
+    >
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth={2}
+        d='M19 9l-7 7-7-7'
+      />
+    </svg>
+  );
+}
+
+// ============================================
+// Título de secção com barra azul
+// ============================================
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <h2 className='text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3'>
+      <span className='w-2 h-8 bg-blue-600 rounded'></span>
+      {children}
+    </h2>
+  );
+}
+
+// ============================================
+// Banda de secção — alterna fundos para criar
+// ritmo visual sem depender de imagens internas
+// ============================================
+function SectionBand({
+  tone = 'white',
+  children,
+}: {
+  tone?: 'white' | 'gray';
+  children: React.ReactNode;
+}) {
+  return (
+    <section
+      className={`py-14 md:py-16 px-4 ${
+        tone === 'gray' ? 'bg-gray-50' : 'bg-white'
+      }`}
+    >
+      <div className='max-w-5xl mx-auto'>{children}</div>
+    </section>
+  );
+}
+
+// ============================================
+// Item do accordion de FAQ
+// ============================================
+interface FaqAccordionItemProps {
+  question: string;
+  answer: string;
+  isOpen: boolean;
+  onClick: () => void;
+}
+
+function FaqAccordionItem({
+  question,
+  answer,
+  isOpen,
+  onClick,
+}: FaqAccordionItemProps) {
+  return (
+    <div className='border-b border-gray-200 last:border-b-0'>
+      <button
+        onClick={onClick}
+        className='w-full py-5 px-4 flex items-center justify-between text-left hover:bg-blue-50/50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset rounded-lg'
+        aria-expanded={isOpen}
+      >
+        <span className='text-gray-800 font-medium pr-4 text-base md:text-lg'>
+          {question}
+        </span>
+        <ChevronDownIcon
+          className={`w-5 h-5 text-blue-600 flex-shrink-0 transition-transform duration-300 ${
+            isOpen ? 'rotate-180' : ''
+          }`}
+        />
+      </button>
+      <div
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${
+          isOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        <p className='px-4 pb-5 text-gray-600 leading-relaxed text-sm md:text-base'>
+          {answer}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ============================================
+// Página de Tratamento
+// ============================================
 export default function TreatmentPage() {
   const { slug } = useParams<{ slug: string }>();
   const { language, t } = useLanguage();
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   // Obter tratamentos no idioma atual
   const treatments = getTreatments(language);
@@ -18,10 +144,11 @@ export default function TreatmentPage() {
   // Scroll para o topo quando a página carregar ou o slug mudar
   useEffect(() => {
     window.scrollTo(0, 0);
+    setOpenFaq(null);
   }, [slug]);
 
   // Encontrar o tratamento pelo slug
-  const treatment = treatments.find(t => t.slug === slug);
+  const treatment = treatments.find(tr => tr.slug === slug);
 
   // Se não encontrar o tratamento, redirecionar para home
   if (!treatment) {
@@ -32,10 +159,23 @@ export default function TreatmentPage() {
   const path = `/tratamentos/${treatment.slug}`;
 
   // Descrição SEO baseada no tratamento
-  const seoDescription = `${treatment.title} - Centro Dentário Colombo, Lisboa. ${treatment.description.substring(0, 120)}... ${t('treatmentPage.seoSuffix')}`;
+  const seoDescription = `${treatment.title} - Centro Dentário Colombo, Lisboa. ${treatment.description} ${t('treatmentPage.seoSuffix')}`;
 
   // Keywords
-  const seoKeywords = `${treatment.title.toLowerCase()}, ${treatment.subtitle.toLowerCase()}, ${language === 'en' ? 'dental treatment lisbon, centro dentário colombo, dentist lisbon' : 'tratamento dentário lisboa, centro dentário colombo, dentista lisboa'}`;
+  const seoKeywords = `${treatment.keywords.join(', ')}, ${
+    language === 'en'
+      ? 'dental treatment lisbon, centro dentário colombo, dentist lisbon'
+      : 'tratamento dentário lisboa, centro dentário colombo, dentista lisboa'
+  }`;
+
+  const bannerAbsolute = treatment.bannerImage.startsWith('http')
+    ? treatment.bannerImage
+    : `https://www.centrodentariocolombo.com${treatment.bannerImage}`;
+
+  const whatsAppHref = getWhatsAppUrl({
+    treatment: treatment.title,
+    language: language === 'en' ? 'en' : 'pt',
+  });
 
   return (
     <div className='min-h-screen bg-white'>
@@ -44,11 +184,7 @@ export default function TreatmentPage() {
         title={treatment.title}
         description={seoDescription}
         keywords={seoKeywords}
-        image={
-          treatment.bannerImage.startsWith('http')
-            ? treatment.bannerImage
-            : `https://www.centrodentariocolombo.com${treatment.bannerImage}`
-        }
+        image={bannerAbsolute}
         path={path}
         type='article'
       />
@@ -68,164 +204,236 @@ export default function TreatmentPage() {
         name={treatment.title}
         description={seoDescription}
         path={path}
-        image={
-          treatment.bannerImage.startsWith('http')
-            ? treatment.bannerImage
-            : `https://www.centrodentariocolombo.com${treatment.bannerImage}`
-        }
+        image={bannerAbsolute}
       />
+      {/* FAQ visível na página, por isso é elegível para schema FAQPage */}
+      <FaqJsonLd items={treatment.faq} />
 
       {/* Navbar vem do Layout. */}
 
-      {/* Hero Banner */}
+      {/* Hero Banner — única imagem da página.
+          Imagem recomendada: 1920×1080 (WebP/JPG otimizado). */}
       <section className='pt-20'>
-        <div className='relative h-[400px] md:h-[500px] overflow-hidden'>
+        <div className='relative h-[460px] md:h-[560px] overflow-hidden'>
           <img
             src={treatment.bannerImage}
             alt={treatment.title}
             className='w-full h-full object-cover'
+            fetchPriority='high'
           />
-          <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent'></div>
+          {/* Gradiente reforçado à esquerda para legibilidade do texto */}
+          <div className='absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/10'></div>
+          <div className='absolute inset-0 bg-gradient-to-r from-black/40 to-transparent'></div>
 
-          {/* Título sobre o banner */}
+          {/* Conteúdo do hero */}
           <div className='absolute bottom-0 left-0 right-0 p-8 md:p-12'>
             <div className='max-w-7xl mx-auto'>
-              <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3'>
+              {/* Breadcrumb visível — orientação e SEO */}
+              <nav
+                aria-label='Breadcrumb'
+                className='mb-4 text-sm text-white/70'
+              >
+                <ol className='flex flex-wrap items-center gap-2'>
+                  <li>
+                    <Link to='/' className='hover:text-white transition'>
+                      {t('treatmentPage.breadcrumbHome')}
+                    </Link>
+                  </li>
+                  <li aria-hidden='true'>/</li>
+                  <li>
+                    <a
+                      href='/#tratamentos'
+                      className='hover:text-white transition'
+                    >
+                      {t('treatmentPage.breadcrumbTreatments')}
+                    </a>
+                  </li>
+                  <li aria-hidden='true'>/</li>
+                  <li className='text-white font-medium'>{treatment.title}</li>
+                </ol>
+              </nav>
+
+              <p className='text-sm md:text-base font-semibold uppercase tracking-wider text-blue-300 mb-3'>
                 {treatment.title}
-              </h1>
-              <p className='text-xl md:text-2xl text-white/90 font-medium'>
-                {treatment.subtitle}
               </p>
+              <h1 className='text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 max-w-4xl'>
+                {treatment.hero.title}
+              </h1>
+              <p className='text-lg md:text-xl text-white/90 max-w-3xl mb-6'>
+                {treatment.hero.subtitle}
+              </p>
+              <a
+                href={whatsAppHref}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='inline-flex items-center bg-blue-600 text-white px-8 py-4 rounded-full hover:bg-blue-700 hover:scale-[1.02] transition text-lg font-semibold shadow-lg'
+              >
+                {treatment.hero.cta}
+              </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Conteúdo Principal */}
-      <section className='py-16 px-4'>
-        <div className='max-w-5xl mx-auto'>
-          {/* Descrição Inicial */}
-          <div className='mb-12'>
-            <div className='bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-lg'>
-              <p className='text-lg text-gray-700 leading-relaxed'>
-                {treatment.description}
+      {/* Introdução */}
+      <SectionBand>
+        <div className='bg-blue-50 border-l-4 border-blue-600 p-6 md:p-8 rounded-r-lg'>
+          <h2 className='text-2xl md:text-3xl font-bold text-gray-900 mb-4'>
+            {treatment.intro.headline}
+          </h2>
+          <p className='text-lg text-gray-700 leading-relaxed'>
+            {treatment.intro.text}
+          </p>
+        </div>
+      </SectionBand>
+
+      {/* O que é? */}
+      <SectionBand>
+        <SectionTitle>{t('treatmentPage.whatIs')}</SectionTitle>
+        <p className='text-gray-700 leading-relaxed text-lg'>
+          {treatment.whatIs}
+        </p>
+      </SectionBand>
+
+      {/* Quando é indicada? */}
+      <SectionBand tone='gray'>
+        <SectionTitle>
+          {treatment.indicationsTitle ?? t('treatmentPage.indications')}
+        </SectionTitle>
+        <div className='grid md:grid-cols-2 gap-4'>
+          {treatment.indications.map((indication, index) => (
+            <div
+              key={index}
+              className='flex items-start gap-3 bg-white p-4 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition'
+            >
+              <CheckIcon className='w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5' />
+              <p className='text-gray-700 leading-relaxed'>{indication}</p>
+            </div>
+          ))}
+        </div>
+      </SectionBand>
+
+      {/* Tratamentos Disponíveis */}
+      <SectionBand>
+        <SectionTitle>{t('treatmentPage.availableTreatments')}</SectionTitle>
+        <div className='grid md:grid-cols-2 gap-5'>
+          {treatment.availableTreatments.map((item, index) => (
+            <div
+              key={index}
+              className='bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl border border-blue-100 hover:shadow-lg hover:-translate-y-0.5 transition'
+            >
+              <h3 className='text-lg font-bold text-gray-900 mb-2'>
+                {item.name}
+              </h3>
+              <p className='text-gray-600 leading-relaxed'>
+                {item.description}
               </p>
             </div>
-          </div>
+          ))}
+        </div>
 
-          {/* O que é? */}
-          <div className='mb-16'>
-            <h2 className='text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3'>
-              <span className='w-2 h-8 bg-blue-600 rounded'></span>
-              {t('treatmentPage.whatIs')}
-            </h2>
-            <div className='prose prose-lg max-w-none'>
-              <p className='text-gray-700 leading-relaxed text-lg'>
-                {treatment.fullContent.whatIs}
-              </p>
-            </div>
+        {/* Secção extra (ex.: Duração do tratamento — Ortodontia) */}
+        {treatment.extraInfo && (
+          <div className='mt-10 bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl border border-blue-200'>
+            <h3 className='text-xl font-bold text-gray-900 mb-3'>
+              {treatment.extraInfo.title}
+            </h3>
+            <p className='text-gray-700 leading-relaxed text-lg'>
+              {treatment.extraInfo.text}
+            </p>
           </div>
+        )}
+      </SectionBand>
 
-          {/* Imagem 1 */}
-          <div className='mb-16'>
-            <div className='rounded-2xl overflow-hidden shadow-xl'>
-              <img
-                src={treatment.image1}
-                alt={`${treatment.title} - 1`}
-                className='w-full h-[400px] object-cover'
-              />
-            </div>
-          </div>
-
-          {/* Vantagens */}
-          <div className='mb-16'>
-            <h2 className='text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3'>
-              <span className='w-2 h-8 bg-blue-600 rounded'></span>
-              {t('treatmentPage.advantages')}
-            </h2>
-            <div className='grid md:grid-cols-2 gap-4'>
-              {treatment.fullContent.advantages.map((advantage, index) => (
-                <div
-                  key={index}
-                  className='flex items-start gap-3 bg-white p-4 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition'
-                >
-                  <svg
-                    className='w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    stroke='currentColor'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'
-                    />
-                  </svg>
-                  <p className='text-gray-700 leading-relaxed'>{advantage}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Imagem 2 */}
-          <div className='mb-16'>
-            <div className='rounded-2xl overflow-hidden shadow-xl'>
-              <img
-                src={treatment.image2}
-                alt={`${treatment.title} - 2`}
-                className='w-full h-[400px] object-cover'
-              />
-            </div>
-          </div>
-
-          {/* Informação Adicional */}
-          {treatment.fullContent.additionalInfo && (
-            <div className='mb-16'>
-              <div className='bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl border border-blue-200'>
-                <div className='flex items-start gap-4'>
-                  <svg
-                    className='w-8 h-8 text-blue-600 flex-shrink-0'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    stroke='currentColor'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
-                    />
-                  </svg>
-                  <div>
-                    <h3 className='text-xl font-bold text-gray-900 mb-3'>
-                      {t('treatmentPage.importantInfo')}
-                    </h3>
-                    <p className='text-gray-700 leading-relaxed text-lg'>
-                      {treatment.fullContent.additionalInfo}
-                    </p>
-                  </div>
-                </div>
+      {/* Como funciona? — timeline vertical */}
+      <SectionBand tone='gray'>
+        <SectionTitle>
+          {treatment.stepsTitle ?? t('treatmentPage.howItWorks')}
+        </SectionTitle>
+        <ol className='relative ml-5 border-l-2 border-blue-200 space-y-8'>
+          {treatment.steps.map((step, index) => (
+            <li key={index} className='relative pl-10'>
+              {/* Marcador numerado sobre a linha */}
+              <span className='absolute -left-[21px] top-0 w-10 h-10 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-lg ring-4 ring-gray-50'>
+                {index + 1}
+              </span>
+              <div className='bg-white p-5 rounded-xl border border-gray-200 shadow-sm'>
+                <h3 className='text-lg font-bold text-gray-900 mb-1'>
+                  {step.title}
+                </h3>
+                <p className='text-gray-600 leading-relaxed'>
+                  {step.description}
+                </p>
               </div>
-            </div>
-          )}
+            </li>
+          ))}
+        </ol>
+      </SectionBand>
 
-          {/* Call to Action */}
+      {/* Benefícios */}
+      <SectionBand>
+        <SectionTitle>{t('treatmentPage.benefits')}</SectionTitle>
+        <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-4'>
+          {treatment.benefits.map((benefit, index) => (
+            <div
+              key={index}
+              className='flex items-start gap-3 bg-white p-4 rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition'
+            >
+              <CheckIcon className='w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5' />
+              <p className='text-gray-700 leading-relaxed'>{benefit}</p>
+            </div>
+          ))}
+        </div>
+      </SectionBand>
+
+      {/* Porquê escolher o Centro Dentário Colombo? */}
+      <SectionBand tone='gray'>
+        <SectionTitle>{t('treatmentPage.whyChoose')}</SectionTitle>
+        <div className='bg-white rounded-2xl p-6 md:p-8 border border-gray-200 shadow-sm'>
+          <ul className='space-y-4'>
+            {treatment.whyChoose.map((reason, index) => (
+              <li key={index} className='flex items-start gap-3'>
+                <CheckIcon className='w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5' />
+                <p className='text-gray-700 leading-relaxed text-lg'>
+                  {reason}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </SectionBand>
+
+      {/* Perguntas Frequentes */}
+      <SectionBand>
+        <SectionTitle>{t('treatmentPage.faqTitle')}</SectionTitle>
+        <div className='bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden'>
+          {treatment.faq.map((item, index) => (
+            <FaqAccordionItem
+              key={index}
+              question={item.question}
+              answer={item.answer}
+              isOpen={openFaq === index}
+              onClick={() => setOpenFaq(openFaq === index ? null : index)}
+            />
+          ))}
+        </div>
+      </SectionBand>
+
+      {/* Call to Action */}
+      <section className='pb-16 px-4 bg-white'>
+        <div className='max-w-5xl mx-auto'>
           <div className='bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-8 md:p-12 text-center shadow-2xl'>
             <h3 className='text-3xl font-bold text-white mb-4'>
-              {t('treatmentPage.ctaTitle')}
+              {treatment.ctaHeadline}
             </h3>
             <p className='text-xl text-white/90 mb-8'>
-              {t('treatmentPage.ctaDesc')}
+              {t('treatmentPage.ctaNoCommitment')}
             </p>
             <div className='flex flex-wrap gap-4 justify-center'>
               {/* CTA primário: WhatsApp com mensagem pré-preenchida do
                   tratamento — link direto de conversão para campanhas. */}
               <a
-                href={getWhatsAppUrl({
-                  treatment: treatment.title,
-                  language: language === 'en' ? 'en' : 'pt',
-                })}
+                href={whatsAppHref}
                 target='_blank'
                 rel='noopener noreferrer'
                 className='bg-green-500 text-white px-8 py-4 rounded-full hover:bg-green-600 transition text-lg font-semibold inline-flex items-center shadow-lg'
@@ -291,7 +499,7 @@ export default function TreatmentPage() {
           </h2>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
             {treatments
-              .filter(t => t.id !== treatment.id)
+              .filter(tr => tr.id !== treatment.id)
               .slice(0, 16)
               .map(relatedTreatment => (
                 <Link
@@ -305,6 +513,7 @@ export default function TreatmentPage() {
                       src={relatedTreatment.bannerImage}
                       alt={relatedTreatment.title}
                       className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
+                      loading='lazy'
                     />
                   </div>
                   <div className='p-4'>
@@ -325,7 +534,7 @@ export default function TreatmentPage() {
       <footer className='bg-gray-900 text-white py-8 px-4'>
         <div className='max-w-7xl mx-auto text-center'>
           <p className='text-gray-400'>
-            &copy; 2025 Centro Dentário Colombo.{' '}
+            &copy; {new Date().getFullYear()} Centro Dentário Colombo.{' '}
             {t('treatmentPage.footerRights')}
           </p>
           <p className='text-sm text-gray-500 mt-2'>

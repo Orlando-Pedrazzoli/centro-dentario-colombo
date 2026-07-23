@@ -184,7 +184,14 @@
     "seoSuffix": "Book your appointment!",
     "breadcrumbHome": "Home",
     "breadcrumbTreatments": "Treatments",
-    "bookWhatsApp": "Book via WhatsApp"
+    "bookWhatsApp": "Book via WhatsApp",
+    "indications": "When is it indicated?",
+    "availableTreatments": "Available Treatments",
+    "howItWorks": "How does the treatment work?",
+    "benefits": "Benefits",
+    "whyChoose": "Why choose Centro Dentário Colombo?",
+    "faqTitle": "Frequently Asked Questions",
+    "ctaNoCommitment": "The first assessment carries no commitment whatsoever. We are here to answer all your questions."
   },
   "mobileCta": {
     "call": "Call",
