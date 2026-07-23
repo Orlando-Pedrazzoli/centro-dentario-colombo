@@ -1,4 +1,4 @@
-// 📄 client/src/data/faq-data.ts
+// client/src/data/faq-data.ts
 //
 // FAQ oficial (Jul/2026) — derivado diretamente dos dados das
 // especialidades (fonte única de verdade em ./treatments/).
@@ -21,29 +21,13 @@ export interface FAQItem {
 export interface FAQCategory {
   id: string;
   title: string;
-  icon: string;
   items: FAQItem[];
 }
-
-// Ícone por especialidade (id partilhado entre PT e EN)
-const CATEGORY_ICONS: Record<string, string> = {
-  implantologia: '🦷',
-  ortodontia: '😁',
-  'estetica-dentaria': '✨',
-  dentisteria: '🪥',
-  endodontia: '🩺',
-  periodontologia: '🌿',
-  'protese-protocolo': '🔩',
-  'higiene-oral': '🧼',
-  odontopediatria: '🧒',
-  'harmonizacao-orofacial': '💆',
-};
 
 function buildCategories(treatments: Treatment[]): FAQCategory[] {
   return treatments.map(treatment => ({
     id: treatment.id,
     title: treatment.title,
-    icon: CATEGORY_ICONS[treatment.id] ?? '🦷',
     items: treatment.faq,
   }));
 }
