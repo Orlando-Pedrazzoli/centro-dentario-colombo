@@ -13,6 +13,25 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { getWhatsAppUrl } from '../utils/whatsapp';
 
 // ============================================
+// Variantes otimizadas do banner
+// Geradas em /public/images/banners/ a partir da imagem original:
+//   {nome}-desktop.webp → 1920×640 (≈3:1, altura real do hero em desktop)
+//   {nome}-mobile.webp  → 864×1080 (4:5, altura real do hero em mobile)
+//   {nome}-card.webp    → 800×450 (cartões de tratamentos relacionados)
+// ============================================
+function getBannerVariants(bannerImage: string) {
+  if (!bannerImage.startsWith('/images/')) return null;
+  const base = bannerImage
+    .replace('/images/', '')
+    .replace(/\.(jpg|jpeg|png|webp)$/i, '');
+  return {
+    desktop: `/images/banners/${base}-desktop.webp`,
+    mobile: `/images/banners/${base}-mobile.webp`,
+    card: `/images/banners/${base}-card.webp`,
+  };
+}
+
+// ============================================
 // Ícones inline (sem dependências extra)
 // ============================================
 function CheckIcon({ className }: { className?: string }) {
@@ -172,6 +191,8 @@ export default function TreatmentPage() {
     ? treatment.bannerImage
     : `https://www.centrodentariocolombo.com${treatment.bannerImage}`;
 
+  const bannerVariants = getBannerVariants(treatment.bannerImage);
+
   const whatsAppHref = getWhatsAppUrl({
     treatment: treatment.title,
     language: language === 'en' ? 'en' : 'pt',
@@ -212,15 +233,34 @@ export default function TreatmentPage() {
       {/* Navbar vem do Layout. */}
 
       {/* Hero Banner — única imagem da página.
-          Imagem recomendada: 1920×1080 (WebP/JPG otimizado). */}
+          Serve recortes otimizados por breakpoint via <picture>:
+          desktop 1920×640 (≈3:1) e mobile 864×1080 (4:5), com fallback
+          para a imagem original caso as variantes não existam. */}
       <section className='pt-20'>
         <div className='relative h-[460px] md:h-[560px] overflow-hidden'>
-          <img
-            src={treatment.bannerImage}
-            alt={treatment.title}
-            className='w-full h-full object-cover'
-            fetchPriority='high'
-          />
+          {bannerVariants ? (
+            <picture>
+              <source
+                media='(min-width: 768px)'
+                srcSet={bannerVariants.desktop}
+                type='image/webp'
+              />
+              <source srcSet={bannerVariants.mobile} type='image/webp' />
+              <img
+                src={treatment.bannerImage}
+                alt={treatment.title}
+                className='w-full h-full object-cover'
+                fetchPriority='high'
+              />
+            </picture>
+          ) : (
+            <img
+              src={treatment.bannerImage}
+              alt={treatment.title}
+              className='w-full h-full object-cover'
+              fetchPriority='high'
+            />
+          )}
           {/* Gradiente reforçado à esquerda para legibilidade do texto */}
           <div className='absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/10'></div>
           <div className='absolute inset-0 bg-gradient-to-r from-black/40 to-transparent'></div>
@@ -510,7 +550,10 @@ export default function TreatmentPage() {
                 >
                   <div className='h-48 overflow-hidden'>
                     <img
-                      src={relatedTreatment.bannerImage}
+                      src={
+                        getBannerVariants(relatedTreatment.bannerImage)?.card ??
+                        relatedTreatment.bannerImage
+                      }
                       alt={relatedTreatment.title}
                       className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
                       loading='lazy'

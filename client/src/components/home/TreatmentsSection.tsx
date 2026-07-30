@@ -9,10 +9,10 @@ import CountUp from '../ui/CountUp';
 
 /**
  * Hierarquia de conteúdo:
- * A grelha anterior tinha 12 cards com o mesmo peso visual.
- * A maioria dos pacientes procura 3-4 coisas — destacamos essas
- * com cards grandes (com imagem) e agrupamos as restantes num
- * grid compacto sem imagem (menos 8 downloads do Unsplash).
+ * As 10 especialidades são mostradas com cards de imagem —
+ * os 4 mais procurados primeiro, seguidos das restantes.
+ * Todas as imagens usam a variante otimizada -card.webp
+ * (~20 KB cada, geradas em /public/images/banners/).
  */
 const FEATURED_SLUGS = [
   'implantologia',
@@ -20,6 +20,14 @@ const FEATURED_SLUGS = [
   'estetica-dentaria',
   'caries',
 ];
+
+// Deriva a variante otimizada para cards a partir do bannerImage
+const getCardImage = (bannerImage: string) =>
+  bannerImage.startsWith('/images/')
+    ? `/images/banners/${bannerImage
+        .replace('/images/', '')
+        .replace(/\.(jpg|jpeg|png|webp)$/i, '')}-card.webp`
+    : bannerImage;
 
 export default function TreatmentsSection() {
   const { t, language } = useLanguage();
@@ -63,7 +71,7 @@ export default function TreatmentsSection() {
                 >
                   <div className='h-44 overflow-hidden bg-gradient-to-br from-primary-50 to-white relative'>
                     <img
-                      src={treatment.bannerImage}
+                      src={getCardImage(treatment.bannerImage)}
                       alt={treatment.title}
                       loading='lazy'
                       decoding='async'
@@ -97,31 +105,49 @@ export default function TreatmentsSection() {
           </div>
         </Reveal>
 
-        {/* ============ RESTANTES (grid compacto, sem imagem) ============ */}
+        {/* ============ RESTANTES (cards com imagem, mesmo formato) ============ */}
         <Reveal className='mb-16'>
           <h3 className='text-sm font-bold tracking-widest uppercase text-gray-500 mb-5'>
             {t('treatments.othersLabel')}
           </h3>
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
             {others.map((treatment, i) => (
-              <Reveal key={treatment.id} delay={(i % 4) * 70}>
+              <Reveal key={treatment.id} delay={(i % 4) * 90}>
                 <Link
                   to={`/tratamentos/${treatment.slug}`}
                   onClick={scrollTop}
-                  className='flex items-center justify-between gap-3 h-full bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-card hover:border-primary-200 hover:-translate-y-0.5 transition-all duration-300 p-4 group'
+                  className='block h-full bg-white rounded-2xl shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 overflow-hidden group'
                 >
-                  <div className='min-w-0'>
-                    <h4 className='font-bold text-gray-900 text-sm md:text-base truncate'>
+                  <div className='h-44 overflow-hidden bg-gradient-to-br from-primary-50 to-white relative'>
+                    <img
+                      src={getCardImage(treatment.bannerImage)}
+                      alt={treatment.title}
+                      loading='lazy'
+                      decoding='async'
+                      className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
+                    />
+                    <div className='absolute inset-0 bg-gradient-to-t from-primary-900/25 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
+                  </div>
+
+                  <div className='p-5'>
+                    <h4 className='text-lg font-bold text-gray-900 mb-1'>
                       {treatment.title}
                     </h4>
-                    <p className='text-xs md:text-sm text-gray-500 truncate'>
+                    <p className='text-primary-600 font-semibold text-sm mb-2'>
                       {treatment.subtitle}
                     </p>
+                    <p className='text-gray-600 text-sm leading-relaxed line-clamp-2'>
+                      {treatment.description}
+                    </p>
+
+                    <div className='inline-flex items-center mt-4 text-primary-600 text-sm font-semibold group-hover:text-primary-700 transition'>
+                      {t('treatments.learnMore')}
+                      <ChevronRight
+                        className='w-4 h-4 ml-0.5 group-hover:translate-x-1 transition-transform'
+                        aria-hidden='true'
+                      />
+                    </div>
                   </div>
-                  <ChevronRight
-                    className='w-4 h-4 flex-shrink-0 text-gray-300 group-hover:text-primary-600 group-hover:translate-x-0.5 transition-all'
-                    aria-hidden='true'
-                  />
                 </Link>
               </Reveal>
             ))}
@@ -133,7 +159,7 @@ export default function TreatmentsSection() {
           <div className='grid grid-cols-2 md:grid-cols-4 gap-8 text-center'>
             <div>
               <div className='text-3xl md:text-4xl font-extrabold text-primary-600 mb-2'>
-                <CountUp end={16} suffix='+' />
+                <CountUp end={10} suffix='+' />
               </div>
               <div className='text-gray-600'>{t('treatments.specialties')}</div>
             </div>

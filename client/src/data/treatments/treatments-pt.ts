@@ -140,8 +140,7 @@ export const treatmentsPT: Treatment[] = [
           'O cuidado diário é semelhante ao dos dentes naturais — escovagem regular, fio dentário e consultas periódicas de higiene oral. A manutenção regular é essencial para garantir a longevidade do implante.',
       },
     ],
-    bannerImage:
-      'https://images.unsplash.com/photo-1660732205497-f284ab0be4e9?q=80&w=1125&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    bannerImage: '/images/implantologia.jpg',
     image1:
       'https://images.unsplash.com/photo-1598256989800-fe5f95da9787?w=800&h=500&fit=crop',
     image2:
@@ -299,8 +298,7 @@ export const treatmentsPT: Treatment[] = [
           'Sim. Após o alinhamento dos dentes, a contenção é fundamental para manter os resultados. A contenção pode ser fixa (colada na parte interior dos dentes) ou removível, e está incluída no acompanhamento do tratamento.',
       },
     ],
-    bannerImage:
-      'https://images.unsplash.com/photo-1720685193942-5a1c5ac7fd80?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    bannerImage: '/images/ortodontia.jpg',
     image1:
       'https://images.unsplash.com/photo-1606811971618-4486d14f3f99?w=800&h=500&fit=crop',
     image2:
@@ -449,8 +447,7 @@ export const treatmentsPT: Treatment[] = [
           'Sim. O nosso objetivo é sempre alcançar um resultado harmonioso que se integre de forma natural com o rosto e a personalidade de cada paciente. Utilizamos materiais de elevada qualidade e um planeamento cuidadoso para garantir que o resultado final parece sempre natural.',
       },
     ],
-    bannerImage:
-      'https://images.unsplash.com/photo-1681939283065-011297ba26eb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    bannerImage: '/images/estetica_dentaria.jpg',
     image1:
       'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=800&h=500&fit=crop',
     image2:
@@ -600,8 +597,7 @@ export const treatmentsPT: Treatment[] = [
           'A prevenção passa por uma boa higiene oral diária, consultas regulares de higiene profissional e uma alimentação equilibrada. Em crianças e adultos jovens, o selamento de fissuras é também uma excelente medida preventiva.',
       },
     ],
-    bannerImage:
-      'https://images.unsplash.com/photo-1743767587921-473b6d079137?q=80&w=1355&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    bannerImage: '/images/dentisteria.jpg',
     image1:
       'https://images.unsplash.com/photo-1606811971618-4486d14f3f99?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     image2:
@@ -745,8 +741,7 @@ export const treatmentsPT: Treatment[] = [
           'Os cuidados são semelhantes aos dos outros dentes — escovagem regular e fio dentário. Se foi colocada uma coroa, deve evitar morder objetos duros com esse dente. As consultas de acompanhamento são importantes para monitorizar a cicatrização.',
       },
     ],
-    bannerImage:
-      'https://images.unsplash.com/photo-1658847075814-bf9a341c91e5?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    bannerImage: '/images/endodontia.jpg',
     image1:
       'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&h=500&fit=crop',
     image2:
@@ -899,8 +894,7 @@ export const treatmentsPT: Treatment[] = [
           'A periodontite requer acompanhamento contínuo. Com tratamento adequado e manutenção regular, é possível controlá-la de forma eficaz e preservar os dentes ao longo dos anos. Por isso, as consultas de manutenção são essenciais.',
       },
     ],
-    bannerImage:
-      'https://d2k1crfmot9vtj.cloudfront.net/media/ae42b22c5fe2137f34c929204328b4ef_TZjkGkL.jpg',
+    bannerImage: '/images/periodontologia.jpg',
     image1:
       'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&h=500&fit=crop',
     image2:
@@ -1056,8 +1050,7 @@ export const treatmentsPT: Treatment[] = [
           'Sim. Com os cuidados adequados e acompanhamento regular, a Prótese Protocolo é uma solução de longa duração. Os implantes têm uma taxa de sucesso superior a 95% a longo prazo.',
       },
     ],
-    bannerImage:
-      'https://images.unsplash.com/photo-1612283105859-6e2585710acd?q=80&w=1224&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    bannerImage: '/images/protese_protocolo.jpg',
     image1:
       'https://images.unsplash.com/photo-1660737217837-95f00b9eae53?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     image2:
@@ -1201,8 +1194,7 @@ export const treatmentsPT: Treatment[] = [
           'Recomendamos escovagem durante 2 minutos, pelo menos 2 vezes por dia (especialmente antes de dormir), utilização de fio dentário diariamente, e água após as refeições. Na consulta de higiene oral, a nossa equipa dá orientações personalizadas para cada caso.',
       },
     ],
-    bannerImage:
-      'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=1200&h=600&fit=crop',
+    bannerImage: '/images/higiene_oral.jpg',
     image1:
       'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&h=500&fit=crop',
     image2:
@@ -1355,8 +1347,7 @@ export const treatmentsPT: Treatment[] = [
           'Em caso de queda ou batida com envolvimento de dentes, deve contactar-nos o mais rapidamente possível. Se o dente permanente sair da boca, guarde-o em leite ou soro fisiológico e venha de imediato à clínica — em muitos casos é possível reimplantá-lo.',
       },
     ],
-    bannerImage:
-      'https://images.unsplash.com/photo-1588776814546-daab30f310ce?w=1200&h=600&fit=crop',
+    bannerImage: '/images/odontopediatria.jpg',
     image1:
       'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=800&h=500&fit=crop',
     image2:
@@ -1496,8 +1487,7 @@ export const treatmentsPT: Treatment[] = [
           'A primeira consulta de avaliação é fundamental. Durante esta consulta, analisamos a anatomia facial, as suas expectativas e o resultado que pretende alcançar, e definimos juntos o plano mais adequado ao seu caso.',
       },
     ],
-    bannerImage:
-      'https://images.unsplash.com/photo-1655807946138-811bb2340d34?q=80&w=1571&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    bannerImage: '/images/harmonizacao_orofacial.jpg',
     image1:
       'https://images.unsplash.com/photo-1681939283065-011297ba26eb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     image2:

@@ -138,8 +138,7 @@ export const treatmentsEN: Treatment[] = [
           'Daily care is similar to natural teeth — regular brushing, flossing and periodic oral hygiene appointments. Regular maintenance is essential to ensure the longevity of the implant.',
       },
     ],
-    bannerImage:
-      'https://images.unsplash.com/photo-1660732205497-f284ab0be4e9?q=80&w=1125&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    bannerImage: '/images/implantologia.jpg',
     image1:
       'https://images.unsplash.com/photo-1598256989800-fe5f95da9787?w=800&h=500&fit=crop',
     image2:
@@ -297,8 +296,7 @@ export const treatmentsEN: Treatment[] = [
           'Yes. After the teeth are aligned, retention is essential to maintain the results. The retainer can be fixed (bonded to the inner surface of the teeth) or removable, and is included in the treatment follow-up.',
       },
     ],
-    bannerImage:
-      'https://images.unsplash.com/photo-1720685193942-5a1c5ac7fd80?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    bannerImage: '/images/ortodontia.jpg',
     image1:
       'https://images.unsplash.com/photo-1606811971618-4486d14f3f99?w=800&h=500&fit=crop',
     image2:
@@ -447,8 +445,7 @@ export const treatmentsEN: Treatment[] = [
           'Yes. Our goal is always a harmonious result that integrates naturally with each patient\u2019s face and personality. We use high-quality materials and careful planning to ensure the final result always looks natural.',
       },
     ],
-    bannerImage:
-      'https://images.unsplash.com/photo-1681939283065-011297ba26eb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    bannerImage: '/images/estetica_dentaria.jpg',
     image1:
       'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?w=800&h=500&fit=crop',
     image2:
@@ -598,8 +595,7 @@ export const treatmentsEN: Treatment[] = [
           'Prevention involves good daily oral hygiene, regular professional hygiene appointments and a balanced diet. In children and young adults, fissure sealing is also an excellent preventive measure.',
       },
     ],
-    bannerImage:
-      'https://images.unsplash.com/photo-1743767587921-473b6d079137?q=80&w=1355&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    bannerImage: '/images/dentisteria.jpg',
     image1:
       'https://images.unsplash.com/photo-1606811971618-4486d14f3f99?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     image2:
@@ -740,8 +736,7 @@ export const treatmentsEN: Treatment[] = [
           'Care is similar to your other teeth — regular brushing and flossing. If a crown was placed, avoid biting hard objects with that tooth. Follow-up appointments are important to monitor healing.',
       },
     ],
-    bannerImage:
-      'https://images.unsplash.com/photo-1658847075814-bf9a341c91e5?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    bannerImage: '/images/endodontia.jpg',
     image1:
       'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&h=500&fit=crop',
     image2:
@@ -889,8 +884,7 @@ export const treatmentsEN: Treatment[] = [
           'Periodontitis requires ongoing follow-up. With proper treatment and regular maintenance, it can be effectively controlled and the teeth preserved over the years. That is why maintenance appointments are essential.',
       },
     ],
-    bannerImage:
-      'https://d2k1crfmot9vtj.cloudfront.net/media/ae42b22c5fe2137f34c929204328b4ef_TZjkGkL.jpg',
+    bannerImage: '/images/periodontologia.jpg',
     image1:
       'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&h=500&fit=crop',
     image2:
@@ -1044,8 +1038,7 @@ export const treatmentsEN: Treatment[] = [
           'Yes. With proper care and regular follow-up, the Fixed Hybrid Prosthesis is a long-lasting solution. Implants have a long-term success rate above 95%.',
       },
     ],
-    bannerImage:
-      'https://images.unsplash.com/photo-1612283105859-6e2585710acd?q=80&w=1224&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    bannerImage: '/images/protese_protocolo.jpg',
     image1:
       'https://images.unsplash.com/photo-1660737217837-95f00b9eae53?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     image2:
@@ -1189,8 +1182,7 @@ export const treatmentsEN: Treatment[] = [
           'We recommend brushing for 2 minutes, at least twice a day (especially before bed), daily flossing, and water after meals. At the oral hygiene appointment, our team provides personalised guidance for each case.',
       },
     ],
-    bannerImage:
-      'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=1200&h=600&fit=crop',
+    bannerImage: '/images/higiene_oral.jpg',
     image1:
       'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&h=500&fit=crop',
     image2:
@@ -1342,8 +1334,7 @@ export const treatmentsEN: Treatment[] = [
           'In case of a fall or blow involving teeth, contact us as quickly as possible. If a permanent tooth comes out of the mouth, keep it in milk or saline solution and come to the clinic immediately — in many cases it can be reimplanted.',
       },
     ],
-    bannerImage:
-      'https://images.unsplash.com/photo-1588776814546-daab30f310ce?w=1200&h=600&fit=crop',
+    bannerImage: '/images/odontopediatria.jpg',
     image1:
       'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=800&h=500&fit=crop',
     image2:
@@ -1483,8 +1474,7 @@ export const treatmentsEN: Treatment[] = [
           'The first assessment appointment is essential. During this appointment, we analyse your facial anatomy, your expectations and the result you want to achieve, and together we define the plan best suited to your case.',
       },
     ],
-    bannerImage:
-      'https://images.unsplash.com/photo-1655807946138-811bb2340d34?q=80&w=1571&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    bannerImage: '/images/harmonizacao_orofacial.jpg',
     image1:
       'https://images.unsplash.com/photo-1681939283065-011297ba26eb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     image2:
