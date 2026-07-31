@@ -119,10 +119,10 @@ export default function Navbar() {
               <img
                 src='/logo-colombo-nav.png'
                 alt=''
-                className='h-9 sm:h-10 lg:h-12 w-auto flex-shrink-0 transition-transform group-hover:scale-105'
+                className='h-11 sm:h-10 lg:h-12 w-auto flex-shrink-0 transition-transform group-hover:scale-105'
               />
               <span
-                className={`font-semibold tracking-tight leading-none truncate text-[13px] sm:text-base lg:text-lg ${
+                className={`font-semibold tracking-tight leading-none truncate text-sm sm:text-base lg:text-lg ${
                   solid
                     ? 'bg-gradient-to-r from-[#14489c] to-[#006bb3] bg-clip-text text-transparent'
                     : 'text-white drop-shadow'

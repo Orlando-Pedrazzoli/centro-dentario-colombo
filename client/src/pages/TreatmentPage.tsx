@@ -548,7 +548,7 @@ export default function TreatmentPage() {
                   onClick={() => window.scrollTo(0, 0)}
                   className='bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group'
                 >
-                  <div className='h-48 overflow-hidden'>
+                  <div className='aspect-video sm:aspect-auto sm:h-48 overflow-hidden'>
                     <img
                       src={
                         getBannerVariants(relatedTreatment.bannerImage)?.card ??

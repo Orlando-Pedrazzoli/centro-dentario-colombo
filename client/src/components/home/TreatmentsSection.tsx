@@ -69,7 +69,7 @@ export default function TreatmentsSection() {
                   onClick={scrollTop}
                   className='block h-full bg-white rounded-2xl shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 overflow-hidden group'
                 >
-                  <div className='h-44 overflow-hidden bg-gradient-to-br from-primary-50 to-white relative'>
+                  <div className='aspect-video sm:aspect-auto sm:h-44 overflow-hidden bg-gradient-to-br from-primary-50 to-white relative'>
                     <img
                       src={getCardImage(treatment.bannerImage)}
                       alt={treatment.title}
@@ -118,7 +118,7 @@ export default function TreatmentsSection() {
                   onClick={scrollTop}
                   className='block h-full bg-white rounded-2xl shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 overflow-hidden group'
                 >
-                  <div className='h-44 overflow-hidden bg-gradient-to-br from-primary-50 to-white relative'>
+                  <div className='aspect-video sm:aspect-auto sm:h-44 overflow-hidden bg-gradient-to-br from-primary-50 to-white relative'>
                     <img
                       src={getCardImage(treatment.bannerImage)}
                       alt={treatment.title}

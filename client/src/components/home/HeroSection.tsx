@@ -45,22 +45,26 @@ export default function HeroSection() {
       id='inicio'
       className='relative hero-viewport flex items-center overflow-hidden'
     >
-      {/* Vídeo de fundo — poster evita o flash preto durante o load */}
+      {/* Imagem de fundo — /hero_new.jpg (pasta public).
+          É o elemento LCP da homepage → carregamento eager + fetchPriority high. */}
       <div className='absolute inset-0 z-0'>
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload='metadata'
-          poster='/hero-poster.jpg'
+        <img
+          src='/hero_new.jpg'
+          alt=''
           aria-hidden='true'
+          fetchPriority='high'
+          decoding='async'
           className='w-full h-full object-cover'
-        >
-          <source src='/hero-video.mp4' type='video/mp4' />
-        </video>
-        {/* Overlay mais escuro à esquerda — garante contraste AA do texto */}
-        <div className='absolute inset-0 bg-gradient-to-r from-primary-950/90 via-primary-950/75 to-primary-900/45'></div>
+        />
+        {/* Overlay — mais escuro à esquerda (zona do texto) para manter
+            contraste, mais leve no resto para revelar a imagem.
+            Ajustar os valores /XX para escurecer (subir) ou clarear (descer). */}
+        <div className='absolute inset-0 bg-gradient-to-r from-primary-950/70 via-primary-950/45 to-primary-900/20'></div>
+        {/* Fade inferior — dissolve a imagem na cor de fundo da secção
+            seguinte (primary-50, topo do AboutSection), suavizando a
+            transição em vez de um corte reto. Ajustar h-* para um fade
+            mais curto ou mais longo. */}
+        <div className='absolute inset-x-0 bottom-0 h-24 sm:h-40 bg-gradient-to-b from-transparent to-primary-50'></div>
       </div>
 
       <div className='relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-28 pb-12 sm:pt-32 md:pt-40'>
@@ -100,19 +104,22 @@ export default function HeroSection() {
             {t('hero.description')}
           </p>
 
-          {/* ============ CTAs — hierarquia clara ============ */}
+          {/* ============ CTAs — hierarquia clara ============
+              Mobile: ~48px de altura (py-3 + text-base), alvo de toque
+              recomendado (Apple HIG 44pt / Material 48dp) sem dominar o hero.
+              ≥sm: escala para o tamanho original (py-4 + text-lg). */}
           <div
-            className='animate-fade-up flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8'
+            className='animate-fade-up flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8 sm:mb-12'
             style={{ animationDelay: '300ms' }}
           >
             {/* Primário: branco sólido — o elemento de maior contraste */}
             <a
               href='#contacto'
-              className='group inline-flex items-center justify-center gap-2.5 bg-white text-primary-700 px-8 py-4 rounded-full font-bold text-base sm:text-lg shadow-cta hover:bg-primary-50 hover:scale-[1.02] transition-all duration-300'
+              className='group inline-flex items-center justify-center gap-2 sm:gap-2.5 bg-white text-primary-700 px-6 py-3 sm:px-8 sm:py-4 rounded-full font-bold text-base sm:text-lg shadow-cta hover:bg-primary-50 hover:scale-[1.02] transition-all duration-300'
             >
               {t('hero.cta1')}
               <ArrowRight
-                className='w-5 h-5 group-hover:translate-x-1 transition-transform'
+                className='w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform'
                 aria-hidden='true'
               />
             </a>
@@ -121,9 +128,9 @@ export default function HeroSection() {
             <a
               href={TEL_HREF}
               aria-label={`${t('hero.cta2')}: ${business.telephoneDisplay}`}
-              className='inline-flex items-center justify-center gap-2.5 border-2 border-white/40 text-white px-8 py-4 rounded-full font-bold text-base sm:text-lg hover:bg-white/10 hover:border-white/70 transition-all duration-300'
+              className='inline-flex items-center justify-center gap-2 sm:gap-2.5 border-2 border-white/40 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:bg-white/10 hover:border-white/70 transition-all duration-300'
             >
-              <Phone className='w-5 h-5' aria-hidden='true' />
+              <Phone className='w-4 h-4 sm:w-5 sm:h-5' aria-hidden='true' />
               {TEL_DISPLAY}
             </a>
           </div>
