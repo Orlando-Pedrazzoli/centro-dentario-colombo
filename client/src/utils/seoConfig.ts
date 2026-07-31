@@ -16,7 +16,7 @@ export const SITE_CONFIG = {
     'Clínica dentária no Centro Comercial Colombo, Lisboa. Aberto todos os dias das 09:00 às 23:00, incluindo fins de semana e feriados. Urgências dentárias, implantologia, ortodontia e estética dentária.',
   defaultKeywords:
     'dentista colombo, clínica dentária lisboa, urgência dentária lisboa, dentista aberto ao domingo lisboa, implantes dentários lisboa, ortodontia lisboa, centro dentário colombo',
-  defaultImage: 'https://www.centrodentariocolombo.com/og-image-v2.jpg',
+  defaultImage: 'https://www.centrodentariocolombo.com/og-image-new.jpg',
   locale: 'pt_PT',
   localeAlternate: 'en_GB',
   themeColor: '#14489c',
