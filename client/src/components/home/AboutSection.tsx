@@ -29,7 +29,7 @@ export default function AboutSection() {
   return (
     <section
       id='sobre'
-      className='py-20 md:py-24 px-4 bg-gradient-to-br from-primary-50 to-white'
+      className='pt-8 pb-20 md:pt-10 md:pb-24 px-4 bg-gradient-to-br from-primary-50 to-white'
     >
       <div className='max-w-7xl mx-auto'>
         {/* Título da secção */}

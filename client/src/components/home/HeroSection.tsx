@@ -64,7 +64,7 @@ export default function HeroSection() {
             seguinte (primary-50, topo do AboutSection), suavizando a
             transição em vez de um corte reto. Ajustar h-* para um fade
             mais curto ou mais longo. */}
-        <div className='absolute inset-x-0 bottom-0 h-24 sm:h-40 bg-gradient-to-b from-transparent to-primary-50'></div>
+        <div className='absolute inset-x-0 bottom-0 h-14 sm:h-24 bg-gradient-to-b from-transparent to-primary-50'></div>
       </div>
 
       <div className='relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-28 pb-12 sm:pt-32 md:pt-40'>
