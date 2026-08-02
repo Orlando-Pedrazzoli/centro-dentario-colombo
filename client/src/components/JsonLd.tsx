@@ -64,11 +64,7 @@ export function OrganizationJsonLd() {
       { '@type': 'City', name: 'Amadora' },
       { '@type': 'City', name: 'Loures' },
     ],
-    sameAs: [
-      business.socialMedia.facebook,
-      business.socialMedia.instagram,
-      business.socialMedia.googleMaps,
-    ],
+    sameAs: [business.socialMedia.instagram, business.socialMedia.googleMaps],
     medicalSpecialty: [
       'Implantology',
       'Orthodontics',

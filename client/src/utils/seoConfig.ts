@@ -61,8 +61,7 @@ export const SITE_CONFIG = {
     ersLicense: '3297/2011',
     ersRegistration: 'E115139',
     socialMedia: {
-      facebook: 'https://www.facebook.com/centrodentariocolombo',
-      instagram: 'https://www.instagram.com/centrodentario_colombo',
+      instagram: 'https://www.instagram.com/colombo_centrodentario/',
       googleMaps: 'https://maps.google.com/?cid=3260960382060429767',
     },
   },

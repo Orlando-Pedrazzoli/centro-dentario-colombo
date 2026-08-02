@@ -15,9 +15,10 @@ import { getWhatsAppUrl } from '../utils/whatsapp';
 // ============================================
 // Variantes otimizadas do banner
 // Geradas em /public/images/banners/ a partir da imagem original:
-//   {nome}-desktop.webp → 1920×640 (≈3:1, altura real do hero em desktop)
-//   {nome}-mobile.webp  → 864×1080 (4:5, altura real do hero em mobile)
-//   {nome}-card.webp    → 800×450 (cartões de tratamentos relacionados)
+//   {nome}-desktop.jpg  → panorâmico 24:7 (ex.: 2880×840), rácio
+//                         idêntico ao contentor md:h-[560px] a 1920px
+//   {nome}-card.webp    → 800×450 (16:9) — banner mobile e cartões
+//                         de tratamentos relacionados
 // ============================================
 function getBannerVariants(bannerImage: string) {
   if (!bannerImage.startsWith('/images/')) return null;
@@ -25,7 +26,7 @@ function getBannerVariants(bannerImage: string) {
     .replace('/images/', '')
     .replace(/\.(jpg|jpeg|png|webp)$/i, '');
   return {
-    desktop: `/images/banners/${base}-desktop.webp`,
+    desktop: `/images/banners/${base}-desktop.jpg`,
     mobile: `/images/banners/${base}-mobile.webp`,
     card: `/images/banners/${base}-card.webp`,
   };
@@ -232,20 +233,25 @@ export default function TreatmentPage() {
 
       {/* Navbar vem do Layout. */}
 
-      {/* Hero Banner — única imagem da página.
+      {/* Hero Banner — imagem limpa, sem gradientes nem texto sobreposto.
           Serve recortes otimizados por breakpoint via <picture>:
-          desktop 1920×640 (≈3:1) e mobile 864×1080 (4:5), com fallback
-          para a imagem original caso as variantes não existam. */}
+          desktop panorâmico 24:7 (.jpg) e mobile usa a variante card 800×450
+          (16:9), com fallback para a imagem original caso as variantes
+          não existam. Todo o conteúdo textual vive ABAIXO do banner. */}
       <section className='pt-20'>
-        <div className='relative h-[460px] md:h-[560px] overflow-hidden'>
+        {/* aspect-ratio espelha o recorte servido em cada breakpoint:
+            mobile 16:9 (card 800×450) e desktop 3:1 (1920×640).
+            Com o rácio do contentor igual ao da imagem, o object-cover
+            nunca corta conteúdo visual — em nenhuma largura de ecrã. */}
+        <div className='relative w-full overflow-hidden aspect-video md:aspect-[3/1]'>
           {bannerVariants ? (
             <picture>
               <source
                 media='(min-width: 768px)'
                 srcSet={bannerVariants.desktop}
-                type='image/webp'
+                type='image/jpeg'
               />
-              <source srcSet={bannerVariants.mobile} type='image/webp' />
+              <source srcSet={bannerVariants.card} type='image/webp' />
               <img
                 src={treatment.bannerImage}
                 alt={treatment.title}
@@ -261,56 +267,50 @@ export default function TreatmentPage() {
               fetchPriority='high'
             />
           )}
-          {/* Gradiente reforçado à esquerda para legibilidade do texto */}
-          <div className='absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/10'></div>
-          <div className='absolute inset-0 bg-gradient-to-r from-black/40 to-transparent'></div>
+        </div>
 
-          {/* Conteúdo do hero */}
-          <div className='absolute bottom-0 left-0 right-0 p-8 md:p-12'>
-            <div className='max-w-7xl mx-auto'>
-              {/* Breadcrumb visível — orientação e SEO */}
-              <nav
-                aria-label='Breadcrumb'
-                className='mb-4 text-sm text-white/70'
-              >
-                <ol className='flex flex-wrap items-center gap-2'>
-                  <li>
-                    <Link to='/' className='hover:text-white transition'>
-                      {t('treatmentPage.breadcrumbHome')}
-                    </Link>
-                  </li>
-                  <li aria-hidden='true'>/</li>
-                  <li>
-                    <a
-                      href='/#tratamentos'
-                      className='hover:text-white transition'
-                    >
-                      {t('treatmentPage.breadcrumbTreatments')}
-                    </a>
-                  </li>
-                  <li aria-hidden='true'>/</li>
-                  <li className='text-white font-medium'>{treatment.title}</li>
-                </ol>
-              </nav>
+        {/* Cabeçalho do tratamento — abaixo do banner, sobre fundo branco */}
+        <div className='bg-white border-b border-gray-100'>
+          <div className='max-w-7xl mx-auto px-4 py-8 md:py-12'>
+            {/* Breadcrumb visível — orientação e SEO */}
+            <nav aria-label='Breadcrumb' className='mb-4 text-sm text-gray-500'>
+              <ol className='flex flex-wrap items-center gap-2'>
+                <li>
+                  <Link to='/' className='hover:text-blue-600 transition'>
+                    {t('treatmentPage.breadcrumbHome')}
+                  </Link>
+                </li>
+                <li aria-hidden='true'>/</li>
+                <li>
+                  <a
+                    href='/#tratamentos'
+                    className='hover:text-blue-600 transition'
+                  >
+                    {t('treatmentPage.breadcrumbTreatments')}
+                  </a>
+                </li>
+                <li aria-hidden='true'>/</li>
+                <li className='text-gray-900 font-medium'>{treatment.title}</li>
+              </ol>
+            </nav>
 
-              <p className='text-sm md:text-base font-semibold uppercase tracking-wider text-blue-300 mb-3'>
-                {treatment.title}
-              </p>
-              <h1 className='text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 max-w-4xl'>
-                {treatment.hero.title}
-              </h1>
-              <p className='text-lg md:text-xl text-white/90 max-w-3xl mb-6'>
-                {treatment.hero.subtitle}
-              </p>
-              <a
-                href={whatsAppHref}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='inline-flex items-center bg-blue-600 text-white px-8 py-4 rounded-full hover:bg-blue-700 hover:scale-[1.02] transition text-lg font-semibold shadow-lg'
-              >
-                {treatment.hero.cta}
-              </a>
-            </div>
+            <p className='text-sm md:text-base font-semibold uppercase tracking-wider text-blue-600 mb-3'>
+              {treatment.title}
+            </p>
+            <h1 className='text-3xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 max-w-4xl'>
+              {treatment.hero.title}
+            </h1>
+            <p className='text-lg md:text-xl text-gray-600 max-w-3xl mb-6'>
+              {treatment.hero.subtitle}
+            </p>
+            <a
+              href={whatsAppHref}
+              target='_blank'
+              rel='noopener noreferrer'
+              className='inline-flex items-center bg-blue-600 text-white px-8 py-4 rounded-full hover:bg-blue-700 hover:scale-[1.02] transition text-lg font-semibold shadow-lg'
+            >
+              {treatment.hero.cta}
+            </a>
           </div>
         </div>
       </section>
