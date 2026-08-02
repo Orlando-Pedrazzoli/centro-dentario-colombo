@@ -113,6 +113,7 @@ export default function Navbar() {
             {/* ---------- Logo ---------- */}
             <Link
               to='/'
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               className='flex items-center gap-2.5 min-w-0 group'
               aria-label={SITE_CONFIG.siteName}
             >

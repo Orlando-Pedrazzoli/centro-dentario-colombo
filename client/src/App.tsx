@@ -31,6 +31,7 @@ import MyInvoices from './pages/patient/MyInvoices';
 import Layout from './components/Layout';
 import PatientProtectedRoute from './components/PatientProtectedRoute';
 import CookieConsent from './components/cookies/CookieConsent';
+import ScrollToTop from './components/ScrollToTop';
 
 // ============================================
 // COMPONENTE PARA PROTEGER ROTAS ADMIN
@@ -54,6 +55,7 @@ export default function App() {
 
   return (
     <>
+      <ScrollToTop />
       <Routes>
         {/* ==================== ROTAS PUBLICAS COM LAYOUT ==================== */}
         <Route element={<Layout />}>
