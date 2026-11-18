@@ -314,12 +314,16 @@ export default function Footer() {
                 © {currentYear} Centro Dentário Colombo - D. Amaral Assistência
                 e Prevenção Dentária LDA
               </p>
-              <p className='text-xs text-gray-600 mt-1'>
+              {/* Dados de identificação obrigatórios (DL 238/2015 · Reg. ERS
+                  1058/2016): contraste suficiente para leitura fácil. */}
+              <p className='text-sm text-gray-300 mt-1'>
                 NIPC: 505887533 | Licença ERS: 3297/2011 | Registo ERS: E115139
               </p>
-              {/* Exigência ERS (DL 238/2015 · Reg. ERS 1058/2016) */}
-              <p className='text-xs text-gray-500 mt-1'>
-                {t('footer.clinicalDirector')}: Dr. Orlando Cepa · OMD n.º 8281
+              <p className='text-sm text-gray-300 mt-1'>
+                {t('footer.clinicalDirector')}:{' '}
+                <span className='text-white font-medium'>
+                  Dr. Orlando Cepa · OMD n.º 8281
+                </span>
               </p>
             </div>
 
