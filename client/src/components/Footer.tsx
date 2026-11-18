@@ -317,6 +317,10 @@ export default function Footer() {
               <p className='text-xs text-gray-600 mt-1'>
                 NIPC: 505887533 | Licença ERS: 3297/2011 | Registo ERS: E115139
               </p>
+              {/* Exigência ERS (DL 238/2015 · Reg. ERS 1058/2016) */}
+              <p className='text-xs text-gray-500 mt-1'>
+                {t('footer.clinicalDirector')}: Dr. Orlando Cepa · OMD n.º 8281
+              </p>
             </div>
 
             {/* Legal Links */}
@@ -338,6 +342,59 @@ export default function Footer() {
               </Link>
               <span className='text-gray-700'>|</span>
               <CookieSettingsButton className='text-gray-500 hover:text-blue-400 transition-colors' />
+            </div>
+          </div>
+
+          {/* Livro de Reclamações (DL 156/2005) + RAL (Lei 144/2015) */}
+          <div className='mt-6 pt-6 border-t border-gray-800 grid gap-6 md:grid-cols-[auto_1fr] md:items-center'>
+            <a
+              href='https://www.livroreclamacoes.pt/inicio'
+              target='_blank'
+              rel='noopener noreferrer'
+              aria-label={t('footer.complaintsBookAria')}
+              className='inline-flex items-center gap-3 self-start justify-self-center md:justify-self-start bg-white rounded-lg px-4 py-2.5 shadow hover:ring-2 hover:ring-blue-400 transition'
+            >
+              <img
+                src='/livro-reclamacoes.png'
+                alt='Livro de Reclamações'
+                width={120}
+                height={50}
+                loading='lazy'
+                decoding='async'
+                className='h-10 w-auto'
+                onError={e => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+              <span className='text-sm font-semibold text-gray-900 leading-tight'>
+                {t('footer.complaintsBook')}
+              </span>
+            </a>
+
+            <div className='text-xs text-gray-500 leading-relaxed text-center md:text-left'>
+              <p className='text-gray-400 font-semibold mb-1'>
+                {t('footer.adrTitle')}
+              </p>
+              <p>
+                {t('footer.adrText')} (
+                <a
+                  href='https://www.centroarbitragemlisboa.pt'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='underline hover:text-blue-400 transition-colors'
+                >
+                  www.centroarbitragemlisboa.pt
+                </a>
+                ). {t('footer.adrMore')}{' '}
+                <a
+                  href='https://www.consumidor.gov.pt'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='underline hover:text-blue-400 transition-colors'
+                >
+                  www.consumidor.gov.pt
+                </a>
+              </p>
             </div>
           </div>
 

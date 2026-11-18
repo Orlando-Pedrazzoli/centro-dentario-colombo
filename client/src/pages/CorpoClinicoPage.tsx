@@ -198,8 +198,8 @@ export default function CorpoClinicoPage() {
     <div className='min-h-screen bg-white'>
       <SEO
         title='Corpo Clínico'
-        description='Conheça a equipa de médicos dentistas do Centro Dentário Colombo. Profissionais especializados em implantologia, ortodontia, estética dentária e mais. Marque a sua consulta!'
-        keywords='médicos dentistas lisboa, equipa dentária, especialistas dentários, dentistas centro colombo, implantologista, ortodontista, periodontista'
+        description='Conheça a equipa de médicos dentistas do Centro Dentário Colombo, com experiência em implantologia, ortodontia, estética dentária e mais. Marque a sua consulta!'
+        keywords='médicos dentistas lisboa, equipa dentária, dentistas centro colombo, implantes dentários, ortodontia, periodontologia'
         path='/corpo-clinico'
       />
 
@@ -266,7 +266,7 @@ export default function CorpoClinicoPage() {
             </span>
             <span>
               {specialties.length}{' '}
-              {language === 'en' ? 'specialties' : 'especialidades'}
+              {language === 'en' ? 'clinical areas' : 'áreas clínicas'}
             </span>
             <span
               aria-hidden='true'
@@ -432,9 +432,21 @@ export default function CorpoClinicoPage() {
                       </div>
                     </div>
 
-                    <h3 className='text-xl font-bold text-gray-900 mb-2 flex-shrink-0'>
+                    <h3 className='text-xl font-bold text-gray-900 flex-shrink-0'>
                       {doctor.title} {doctor.name}
                     </h3>
+                    {/* Identificação profissional — exigência ERS */}
+                    <p className='text-sm text-gray-500 mt-1 mb-3 flex-shrink-0'>
+                      {doctor.gender === 'F'
+                        ? t('clinicalTeam.dentistFemale')
+                        : t('clinicalTeam.dentistMale')}
+                      {doctor.omd && (
+                        <>
+                          {' · '}
+                          {t('clinicalTeam.omd')} {doctor.omd}
+                        </>
+                      )}
+                    </p>
 
                     {/* Especialidades */}
                     <div className='flex flex-wrap justify-center gap-2 mb-4 flex-shrink-0 min-h-[60px] items-start'>

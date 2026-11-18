@@ -48,9 +48,15 @@ export default function AboutSection() {
           {/* Coluna Esquerda - Imagem */}
           <Reveal direction='left' className='relative'>
             <div className='rounded-2xl overflow-hidden shadow-card'>
+              {/* Foto real do espaço, sem pessoas. A antiga sobre-colombo.jpg
+                  era de banco de imagens com pessoas que não são da equipa
+                  (risco de publicidade enganosa — ERS). Substituir por foto
+                  real da equipa quando a clínica a enviar. */}
               <img
-                src='/sobre-colombo.jpg'
-                alt='Equipa Centro Dentário Colombo'
+                src='/sobre-espaco.jpg'
+                alt='Entrada do Centro Dentário Colombo no Centro Comercial Colombo'
+                width={1000}
+                height={1000}
                 loading='lazy'
                 decoding='async'
                 className='w-full h-full object-cover'

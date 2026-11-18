@@ -293,8 +293,8 @@ export default function UrgenciasPage() {
       <EmergencyServiceJsonLd
         name={
           isEN
-            ? 'Dental emergency service — Centro Dentário Colombo'
-            : 'Serviço de urgências dentárias — Centro Dentário Colombo'
+            ? 'Dental emergencies, 09:00–23:00 — Centro Dentário Colombo'
+            : 'Urgências dentárias, 09:00–23:00 — Centro Dentário Colombo'
         }
         description={copy.seoDescription}
         language={language}

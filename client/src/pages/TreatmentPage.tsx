@@ -9,6 +9,7 @@ import {
   FaqJsonLd,
 } from '../components/JsonLd';
 import { getTreatments } from '../data/services-data';
+import AiImageCaption from '../components/ui/AiImageCaption';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getWhatsAppUrl } from '../utils/whatsapp';
 
@@ -267,6 +268,7 @@ export default function TreatmentPage() {
               fetchPriority='high'
             />
           )}
+          <AiImageCaption />
         </div>
 
         {/* Cabeçalho do tratamento — abaixo do banner, sobre fundo branco */}

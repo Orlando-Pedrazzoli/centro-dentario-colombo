@@ -8,12 +8,47 @@ export interface Doctor {
   education?: string[];
   achievements?: string[];
   languages?: string[];
+  /** Nº de cédula profissional da Ordem dos Médicos Dentistas */
+  omd?: string;
+  /** 'F' → "Médica Dentista", 'M' → "Médico Dentista" */
+  gender: 'F' | 'M';
 }
+
+// ============================================
+// Dados de identificação profissional (ERS)
+// ============================================
+// Fonte única para PT e EN, indexada pelo id do médico.
+// Exigência ERS: cada médico dentista apresentado no site
+// deve ter o nº da OMD visível. Números retirados dos
+// questionários preenchidos pelos próprios médicos (nov/2026).
+// Os que estão sem `omd` aguardam envio pela clínica.
+const PROFESSIONAL_IDS: Record<string, { omd?: string; gender: 'F' | 'M' }> = {
+  '1': { gender: 'M' }, // Marcelo F. Natali — OMD em falta
+  '2': { gender: 'F' }, // Geane Mendes — OMD em falta
+  '3': { gender: 'F', omd: '8165' }, // Christina Melo Hastenreiter
+  '4': { gender: 'F', omd: '14389' }, // Ana Paula Ribeiro Borges
+  '5': { gender: 'F', omd: '14201' }, // Camila F. Lameira
+  '6': { gender: 'M', omd: '11398' }, // Marcelo Marques
+  '7': { gender: 'M', omd: '8281' }, // Orlando Cepa (diretor clínico)
+  '8': { gender: 'F', omd: '12366' }, // Veridiana Fumio
+  '9': { gender: 'F' }, // Andresa Fonseca M. da Silva — OMD em falta
+  '10': { gender: 'F' }, // Flavia Paula Silva Cardoso — OMD em falta
+  '11': { gender: 'F' }, // Andréa Romero Esteves Lima — OMD em falta
+  '12': { gender: 'F', omd: '15519' }, // Carolina Chaves
+  '13': { gender: 'F', omd: '14350' }, // Fernanda P. Patrício
+  '14': { gender: 'F' }, // Sandra Rodriguez — OMD em falta
+  '15': { gender: 'M' }, // Eder Quedas Ferreira — OMD em falta
+  '16': { gender: 'F', omd: '14245' }, // Jessica Arcadier
+  '17': { gender: 'M', omd: '2724' }, // Júlio Souza
+  '18': { gender: 'F', omd: '14405' }, // Patricia Octávio
+};
+
+type DoctorContent = Omit<Doctor, 'omd' | 'gender'>;
 
 // ============================================
 // Portuguese Doctors Data
 // ============================================
-const doctorsPT: Doctor[] = [
+const doctorsPT: DoctorContent[] = [
   {
     id: '1',
     name: 'Marcelo F. Natali',
@@ -29,7 +64,7 @@ const doctorsPT: Doctor[] = [
     title: 'Dra.',
     specialties: ['Endodontia', 'Prótese Dentária', 'Reabilitação Oral'],
     photo: '/doctors/geane-mendes.jpg',
-    bio: 'Médica Dentista com mais de 25 anos de atuação, especialista em Endodontia, com experiência em Prótese Dentária, Reabilitação Oral e Cirurgia Oral Menor. Dedica-se a prestar cuidados de saúde com rigor clínico, ética e atenção individualizada.',
+    bio: 'Médica Dentista com mais de 25 anos de atuação, com atuação em Endodontia e experiência em Prótese Dentária, Reabilitação Oral e Cirurgia Oral Menor. Dedica-se a prestar cuidados de saúde com rigor clínico, ética e atenção individualizada.',
     languages: ['Português'],
   },
   {
@@ -56,7 +91,7 @@ const doctorsPT: Doctor[] = [
     title: 'Dra.',
     specialties: ['Ortodontia', 'Ortopedia', 'Odontopediatria'],
     photo: '/doctors/camila-lameira.jpg',
-    bio: 'Médica dentista com 20 anos de experiência. Especialista em Ortodontia, com atuação em Ortopedia e paixão pela Odontopediatria. Acredita que compreender cada paciente é essencial para transformar sorrisos com confiança.',
+    bio: 'Médica dentista com 20 anos de experiência. Atua em Ortodontia e Ortopedia Funcional dos Maxilares, com paixão pela Odontopediatria. Acredita que compreender cada paciente é essencial para transformar sorrisos com confiança.',
     languages: ['Português'],
   },
   {
@@ -65,7 +100,7 @@ const doctorsPT: Doctor[] = [
     title: 'Dr.',
     specialties: ['Dentisteria Estética', 'Implantes Dentários'],
     photo: '/doctors/marcelo-marques.jpg',
-    bio: 'Especialista em Dentisteria Estética, com foco em facetas e coroas. Possui pós-graduações em Implantes Dentários, Oclusão, Reabilitação Oral, Periodontologia e Ortodontia, oferecendo um atendimento completo e multidisciplinar.',
+    bio: 'Com experiência em Dentisteria Estética, com foco em facetas e coroas. Possui pós-graduações em Implantes Dentários, Oclusão, Reabilitação Oral, Periodontologia e Ortodontia, oferecendo um atendimento completo e multidisciplinar.',
     education: [
       'Pós-graduação em Implantes Dentários',
       'Pós-graduação em Oclusão',
@@ -73,7 +108,6 @@ const doctorsPT: Doctor[] = [
       'Pós-graduação em Periodontologia',
       'Pós-graduação em Ortodontia',
     ],
-    achievements: ['OMD 11398'],
     languages: ['Português'],
   },
   {
@@ -82,7 +116,7 @@ const doctorsPT: Doctor[] = [
     title: 'Dr.',
     specialties: ['Reabilitação Oral', 'Dentisteria', 'Prótese Dentária'],
     photo: '/doctors/orlando-cepa.jpg',
-    bio: 'Com uma carreira distinta que inclui formação em Medicina Dentária na FMDUP, experiência clínica e um foco em reabilitação oral, dentisteria e prótese dentária, trabalhando com uma equipa especializada na clínica.',
+    bio: 'Com uma carreira distinta que inclui formação em Medicina Dentária na FMDUP, experiência clínica e um foco em reabilitação oral, dentisteria e prótese dentária, trabalhando com uma equipa experiente na clínica.',
     education: [
       'Medicina Dentária - FMDUP (Faculdade de Medicina Dentária da Universidade do Porto)',
     ],
@@ -137,10 +171,10 @@ const doctorsPT: Doctor[] = [
       'Periodontologia',
     ],
     photo: '/doctors/andrea-romero.jpeg',
-    bio: 'Especialista em Prótese e Dentisteria, executa tratamentos restauradores em geral como coroas e facetas em resina e porcelana, periodontologia e pequenas cirurgias. Formação em implantes e prótese sobre implantes.',
+    bio: 'Atua em Prótese e Dentisteria, executa tratamentos restauradores em geral como coroas e facetas em resina e porcelana, periodontologia e pequenas cirurgias. Formação em implantes e prótese sobre implantes.',
     education: [
-      'Especialização em Prótese',
-      'Especialização em Dentisteria',
+      'Formação em Prótese',
+      'Formação em Dentisteria',
       'Formação em Implantes e Prótese sobre Implantes',
       'Formação em Periodontologia',
     ],
@@ -152,9 +186,9 @@ const doctorsPT: Doctor[] = [
     title: 'Dra.',
     specialties: ['Prostodontia', 'Implantes Dentários'],
     photo: '/doctors/carolina-chaves.jpg',
-    bio: 'Especialista em Prostodontia com Doutoramento (PhD) e mais de 10 anos de experiência clínica e investigação. Formação avançada em Cirurgia de Implantes e Prótese sobre Implantes. Investigadora em biomateriais para reabilitação oral, com publicações em revistas científicas internacionais.',
+    bio: 'Doutorada (PhD) em Reabilitação Oral, com mais de 10 anos de experiência clínica e investigação. Formação avançada em Cirurgia de Implantes e Prótese sobre Implantes. Investigadora em biomateriais para reabilitação oral, com publicações em revistas científicas internacionais.',
     education: [
-      'Doutoramento (PhD) em Prostodontia',
+      'Doutoramento (PhD) em Reabilitação Oral — UNESP',
       'Formação em Cirurgia de Implantes',
       'Formação em Prótese sobre Implantes',
       'Investigação - São Paulo State University',
@@ -178,7 +212,7 @@ const doctorsPT: Doctor[] = [
     title: 'Dra.',
     specialties: ['Clínica Geral'],
     photo: '/doctors/sandra-rodrigues.jpg',
-    bio: 'Médica dentista formada há 20 anos. Apaixonada pelo trabalho clínico e pela aplicação da evidência científica para oferecer aos pacientes tratamentos de última geração com calidez humana.',
+    bio: 'Médica dentista formada há 20 anos. Apaixonada pelo trabalho clínico e pela aplicação da evidência científica para oferecer aos pacientes tratamentos de última geração com calor humano.',
     languages: ['Português'],
   },
   {
@@ -193,7 +227,7 @@ const doctorsPT: Doctor[] = [
       'Cirurgia',
     ],
     photo: '/doctors/eder-quedas.jpg',
-    bio: 'Médico Dentista Generalista formado em Odontologia em São Paulo, Brasil. Atua em Portugal desde 1989, clinicando em Lisboa e Setúbal. Experiência em Dentisteria Estética, Próteses Fixa e Removível, e Cirurgia.',
+    bio: 'Médico Dentista Generalista formado em Medicina Dentária em São Paulo, Brasil. Atua em Portugal desde 1989, clinicando em Lisboa e Setúbal. Experiência em Dentisteria Estética, Próteses Fixa e Removível, e Cirurgia.',
     languages: ['Português'],
   },
   {
@@ -202,7 +236,7 @@ const doctorsPT: Doctor[] = [
     title: 'Dra.',
     specialties: ['Periodontia', 'Prótese Fixa', 'Dentisteria Estética'],
     photo: '/doctors/jessica-arcadier.jpg',
-    bio: 'Especialista em Periodontia, tratando doenças e realizando cirurgias nos tecidos de suporte dos dentes. Possui especialização em Odontologia Estética, com foco em restaurações e reabilitações fixas que unem função e harmonia do sorriso.',
+    bio: 'Atua em Periodontia, tratando doenças e realizando cirurgias nos tecidos de suporte dos dentes. Possui formação em Dentisteria Estética, com foco em restaurações e reabilitações fixas que unem função e harmonia do sorriso.',
     languages: ['Português'],
   },
   {
@@ -211,7 +245,7 @@ const doctorsPT: Doctor[] = [
     title: 'Dr.',
     specialties: ['Cirurgia Oral'],
     photo: '/doctors/julio-souza.jpg',
-    bio: 'Cirurgião-dentista com mais de 40 anos de experiência clínica, reconhecido pelo atendimento humanizado, bem-humorado e pela realização de extrações com conforto, tranquilidade e segurança.',
+    bio: 'Médico dentista com mais de 40 anos de experiência clínica, reconhecido pelo atendimento humanizado, bem-humorado e pela realização de extrações com conforto, tranquilidade e segurança.',
     languages: ['Português'],
   },
   {
@@ -226,8 +260,7 @@ const doctorsPT: Doctor[] = [
       'Reabilitação Oral',
     ],
     photo: '/doctors/patricia-octavio.jpg',
-    bio: 'Com 28 anos de experiência, especialista em Cirurgia Oral Avançada, Implantes Avançados, Próteses sobre Implantes e Reabilitação Oral, devolvendo função mastigatória e estética ao paciente.',
-    achievements: ['OMD 14405'],
+    bio: 'Com 28 anos de experiência em Cirurgia Oral Avançada, Implantes Avançados, Próteses sobre Implantes e Reabilitação Oral, devolvendo função mastigatória e estética ao paciente.',
     languages: ['Português'],
   },
 ];
@@ -235,7 +268,7 @@ const doctorsPT: Doctor[] = [
 // ============================================
 // English Doctors Data
 // ============================================
-const doctorsEN: Doctor[] = [
+const doctorsEN: DoctorContent[] = [
   {
     id: '1',
     name: 'Marcelo F. Natali',
@@ -251,7 +284,7 @@ const doctorsEN: Doctor[] = [
     title: 'Dr.',
     specialties: ['Endodontics', 'Dental Prosthetics', 'Oral Rehabilitation'],
     photo: '/doctors/geane-mendes.jpg',
-    bio: 'Dentist with over 25 years of practice, specialist in Endodontics, with experience in Dental Prosthetics, Oral Rehabilitation, and Minor Oral Surgery. Dedicated to providing healthcare with clinical rigor, ethics, and individualized attention.',
+    bio: 'Dentist with over 25 years of practice, practising in Endodontics, with experience in Dental Prosthetics, Oral Rehabilitation, and Minor Oral Surgery. Dedicated to providing healthcare with clinical rigor, ethics, and individualized attention.',
     languages: ['Portuguese'],
   },
   {
@@ -278,7 +311,7 @@ const doctorsEN: Doctor[] = [
     title: 'Dr.',
     specialties: ['Orthodontics', 'Orthopedics', 'Pediatric Dentistry'],
     photo: '/doctors/camila-lameira.jpg',
-    bio: 'Dentist with 20 years of experience. Specialist in Orthodontics, with practice in Orthopedics and a passion for Pediatric Dentistry. Believes that understanding each patient is essential to transforming smiles with confidence.',
+    bio: 'Dentist with 20 years of experience. Practises Orthodontics and Functional Jaw Orthopedics, with a passion for Pediatric Dentistry. Believes that understanding each patient is essential to transforming smiles with confidence.',
     languages: ['Portuguese'],
   },
   {
@@ -287,7 +320,7 @@ const doctorsEN: Doctor[] = [
     title: 'Dr.',
     specialties: ['Cosmetic Dentistry', 'Dental Implants'],
     photo: '/doctors/marcelo-marques.jpg',
-    bio: 'Specialist in Cosmetic Dentistry, focusing on veneers and crowns. Holds postgraduate degrees in Dental Implants, Occlusion, Oral Rehabilitation, Periodontology, and Orthodontics, offering comprehensive and multidisciplinary care.',
+    bio: 'Experienced in Cosmetic Dentistry, focusing on veneers and crowns. Holds postgraduate degrees in Dental Implants, Occlusion, Oral Rehabilitation, Periodontology, and Orthodontics, offering comprehensive and multidisciplinary care.',
     education: [
       'Postgraduate in Dental Implants',
       'Postgraduate in Occlusion',
@@ -295,7 +328,6 @@ const doctorsEN: Doctor[] = [
       'Postgraduate in Periodontology',
       'Postgraduate in Orthodontics',
     ],
-    achievements: ['OMD 11398'],
     languages: ['Portuguese'],
   },
   {
@@ -308,7 +340,7 @@ const doctorsEN: Doctor[] = [
       'Dental Prosthetics',
     ],
     photo: '/doctors/orlando-cepa.jpg',
-    bio: 'With a distinguished career including training in Dental Medicine at FMDUP, clinical experience and a focus on oral rehabilitation, restorative dentistry, and dental prosthetics, working with a specialized team at the clinic.',
+    bio: 'With a distinguished career including training in Dental Medicine at FMDUP, clinical experience and a focus on oral rehabilitation, restorative dentistry, and dental prosthetics, working with an experienced team at the clinic.',
     education: [
       'Dental Medicine - FMDUP (Faculty of Dental Medicine, University of Porto)',
     ],
@@ -363,10 +395,10 @@ const doctorsEN: Doctor[] = [
       'Periodontology',
     ],
     photo: '/doctors/andrea-romero.jpeg',
-    bio: 'Specialist in Prosthetics and Restorative Dentistry, performs general restorative treatments such as resin and porcelain crowns and veneers, periodontology, and minor surgeries. Trained in implants and implant-supported prosthetics.',
+    bio: 'Practises Prosthetics and Restorative Dentistry, performing general restorative treatments such as resin and porcelain crowns and veneers, periodontology, and minor surgeries. Trained in implants and implant-supported prosthetics.',
     education: [
-      'Specialization in Prosthetics',
-      'Specialization in Restorative Dentistry',
+      'Training in Prosthetics',
+      'Training in Restorative Dentistry',
       'Training in Implants and Implant-Supported Prosthetics',
       'Training in Periodontology',
     ],
@@ -378,9 +410,9 @@ const doctorsEN: Doctor[] = [
     title: 'Dr.',
     specialties: ['Prosthodontics', 'Dental Implants'],
     photo: '/doctors/carolina-chaves.jpg',
-    bio: 'Prosthodontics Specialist with a PhD and over 10 years of clinical experience and research. Advanced training in Implant Surgery and Implant-Supported Prosthetics. Researcher in biomaterials for oral rehabilitation, with publications in international scientific journals.',
+    bio: 'PhD in Oral Rehabilitation, with over 10 years of clinical experience and research. Advanced training in Implant Surgery and Implant-Supported Prosthetics. Researcher in biomaterials for oral rehabilitation, with publications in international scientific journals.',
     education: [
-      'PhD in Prosthodontics',
+      'PhD in Oral Rehabilitation — UNESP',
       'Training in Implant Surgery',
       'Training in Implant-Supported Prosthetics',
       'Research - São Paulo State University',
@@ -428,7 +460,7 @@ const doctorsEN: Doctor[] = [
     title: 'Dr.',
     specialties: ['Periodontics', 'Fixed Prosthetics', 'Cosmetic Dentistry'],
     photo: '/doctors/jessica-arcadier.jpg',
-    bio: 'Periodontics specialist, treating diseases and performing surgeries on tooth-supporting tissues. Holds a specialization in Cosmetic Dentistry, focusing on restorations and fixed rehabilitations that combine function and smile harmony.',
+    bio: 'Practises Periodontics, treating diseases and performing surgeries on tooth-supporting tissues. Trained in Cosmetic Dentistry, focusing on restorations and fixed rehabilitations that combine function and smile harmony.',
     languages: ['Portuguese'],
   },
   {
@@ -437,7 +469,7 @@ const doctorsEN: Doctor[] = [
     title: 'Dr.',
     specialties: ['Oral Surgery'],
     photo: '/doctors/julio-souza.jpg',
-    bio: 'Dental surgeon with over 40 years of clinical experience, recognized for humanized, good-humored care and performing extractions with comfort, tranquility, and safety.',
+    bio: 'Dentist with over 40 years of clinical experience, recognized for humanized, good-humored care and performing extractions with comfort, tranquility, and safety.',
     languages: ['Portuguese'],
   },
   {
@@ -452,8 +484,7 @@ const doctorsEN: Doctor[] = [
       'Oral Rehabilitation',
     ],
     photo: '/doctors/patricia-octavio.jpg',
-    bio: 'With 28 years of experience, specialist in Advanced Oral Surgery, Advanced Implants, Implant-Supported Prosthetics, and Oral Rehabilitation, restoring chewing function and aesthetics to patients.',
-    achievements: ['OMD 14405'],
+    bio: 'With 28 years of experience in Advanced Oral Surgery, Advanced Implants, Implant-Supported Prosthetics, and Oral Rehabilitation, restoring chewing function and aesthetics to patients.',
     languages: ['Portuguese'],
   },
 ];
@@ -461,10 +492,19 @@ const doctorsEN: Doctor[] = [
 // ============================================
 // Export function to get doctors by language
 // ============================================
+const withProfessionalIds = (list: DoctorContent[]): Doctor[] =>
+  list.map(doctor => ({
+    ...doctor,
+    ...(PROFESSIONAL_IDS[doctor.id] ?? { gender: 'M' as const }),
+  }));
+
+const doctorsPTFull = withProfessionalIds(doctorsPT);
+const doctorsENFull = withProfessionalIds(doctorsEN);
+
 export function getDoctors(language: string): Doctor[] {
-  return language === 'en' ? doctorsEN : doctorsPT;
+  return language === 'en' ? doctorsENFull : doctorsPTFull;
 }
 
 // Default export for backward compatibility
-export const doctors = doctorsPT;
+export const doctors = doctorsPTFull;
 export default doctors;

@@ -1,7 +1,7 @@
 {
   "navbar": {
     "treatments": "Tratamentos",
-    "scheduleAppointment": "Agendar Consulta",
+    "scheduleAppointment": "Marcar Consulta",
     "clinicalTeamLink": "Corpo Clínico",
     "contact": "Contacto",
     "faq": "FAQ",
@@ -21,7 +21,7 @@
     "title1": "O Seu Sorriso é a",
     "title2": "Nossa",
     "titleHighlight": "Prioridade",
-    "description": "Clínica dentária moderna no Colombo. Excelência e atendimento humanizado.",
+    "description": "Clínica dentária no Colombo, com atendimento próximo e humano.",
     "cta1": "Marcar Consulta",
     "cta2": "Ligar Agora",
     "featureClinicalTeam": "Corpo Clínico",
@@ -29,33 +29,33 @@
     "featureModern": "Equipamentos Modernos",
     "openBadge": "Aberto agora — até às 23:00",
     "closedBadge": "De momento fechado — abrimos às 09:00",
-    "urgencyTitle": "Urgência dentária?",
-    "urgencyDesc": "Sem marcação — triagem à chegada, todos os dias até às 23:00.",
+    "urgencyTitle": "Urgências dentárias · 09:00–23:00",
+    "urgencyDesc": "Sem marcação — triagem à chegada, todos os dias, das 09:00 às 23:00.",
     "urgencyLink": "Ver urgências",
     "trustGoogle": "5.0 no Google",
     "trustLocation": "C.C. Colombo · Piso -1, Loja 507"
   },
   "about": {
     "sectionTitle": "Sobre Nós",
-    "title": "Excelência em Cuidados Dentários no Colombo",
-    "description": "é uma moderna clínica dentária localizada no coração do Centro Comercial Colombo. Oferecemos uma ampla gama de tratamentos dentários cosméticos e gerais com equipamentos de última geração.",
+    "title": "Cuidados Dentários no Colombo",
+    "description": "é uma clínica dentária localizada no Centro Comercial Colombo. Disponibilizamos tratamentos dentários gerais e estéticos, com equipamentos atuais.",
     "yearsExp": "Anos de Experiência",
     "feature1Title": "Tecnologia Avançada",
     "feature1Desc": "Equipamentos modernos e técnicas inovadoras",
-    "feature2Title": "Equipa Especializada",
-    "feature2Desc": "Profissionais experientes e certificados",
+    "feature2Title": "Equipa Experiente",
+    "feature2Desc": "Médicos dentistas inscritos na Ordem dos Médicos Dentistas",
     "feature3Title": "Horário Flexível",
     "feature3Desc": "Aberto todos os dias das 09:00-23:00",
     "feature4Title": "Ambiente Confortável",
     "feature4Desc": "Espaço moderno e acolhedor",
     "ersTitle": "Licenciados pela ERS",
-    "ersDesc": "Estabelecimento licenciado pela Entidade Reguladora da Saúde com a licença nº 3297/2011. Garantimos os mais altos padrões de qualidade e segurança."
+    "ersDesc": "Estabelecimento licenciado pela Entidade Reguladora da Saúde com a licença n.º 3297/2011. Trabalhamos com rigor e com os padrões de qualidade e segurança exigidos."
   },
   "treatments": {
-    "sectionTitle": "Nossos Tratamentos",
-    "sectionDesc": "Oferecemos uma gama completa de tratamentos dentários com a mais alta qualidade e tecnologia de ponta",
+    "sectionTitle": "Os Nossos Tratamentos",
+    "sectionDesc": "Disponibilizamos uma gama completa de tratamentos dentários, com tecnologia atual.",
     "learnMore": "Saber mais",
-    "specialties": "Especialidades",
+    "specialties": "Áreas clínicas",
     "satisfaction": "Satisfação",
     "daysWeek": "Dias/Semana",
     "certified": "Certificado",
@@ -63,23 +63,24 @@
     "ctaButton": "Marcar Consulta",
     "ctaCall": "Ligar Agora",
     "featuredLabel": "Os mais procurados",
-    "othersLabel": "Todas as especialidades"
+    "othersLabel": "Todos os tratamentos",
+    "aiImageCaption": "Imagem ilustrativa criada com IA"
   },
   "differentials": {
-    "sectionTitle": "Por Que Escolher o Centro Dentário Colombo?",
-    "sectionDesc": "Comprometidos com a excelência no atendimento e tratamento dentário",
+    "sectionTitle": "Porquê escolher o Centro Dentário Colombo?",
+    "sectionDesc": "Comprometidos com um atendimento e tratamento dentário rigorosos",
     "open7Title": "Aberto 7 Dias",
     "open7Desc": "Segunda a Domingo das 09h às 23h. Marcações flexíveis adaptadas a si.",
     "modernTitle": "Equipamentos Modernos",
-    "modernDesc": "Materiais e equipamentos de última geração para tratamentos de excelência.",
+    "modernDesc": "Materiais e equipamentos atuais para os seus tratamentos.",
     "welcomeTitle": "Ambiente Acolhedor",
-    "welcomeDesc": "Atmosfera calorosa e atenciosa para seu conforto e tranquilidade.",
+    "welcomeDesc": "Atmosfera calorosa e atenciosa para o seu conforto e tranquilidade.",
     "ersTitle": "Licenciado pela ERS",
     "ersDesc": "Estabelecimento registado e licenciado pela Entidade Reguladora da Saúde."
   },
   "contact": {
     "sectionTitle": "Entre em Contacto",
-    "sectionDesc": "Estamos prontos para cuidar do seu sorriso. Agende já a sua consulta!",
+    "sectionDesc": "Estamos prontos para cuidar do seu sorriso. Marque já a sua consulta!",
     "address": "Morada",
     "addressLine1": "Avenida Lusíada",
     "addressLine2": "Centro Comercial Colombo - Piso -1, Loja 507",
@@ -93,7 +94,7 @@
     "formName": "Nome Completo",
     "formNamePlaceholder": "O seu nome",
     "formEmail": "Email",
-    "formEmailPlaceholder": "seu@email.com",
+    "formEmailPlaceholder": "o.seu@email.com",
     "formPhone": "Telefone",
     "formPhonePlaceholder": "+351 XXX XXX XXX",
     "formMessage": "Mensagem",
@@ -101,7 +102,7 @@
     "formSubmit": "Enviar Mensagem"
   },
   "footer": {
-    "description": "Moderna clínica dentária no Centro Comercial Colombo. Tratamentos de excelência com equipamentos de última geração.",
+    "description": "Clínica dentária no Centro Comercial Colombo, aberta todos os dias das 09:00 às 23:00.",
     "navigation": "Navegação",
     "home": "Início",
     "aboutUs": "Sobre Nós",
@@ -124,7 +125,13 @@
     "ersLicensed": "Estabelecimento licenciado pela",
     "ersEntity": "ERS - Entidade Reguladora da Saúde",
     "emergencies": "Urgências Dentárias",
-    "openEveryDayShort": "Aberto todos os dias"
+    "openEveryDayShort": "Aberto todos os dias",
+    "clinicalDirector": "Diretor clínico",
+    "complaintsBook": "Livro de Reclamações Eletrónico",
+    "complaintsBookAria": "Livro de Reclamações Eletrónico (abre numa nova janela)",
+    "adrTitle": "Resolução alternativa de litígios",
+    "adrText": "Em caso de litígio, o consumidor pode recorrer a uma Entidade de Resolução Alternativa de Litígios de consumo: Centro de Arbitragem de Conflitos de Consumo de Lisboa",
+    "adrMore": "Mais informações no Portal do Consumidor:"
   },
   "testimonials": {
     "googleReviews": "Avaliações Google",
@@ -147,9 +154,9 @@
   },
   "clinicalTeam": {
     "back": "Voltar",
-    "heroTitle": "Nosso Corpo Clínico",
-    "heroDesc": "Uma equipa de profissionais altamente qualificados e experientes, dedicados a proporcionar os melhores cuidados dentários com tecnologia de ponta e atendimento humanizado.",
-    "sectionTitle": "Conheça Nossa Equipa",
+    "heroTitle": "O Nosso Corpo Clínico",
+    "heroDesc": "Uma equipa de médicos dentistas experientes, dedicada a cuidar da sua saúde oral com atendimento próximo e humano.",
+    "sectionTitle": "Conheça a Nossa Equipa",
     "sectionDesc": "Profissionais dedicados ao seu sorriso e bem-estar",
     "viewMore": "Ver mais",
     "viewLess": "Ver menos",
@@ -160,14 +167,17 @@
     "shareText": "Conheça",
     "shareTextSuffix": "no Centro Dentário Colombo!",
     "whatsappMsg": "Olá! Gostaria de marcar uma consulta com",
-    "ctaTitle": "Agende Sua Consulta com Nossos Especialistas",
-    "ctaDesc": "Nossa equipa está pronta para cuidar do seu sorriso com excelência e dedicação",
+    "ctaTitle": "Marque a sua consulta",
+    "ctaDesc": "A nossa equipa está pronta para cuidar do seu sorriso com dedicação.",
     "ctaCall": "Ligar Agora",
     "ctaEmail": "Enviar Email",
     "footerRights": "Todos os direitos reservados.",
     "footerErs": "Estabelecimento licenciado pela ERS - Licença: 3297/2011",
     "filterAll": "Todos",
-    "filterLabel": "Filtrar por especialidade"
+    "filterLabel": "Filtrar por área clínica",
+    "dentistMale": "Médico Dentista",
+    "dentistFemale": "Médica Dentista",
+    "omd": "OMD n.º"
   },
   "treatmentPage": {
     "backToTreatments": "Voltar aos Tratamentos",
@@ -175,7 +185,7 @@
     "advantages": "Quais as vantagens?",
     "importantInfo": "Informação Importante",
     "ctaTitle": "Interessado neste tratamento?",
-    "ctaDesc": "Agende a sua consulta e comece a transformação do seu sorriso hoje mesmo!",
+    "ctaDesc": "Marque a sua consulta e dê o primeiro passo para cuidar do seu sorriso.",
     "bookAppointment": "Marcar Consulta",
     "callNow": "Ligar Agora",
     "otherTreatments": "Outros Tratamentos",
@@ -184,7 +194,7 @@
     "seoSuffix": "Marque a sua consulta!",
     "breadcrumbHome": "Início",
     "breadcrumbTreatments": "Tratamentos",
-    "bookWhatsApp": "Agendar no WhatsApp",
+    "bookWhatsApp": "Marcar pelo WhatsApp",
     "indications": "Quando é indicada?",
     "availableTreatments": "Tratamentos Disponíveis",
     "howItWorks": "Como funciona o tratamento?",
@@ -200,7 +210,7 @@
   },
   "common": {
     "eyebrowAbout": "A nossa clínica",
-    "eyebrowTreatments": "Especialidades",
+    "eyebrowTreatments": "Tratamentos",
     "eyebrowContact": "Fale connosco"
   }
 }

@@ -121,7 +121,7 @@ export default function PatientIDModal({ onClose }: PatientIDModalProps) {
               autoComplete="off"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Este ID foi fornecido pela clínica no momento do cadastro
+              Este ID foi fornecido pela clínica no momento do registo
             </p>
           </div>
 

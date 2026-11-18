@@ -294,6 +294,7 @@ interface DoctorSchemaItem {
   specialties: string[];
   photo: string;
   languages?: string[];
+  omd?: string;
 }
 
 /**
@@ -319,6 +320,15 @@ export function DoctorsJsonLd({ doctors }: { doctors: DoctorSchemaItem[] }) {
         jobTitle: doctor.specialties.join(', '),
         image: `${base}${doctor.photo}`,
         worksFor: { '@id': `${base}/#clinica` },
+        ...(doctor.omd
+          ? {
+              identifier: {
+                '@type': 'PropertyValue',
+                propertyID: 'OMD',
+                value: doctor.omd,
+              },
+            }
+          : {}),
         ...(doctor.languages?.length
           ? { knowsLanguage: doctor.languages }
           : {}),
