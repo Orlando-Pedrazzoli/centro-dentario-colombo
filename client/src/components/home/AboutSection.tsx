@@ -43,34 +43,37 @@ export default function AboutSection() {
           <div className='w-24 h-1 bg-primary-600 mx-auto rounded-full'></div>
         </Reveal>
 
-        {/* Grid 2 colunas */}
-        <div className='grid lg:grid-cols-2 gap-12 items-center'>
-          {/* Coluna Esquerda - Imagem */}
-          <Reveal direction='left' className='relative'>
-            <div className='rounded-2xl overflow-hidden shadow-card'>
-              {/* Foto real do espaço, sem pessoas. A antiga sobre-colombo.jpg
-                  era de banco de imagens com pessoas que não são da equipa
-                  (risco de publicidade enganosa — ERS). Substituir por foto
-                  real da equipa quando a clínica a enviar. */}
-              <img
-                src='/sobre-espaco.jpg'
-                alt='Entrada do Centro Dentário Colombo no Centro Comercial Colombo'
-                width={1000}
-                height={1000}
-                loading='lazy'
-                decoding='async'
-                className='w-full h-full object-cover'
-              />
-            </div>
-            {/* Badge decorativo */}
-            <div className='absolute -bottom-6 -right-4 sm:-right-6 bg-primary-600 text-white px-6 sm:px-8 py-4 rounded-xl shadow-cta'>
-              <p className='text-3xl font-extrabold'>28+</p>
-              <p className='text-sm text-primary-100'>{t('about.yearsExp')}</p>
-            </div>
-          </Reveal>
+        {/* Montra completa em faixa larga — a imagem é panorâmica (16:9),
+            por isso fica a toda a largura em vez de recortada numa coluna.
+            Foto real do espaço, sem pessoas (a antiga sobre-colombo.jpg era
+            de banco de imagens — risco de publicidade enganosa, ERS).
+            Substituir por foto real da equipa quando a clínica a enviar. */}
+        <Reveal className='relative mb-16 md:mb-20'>
+          <div className='rounded-2xl overflow-hidden shadow-card aspect-video md:aspect-[2/1]'>
+            <img
+              src='/sobre-espaco.jpg'
+              alt='Montra do Centro Dentário Colombo no Centro Comercial Colombo'
+              width={1600}
+              height={900}
+              loading='lazy'
+              decoding='async'
+              className='w-full h-full object-cover object-top'
+            />
+          </div>
+          {/* Badge decorativo */}
+          <div className='absolute -bottom-5 sm:-bottom-6 left-3 sm:left-8 bg-primary-600 text-white px-4 py-2 sm:px-8 sm:py-4 rounded-xl shadow-cta'>
+            <p className='text-xl sm:text-3xl font-extrabold leading-tight'>
+              28+
+            </p>
+            <p className='text-xs sm:text-sm text-primary-100'>
+              {t('about.yearsExp')}
+            </p>
+          </div>
+        </Reveal>
 
-          {/* Coluna Direita - Conteúdo */}
-          <Reveal direction='right' delay={120} className='space-y-6'>
+        {/* Texto + ERS à esquerda, diferenciais à direita */}
+        <div className='grid lg:grid-cols-12 gap-10 lg:gap-12 items-stretch'>
+          <Reveal direction='left' className='lg:col-span-5 space-y-6'>
             <div>
               <h3 className='text-2xl font-bold text-gray-900 mb-4'>
                 {t('about.title')}
@@ -86,35 +89,8 @@ export default function AboutSection() {
               </p>
             </div>
 
-            {/* Features em grid */}
-            <div className='grid sm:grid-cols-2 gap-4 pt-2'>
-              {features.map(({ icon: Icon, titleKey, descKey }, i) => (
-                <Reveal
-                  key={titleKey}
-                  delay={i * 90}
-                  className='flex items-start gap-3 bg-white p-4 rounded-xl shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300'
-                >
-                  <div className='flex-shrink-0 w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center'>
-                    <Icon
-                      className='w-5 h-5 text-primary-600'
-                      aria-hidden='true'
-                    />
-                  </div>
-                  <div>
-                    <h4 className='font-bold text-gray-900 mb-1'>
-                      {t(titleKey)}
-                    </h4>
-                    <p className='text-sm text-gray-600'>{t(descKey)}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-
             {/* Destaque ERS */}
-            <Reveal
-              delay={180}
-              className='bg-gradient-to-r from-primary-600 to-primary-700 text-white p-6 rounded-xl shadow-cta mt-6'
-            >
+            <div className='bg-gradient-to-r from-primary-600 to-primary-700 text-white p-6 rounded-xl shadow-cta'>
               <div className='flex items-start gap-4'>
                 <BadgeCheck
                   className='w-8 h-8 flex-shrink-0 mt-1 text-primary-200'
@@ -127,7 +103,37 @@ export default function AboutSection() {
                   <p className='text-primary-100'>{t('about.ersDesc')}</p>
                 </div>
               </div>
-            </Reveal>
+            </div>
+          </Reveal>
+
+          {/* Features em grid */}
+          <Reveal
+            direction='right'
+            delay={120}
+            className='lg:col-span-7 grid sm:grid-cols-2 auto-rows-fr gap-4'
+          >
+            {features.map(({ icon: Icon, titleKey, descKey }, i) => (
+              <Reveal
+                key={titleKey}
+                delay={i * 90}
+                className='flex items-center gap-4 bg-white p-6 rounded-xl shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300 h-full'
+              >
+                <div className='flex-shrink-0 w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center'>
+                  <Icon
+                    className='w-5 h-5 text-primary-600'
+                    aria-hidden='true'
+                  />
+                </div>
+                <div>
+                  <h4 className='font-bold text-gray-900 mb-1'>
+                    {t(titleKey)}
+                  </h4>
+                  <p className='text-sm text-gray-600 leading-relaxed'>
+                    {t(descKey)}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
           </Reveal>
         </div>
       </div>
