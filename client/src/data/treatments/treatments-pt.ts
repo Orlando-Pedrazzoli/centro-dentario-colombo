@@ -348,7 +348,7 @@ export const treatmentsPT: Treatment[] = [
       {
         name: 'Branqueamento Dentário',
         description:
-          'Clareamento seguro, supervisionado clinicamente, que respeita a sensibilidade de cada paciente e recupera a luminosidade natural do sorriso.',
+          'Branqueamento seguro, supervisionado clinicamente, que respeita a sensibilidade de cada paciente e recupera a luminosidade natural do sorriso.',
       },
       {
         name: 'Facetas em Cerâmica (Porcelana)',
@@ -1454,7 +1454,7 @@ export const treatmentsPT: Treatment[] = [
       'Foco na naturalidade dos resultados.',
       'Acompanhamento antes e após o tratamento.',
     ],
-    ctaHeadline: 'A verdadeira harmonia está em valorizar quem você já é.',
+    ctaHeadline: 'A verdadeira harmonia está em valorizar quem já é.',
     faq: [
       {
         question: 'A Harmonização Orofacial altera a expressão do rosto?',

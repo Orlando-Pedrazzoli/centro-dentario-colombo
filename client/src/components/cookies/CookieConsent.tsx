@@ -68,16 +68,16 @@ export default function CookieConsent() {
                       </h3>
                       <p className="text-gray-600 text-sm leading-relaxed">
                         Utilizamos cookies e tecnologias semelhantes para melhorar a sua 
-                        experiencia de navegacao, personalizar conteudo e anuncios, fornecer 
-                        funcionalidades de redes sociais e analisar o nosso trafego. Ao clicar 
-                        em "Aceitar Todos", consente a utilizacao de todos os cookies. Pode 
-                        personalizar as suas preferencias clicando em "Definicoes".
+                        experiência de navegação, personalizar conteúdo e anúncios, fornecer 
+                        funcionalidades de redes sociais e analisar o nosso tráfego. Ao clicar 
+                        em "Aceitar Todos", consente a utilização de todos os cookies. Pode 
+                        personalizar as suas preferências clicando em "Definições".
                       </p>
                       <button
                         onClick={openSettings}
                         className="mt-2 text-sm text-blue-600 hover:text-blue-800 hover:underline inline-flex items-center gap-1"
                       >
-                        Saber mais sobre a nossa politica de cookies
+                        Saber mais sobre a nossa política de cookies
                       </button>
                     </div>
                   </div>
@@ -95,7 +95,7 @@ export default function CookieConsent() {
                       className="px-5 py-2.5 text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-all font-medium text-sm flex items-center justify-center gap-2 whitespace-nowrap"
                     >
                       <Settings size={16} />
-                      Definicoes
+                      Definições
                     </button>
                     <button
                       onClick={() => handleClose(acceptAll)}
@@ -111,7 +111,7 @@ export default function CookieConsent() {
         </div>
       )}
 
-      {/* Modal de Definicoes */}
+      {/* Modal de Definições */}
       {showSettings && (
         <CookieSettingsModal
           categories={categories}

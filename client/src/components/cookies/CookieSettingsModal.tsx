@@ -43,10 +43,10 @@ export default function CookieSettingsModal({
         <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-gray-900">
-              Definicoes de Cookies
+              Definições de Cookies
             </h2>
             <p className="text-sm text-gray-500 mt-1">
-              Personalize as suas preferencias de privacidade
+              Personalize as suas preferências de privacidade
             </p>
           </div>
           <button
@@ -63,9 +63,9 @@ export default function CookieSettingsModal({
           {/* Info Box */}
           <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-6">
             <p className="text-sm text-blue-800">
-              De acordo com o Regulamento Geral de Protecao de Dados (RGPD) e a 
-              legislacao portuguesa, utilizamos cookies para melhorar a sua 
-              experiencia. Pode escolher quais categorias de cookies deseja permitir.
+              De acordo com o Regulamento Geral de Proteção de Dados (RGPD) e a 
+              legislação portuguesa, utilizamos cookies para melhorar a sua 
+              experiência. Pode escolher que categorias de cookies deseja permitir.
             </p>
           </div>
 
@@ -96,7 +96,7 @@ export default function CookieSettingsModal({
                         </h3>
                         {category.required && (
                           <span className="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full">
-                            Obrigatorio
+                            Obrigatório
                           </span>
                         )}
                       </div>
@@ -131,24 +131,24 @@ export default function CookieSettingsModal({
           {/* Additional Info */}
           <div className="mt-6 p-4 bg-gray-50 rounded-xl">
             <h4 className="font-semibold text-gray-900 mb-2">
-              Mais Informacoes
+              Mais Informações
             </h4>
             <p className="text-sm text-gray-600 mb-3">
               Para mais detalhes sobre como utilizamos os seus dados, consulte a nossa 
-              Politica de Privacidade e a Politica de Cookies.
+              Política de Privacidade e a Política de Cookies.
             </p>
             <div className="flex gap-4">
               <a 
                 href="/politica-privacidade" 
                 className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
               >
-                Politica de Privacidade
+                Política de Privacidade
               </a>
               <a 
                 href="/politica-cookies" 
                 className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
               >
-                Politica de Cookies
+                Política de Cookies
               </a>
             </div>
           </div>
@@ -168,7 +168,7 @@ export default function CookieSettingsModal({
               className="flex-1 px-4 py-2.5 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium flex items-center justify-center gap-2"
             >
               <Check size={18} />
-              Guardar Preferencias
+              Guardar Preferências
             </button>
             <button
               onClick={onAcceptAll}

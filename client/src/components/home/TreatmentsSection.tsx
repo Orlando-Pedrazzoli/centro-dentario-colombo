@@ -6,6 +6,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { getTreatments } from '../../data/services-data';
 import Reveal from '../ui/Reveal';
 import CountUp from '../ui/CountUp';
+import AiImageCaption from '../ui/AiImageCaption';
 
 /**
  * Hierarquia de conteúdo:
@@ -78,6 +79,7 @@ export default function TreatmentsSection() {
                       className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
                     />
                     <div className='absolute inset-0 bg-gradient-to-t from-primary-900/25 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
+                    <AiImageCaption />
                   </div>
 
                   <div className='p-5'>
@@ -127,6 +129,7 @@ export default function TreatmentsSection() {
                       className='w-full h-full object-cover group-hover:scale-110 transition-transform duration-500'
                     />
                     <div className='absolute inset-0 bg-gradient-to-t from-primary-900/25 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
+                    <AiImageCaption />
                   </div>
 
                   <div className='p-5'>
@@ -165,11 +168,9 @@ export default function TreatmentsSection() {
             </div>
             <div>
               <div className='text-3xl md:text-4xl font-extrabold text-primary-600 mb-2'>
-                <CountUp end={100} suffix='%' />
+                <CountUp end={28} suffix='+' />
               </div>
-              <div className='text-gray-600'>
-                {t('treatments.satisfaction')}
-              </div>
+              <div className='text-gray-600'>{t('about.yearsExp')}</div>
             </div>
             <div>
               <div className='text-3xl md:text-4xl font-extrabold text-primary-600 mb-2'>
