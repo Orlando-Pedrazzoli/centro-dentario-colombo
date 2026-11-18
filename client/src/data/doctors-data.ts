@@ -19,28 +19,32 @@ export interface Doctor {
 // ============================================
 // Fonte única para PT e EN, indexada pelo id do médico.
 // Exigência ERS: cada médico dentista apresentado no site
-// deve ter o nº da OMD visível. Números retirados dos
-// questionários preenchidos pelos próprios médicos (nov/2026).
-// Os que estão sem `omd` aguardam envio pela clínica.
-const PROFESSIONAL_IDS: Record<string, { omd?: string; gender: 'F' | 'M' }> = {
-  '1': { gender: 'M' }, // Marcelo F. Natali — OMD em falta
-  '2': { gender: 'F' }, // Geane Mendes — OMD em falta
+// deve ter o nº da OMD visível. Lista oficial enviada pela
+// clínica em 18/11/2026.
+// `hidden: true` → não consta da lista oficial e não aparece
+// no Corpo Clínico (os dados ficam guardados para reativar).
+const PROFESSIONAL_IDS: Record<
+  string,
+  { omd?: string; gender: 'F' | 'M'; hidden?: boolean }
+> = {
+  '1': { gender: 'M', omd: '3397' }, // Marcelo Ferrian Natali
+  '2': { gender: 'F', omd: '12367' }, // Geane Augusta Mendes
   '3': { gender: 'F', omd: '8165' }, // Christina Melo Hastenreiter
   '4': { gender: 'F', omd: '14389' }, // Ana Paula Ribeiro Borges
-  '5': { gender: 'F', omd: '14201' }, // Camila F. Lameira
+  '5': { gender: 'F', omd: '14201' }, // Camila Ferreira Lameira
   '6': { gender: 'M', omd: '11398' }, // Marcelo Marques
   '7': { gender: 'M', omd: '8281' }, // Orlando Cepa (diretor clínico)
   '8': { gender: 'F', omd: '12366' }, // Veridiana Fumio
-  '9': { gender: 'F' }, // Andresa Fonseca M. da Silva — OMD em falta
-  '10': { gender: 'F' }, // Flavia Paula Silva Cardoso — OMD em falta
-  '11': { gender: 'F' }, // Andréa Romero Esteves Lima — OMD em falta
-  '12': { gender: 'F', omd: '15519' }, // Carolina Chaves
-  '13': { gender: 'F', omd: '14350' }, // Fernanda P. Patrício
-  '14': { gender: 'F' }, // Sandra Rodriguez — OMD em falta
-  '15': { gender: 'M' }, // Eder Quedas Ferreira — OMD em falta
+  '9': { gender: 'F', hidden: true }, // Andresa Fonseca M. da Silva — fora da lista
+  '10': { gender: 'F', omd: '16515' }, // Flávia Paula da Silva Cardoso
+  '11': { gender: 'F', hidden: true }, // Andréa Romero Esteves Lima — fora da lista
+  '12': { gender: 'F', omd: '15519' }, // Carolina de Andrade Lima Chaves
+  '13': { gender: 'F', omd: '14350' }, // Fernanda Maria Peixoto Patrício
+  '14': { gender: 'F', hidden: true }, // Sandra Rodriguez — fora da lista
+  '15': { gender: 'M', omd: '3036' }, // Éder Quedas Ferreira
   '16': { gender: 'F', omd: '14245' }, // Jessica Arcadier
-  '17': { gender: 'M', omd: '2724' }, // Júlio Souza
-  '18': { gender: 'F', omd: '14405' }, // Patricia Octávio
+  '17': { gender: 'M', omd: '2724' }, // Júlio Sérgio Gomes de Souza
+  '18': { gender: 'F', omd: '14405' }, // Patrícia Octávio de Oliveira
 };
 
 type DoctorContent = Omit<Doctor, 'omd' | 'gender'>;
@@ -493,10 +497,14 @@ const doctorsEN: DoctorContent[] = [
 // Export function to get doctors by language
 // ============================================
 const withProfessionalIds = (list: DoctorContent[]): Doctor[] =>
-  list.map(doctor => ({
-    ...doctor,
-    ...(PROFESSIONAL_IDS[doctor.id] ?? { gender: 'M' as const }),
-  }));
+  list
+    .filter(doctor => !PROFESSIONAL_IDS[doctor.id]?.hidden)
+    .map(doctor => {
+      const { omd, gender } = PROFESSIONAL_IDS[doctor.id] ?? {
+        gender: 'M' as const,
+      };
+      return { ...doctor, gender, ...(omd ? { omd } : {}) };
+    });
 
 const doctorsPTFull = withProfessionalIds(doctorsPT);
 const doctorsENFull = withProfessionalIds(doctorsEN);
