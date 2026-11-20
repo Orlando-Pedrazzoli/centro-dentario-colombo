@@ -9,6 +9,8 @@ import {
   Phone,
   Mail,
   Languages as LanguagesIcon,
+  GraduationCap,
+  ChevronDown,
 } from 'lucide-react';
 import { SEO } from '../components/SEO';
 import { BreadcrumbJsonLd, DoctorsJsonLd } from '../components/JsonLd';
@@ -69,6 +71,9 @@ export default function CorpoClinicoPage() {
   const { language, t } = useLanguage();
 
   const [expandedBio, setExpandedBio] = useState<string | null>(null);
+  const [expandedEducation, setExpandedEducation] = useState<string | null>(
+    null,
+  );
   const [shareMenuOpen, setShareMenuOpen] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [activeSpecialty, setActiveSpecialty] = useState<string | null>(null);
@@ -193,6 +198,9 @@ export default function CorpoClinicoPage() {
 
   const toggleBio = (doctorId: string) =>
     setExpandedBio(expandedBio === doctorId ? null : doctorId);
+
+  const toggleEducation = (doctorId: string) =>
+    setExpandedEducation(expandedEducation === doctorId ? null : doctorId);
 
   return (
     <div className='min-h-screen bg-white'>
@@ -478,6 +486,47 @@ export default function CorpoClinicoPage() {
                         </button>
                       )}
                     </div>
+
+                    {/* Formação — expansível para não alongar o cartão */}
+                    {doctor.education && doctor.education.length > 0 && (
+                      <div className='mb-4 flex-shrink-0'>
+                        <button
+                          type='button'
+                          onClick={() => toggleEducation(doctor.id)}
+                          aria-expanded={expandedEducation === doctor.id}
+                          aria-controls={`education-${doctor.id}`}
+                          className='inline-flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-primary-700 transition-colors'
+                        >
+                          <GraduationCap
+                            className='w-4 h-4 text-primary-500'
+                            aria-hidden='true'
+                          />
+                          {expandedEducation === doctor.id
+                            ? t('clinicalTeam.hideEducation')
+                            : t('clinicalTeam.education')}
+                          <ChevronDown
+                            className={`w-4 h-4 transition-transform ${expandedEducation === doctor.id ? 'rotate-180' : ''}`}
+                            aria-hidden='true'
+                          />
+                        </button>
+                        {expandedEducation === doctor.id && (
+                          <ul
+                            id={`education-${doctor.id}`}
+                            className='mt-3 space-y-1.5 text-left text-xs text-gray-600 bg-gray-50 rounded-2xl p-4 animate-fadeIn'
+                          >
+                            {doctor.education.map((item, idx) => (
+                              <li key={idx} className='flex gap-2'>
+                                <span
+                                  className='mt-1.5 w-1.5 h-1.5 rounded-full bg-primary-400 flex-shrink-0'
+                                  aria-hidden='true'
+                                ></span>
+                                <span>{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    )}
 
                     {/* Idiomas */}
                     {doctor.languages && doctor.languages.length > 1 && (
