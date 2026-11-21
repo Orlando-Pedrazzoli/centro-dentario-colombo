@@ -109,22 +109,79 @@ export default function Navbar() {
             : 'bg-transparent'
         }`}
       >
+        {/* ==================== BARRA DE UTILIDADES (desktop) ====================
+            Contactos e acessos secundários vivem aqui: horário, morada,
+            telefone, idioma e Área do Paciente. Assim a barra principal fica
+            só com logo + navegação + 1 CTA e nunca parte em duas linhas.
+            Altura: 32px + 48px da barra principal = 80px, o mesmo total de
+            antes (as páginas contam com pt-20 de compensação). */}
+        <div
+          className={`hidden lg:block text-white transition-colors duration-300 ${
+            solid ? 'bg-[#14489c]' : 'bg-black/25 backdrop-blur-sm'
+          }`}
+        >
+          <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-8 flex items-center justify-between gap-6 text-xs font-medium whitespace-nowrap'>
+            <div className='flex items-center gap-5 min-w-0 text-white/85'>
+              <span className='flex items-center gap-1.5'>
+                <ClockIcon className='w-3.5 h-3.5' />
+                {t('navbar.openHours')}
+              </span>
+              <span className='hidden xl:flex items-center gap-1.5'>
+                <PinIcon className='w-3.5 h-3.5' />
+                {t('hero.trustLocation')}
+              </span>
+            </div>
+
+            <div className='flex items-center gap-4'>
+              <a
+                href={TEL_HREF}
+                className='flex items-center gap-1.5 font-semibold text-white hover:text-white/80 transition-colors'
+              >
+                <PhoneIcon className='w-3.5 h-3.5' />
+                {business.telephoneDisplay}
+              </a>
+
+              <span className='h-3.5 w-px bg-white/25' aria-hidden='true' />
+
+              {/* Área do Paciente — abre o login do portal (CDC Manager). */}
+              <a
+                href={PORTAL_HREF}
+                rel='noopener'
+                className='flex items-center gap-1.5 font-semibold text-white hover:text-white/80 transition-colors'
+              >
+                <UserIcon className='w-3.5 h-3.5' />
+                {t('navbar.patientArea')}
+              </a>
+
+              <span className='h-3.5 w-px bg-white/25' aria-hidden='true' />
+
+              <LanguageToggle
+                language={language}
+                setLanguage={setLanguage}
+                solid={false}
+                label={t('navbar.language')}
+                size='xs'
+              />
+            </div>
+          </div>
+        </div>
+
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex items-center justify-between h-16 lg:h-20 gap-4'>
+          <div className='flex items-center justify-between h-16 lg:h-12 gap-4'>
             {/* ---------- Logo ---------- */}
             <Link
               to='/'
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className='flex items-center gap-2.5 min-w-0 group'
+              className='flex items-center gap-2.5 min-w-0 lg:flex-shrink-0 group'
               aria-label={SITE_CONFIG.siteName}
             >
               <img
                 src='/logo-colombo-nav.png'
                 alt=''
-                className='h-11 sm:h-10 lg:h-12 w-auto flex-shrink-0 transition-transform group-hover:scale-105'
+                className='h-11 sm:h-10 lg:h-9 w-auto flex-shrink-0 transition-transform group-hover:scale-105'
               />
               <span
-                className={`font-semibold tracking-tight leading-none truncate text-sm sm:text-base lg:text-lg ${
+                className={`font-semibold tracking-tight leading-none truncate lg:overflow-visible text-sm sm:text-base lg:text-lg ${
                   solid
                     ? 'bg-gradient-to-r from-[#14489c] to-[#006bb3] bg-clip-text text-transparent'
                     : 'text-white drop-shadow'
@@ -135,7 +192,7 @@ export default function Navbar() {
             </Link>
 
             {/* ---------- Links desktop ---------- */}
-            <div className='hidden lg:flex items-center gap-1'>
+            <div className='hidden lg:flex items-center gap-1 whitespace-nowrap'>
               <div
                 ref={dropdownRef}
                 className='relative'
@@ -216,49 +273,15 @@ export default function Navbar() {
               </a>
             </div>
 
-            {/* ---------- Ações desktop ---------- */}
-            <div className='hidden lg:flex items-center gap-3'>
-              <LanguageToggle
-                language={language}
-                setLanguage={setLanguage}
-                solid={solid}
-                label={t('navbar.language')}
-              />
-
-              {/* Área do Paciente — abre o login do portal (CDC Manager). */}
-              <a
-                href={PORTAL_HREF}
-                rel='noopener'
-                aria-label={t('navbar.patientArea')}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-full border text-sm font-semibold transition-colors ${
-                  solid
-                    ? 'border-[#14489c]/30 text-[#14489c] hover:bg-blue-50'
-                    : 'border-white/40 text-white hover:bg-white/10'
-                }`}
-              >
-                <UserIcon className='w-4 h-4' />
-                <span className='hidden xl:inline'>
-                  {t('navbar.patientArea')}
-                </span>
-                <span className='xl:hidden'>{t('navbar.patientAreaShort')}</span>
-              </a>
-
-              <a
-                href={TEL_HREF}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${linkColor}`}
-              >
-                <PhoneIcon className='w-4 h-4' />
-                <span className='hidden xl:inline'>
-                  {business.telephoneDisplay}
-                </span>
-                <span className='xl:hidden'>{t('navbar.call')}</span>
-              </a>
-
+            {/* ---------- Ação desktop ----------
+                Só o CTA: telefone, idioma e Área do Paciente estão na barra
+                de utilidades, por cima. */}
+            <div className='hidden lg:flex items-center flex-shrink-0'>
               {/* "Está com dor?" — leva à página que pede para ligar antes de
                   vir. Sem linguagem de urgência nem indicador a piscar. */}
               <Link
                 to='/dor-de-dentes'
-                className='flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-full text-sm font-semibold shadow-lg shadow-red-600/20 transition-colors'
+                className='flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap shadow-lg shadow-red-600/20 transition-colors'
               >
                 {t('navbar.pain')}
               </Link>
@@ -495,6 +518,50 @@ export default function Navbar() {
   );
 }
 
+function ClockIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill='none'
+      viewBox='0 0 24 24'
+      stroke='currentColor'
+      aria-hidden='true'
+    >
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth={2}
+        d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'
+      />
+    </svg>
+  );
+}
+
+function PinIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill='none'
+      viewBox='0 0 24 24'
+      stroke='currentColor'
+      aria-hidden='true'
+    >
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth={2}
+        d='M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z'
+      />
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth={2}
+        d='M15 11a3 3 0 11-6 0 3 3 0 016 0z'
+      />
+    </svg>
+  );
+}
+
 function UserIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -534,7 +601,7 @@ function LanguageToggle({
   setLanguage: (lang: 'pt' | 'en') => void;
   solid: boolean;
   label: string;
-  size?: 'sm' | 'lg';
+  size?: 'xs' | 'sm' | 'lg';
 }) {
   const options: Array<{ code: 'pt' | 'en'; name: string }> = [
     { code: 'pt', name: 'Português' },
@@ -572,7 +639,11 @@ function LanguageToggle({
             aria-pressed={active}
             title={option.name}
             className={`relative z-10 rounded-full font-semibold transition-colors ${
-              big ? 'flex-1 px-4 py-2.5 text-sm' : 'px-2.5 py-1 text-xs'
+              big
+                ? 'flex-1 px-4 py-2.5 text-sm'
+                : size === 'xs'
+                  ? 'px-2 py-0.5 text-[11px]'
+                  : 'px-2.5 py-1 text-xs'
             } ${
               active
                 ? 'text-[#14489c]'
