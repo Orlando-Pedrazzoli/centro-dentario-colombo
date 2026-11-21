@@ -8,6 +8,7 @@ import { SITE_CONFIG } from '../utils/seoConfig';
 
 const { business } = SITE_CONFIG;
 const TEL_HREF = `tel:${business.telephone}`;
+const PORTAL_HREF = business.patientPortalUrl;
 
 /**
  * Rotas com hero escuro, onde a barra pode ficar transparente no topo.
@@ -223,6 +224,24 @@ export default function Navbar() {
                 solid={solid}
                 label={t('navbar.language')}
               />
+
+              {/* Área do Paciente — abre o login do portal (CDC Manager). */}
+              <a
+                href={PORTAL_HREF}
+                rel='noopener'
+                aria-label={t('navbar.patientArea')}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-full border text-sm font-semibold transition-colors ${
+                  solid
+                    ? 'border-[#14489c]/30 text-[#14489c] hover:bg-blue-50'
+                    : 'border-white/40 text-white hover:bg-white/10'
+                }`}
+              >
+                <UserIcon className='w-4 h-4' />
+                <span className='hidden xl:inline'>
+                  {t('navbar.patientArea')}
+                </span>
+                <span className='xl:hidden'>{t('navbar.patientAreaShort')}</span>
+              </a>
 
               <a
                 href={TEL_HREF}
@@ -451,6 +470,14 @@ export default function Navbar() {
 
             <div className='border-t border-gray-100 p-4 flex-shrink-0'>
               <a
+                href={PORTAL_HREF}
+                rel='noopener'
+                className='flex items-center justify-center gap-2.5 w-full border-2 border-[#14489c] text-[#14489c] hover:bg-blue-50 py-3 rounded-full font-semibold transition-colors mb-3'
+              >
+                <UserIcon className='w-5 h-5' />
+                {t('navbar.patientArea')}
+              </a>
+              <a
                 href={TEL_HREF}
                 className='flex items-center justify-center gap-2.5 w-full bg-[#14489c] hover:bg-[#006bb3] text-white py-3.5 rounded-full font-semibold transition-colors'
               >
@@ -465,6 +492,25 @@ export default function Navbar() {
         </div>
       )}
     </>
+  );
+}
+
+function UserIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill='none'
+      viewBox='0 0 24 24'
+      stroke='currentColor'
+      aria-hidden='true'
+    >
+      <path
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeWidth={2}
+        d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'
+      />
+    </svg>
   );
 }
 

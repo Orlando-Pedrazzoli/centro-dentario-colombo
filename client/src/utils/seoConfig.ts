@@ -28,6 +28,10 @@ export const SITE_CONFIG = {
     // Linhas telefónicas adicionais — mostradas em /dor-de-dentes e no
     // hero da home. Ordem = ordem de tentativa.
     additionalLines: ['+351918565118', '+351929138923', '+351933522580'],
+    // Área do Paciente — o portal vive no CDC Manager (cdcclinicas.com).
+    // O paciente entra com o email e a password que definiu no email de
+    // ativação. Nunca recolher a password neste site: o login é feito lá.
+    patientPortalUrl: 'https://www.cdcclinicas.com/login?origem=paciente',
     whatsapp: '351933522580',
     whatsappDisplay: '+351 933 522 580',
     email: 'clinicadentaria.colombo@gmail.com',

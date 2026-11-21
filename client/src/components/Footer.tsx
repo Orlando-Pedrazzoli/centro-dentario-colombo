@@ -3,6 +3,7 @@
 import { Link } from 'react-router';
 import CookieSettingsButton from './cookies/CookieSettingsButton';
 import { useLanguage } from '../contexts/LanguageContext';
+import { SITE_CONFIG } from '../utils/seoConfig';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -89,6 +90,15 @@ export default function Footer() {
                   <span className='w-1.5 h-1.5 bg-red-500 rounded-full'></span>
                   {t('footer.pain')}
                 </Link>
+              </li>
+              <li>
+                <a
+                  href={SITE_CONFIG.business.patientPortalUrl}
+                  rel='noopener'
+                  className='hover:text-blue-400 transition-colors'
+                >
+                  {t('footer.patientArea')}
+                </a>
               </li>
               <li>
                 <a
