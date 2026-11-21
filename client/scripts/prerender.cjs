@@ -40,7 +40,7 @@ const PORT = 4183;
 // Mantém sincronizado com STATIC_PAGES e TREATMENT_SLUGS em src/utils/seoConfig.ts
 const STATIC_ROUTES = [
   '/',
-  '/urgencias',
+  '/dor-de-dentes',
   '/corpo-clinico',
   '/faq',
   '/politica-privacidade',

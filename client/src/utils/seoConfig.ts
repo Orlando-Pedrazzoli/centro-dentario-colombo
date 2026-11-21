@@ -13,9 +13,9 @@ export const SITE_CONFIG = {
   legalName: 'D. Amaral Assistência e Prevenção Dentária LDA',
   defaultTitle: 'Centro Dentário Colombo | Dentista no Colombo, Lisboa',
   defaultDescription:
-    'Clínica dentária no Centro Comercial Colombo, Lisboa. Aberto todos os dias das 09:00 às 23:00, incluindo fins de semana e feriados. Urgências dentárias, implantologia, ortodontia e estética dentária.',
+    'Clínica dentária no Centro Comercial Colombo, Lisboa. Aberto todos os dias das 09:00 às 23:00, incluindo fins de semana e feriados. Implantologia, ortodontia, estética dentária e medicina dentária geral.',
   defaultKeywords:
-    'dentista colombo, clínica dentária lisboa, urgência dentária lisboa, dentista aberto ao domingo lisboa, implantes dentários lisboa, ortodontia lisboa, centro dentário colombo',
+    'dentista colombo, clínica dentária lisboa, dor de dentes lisboa, dentista aberto ao domingo lisboa, implantes dentários lisboa, ortodontia lisboa, centro dentário colombo',
   defaultImage: 'https://www.centrodentariocolombo.com/og-image-new.jpg',
   locale: 'pt_PT',
   localeAlternate: 'en_GB',
@@ -25,9 +25,9 @@ export const SITE_CONFIG = {
     // NAP oficial — confirmado no Google Business Profile
     telephone: '+351216041355',
     telephoneDisplay: '+351 21 604 13 55',
-    // Linhas de reforço para urgências — mostradas em /urgencias e
-    // publicadas no schema contactPoint. Ordem = ordem de tentativa.
-    emergencyLines: ['+351918565118', '+351929138923', '+351933522580'],
+    // Linhas telefónicas adicionais — mostradas em /dor-de-dentes e no
+    // hero da home. Ordem = ordem de tentativa.
+    additionalLines: ['+351918565118', '+351929138923', '+351933522580'],
     whatsapp: '351933522580',
     whatsappDisplay: '+351 933 522 580',
     email: 'clinicadentaria.colombo@gmail.com',
@@ -122,11 +122,11 @@ export const TREATMENT_SLUGS = [
 /**
  * Páginas estáticas públicas (sitemap + prerender).
  * A prioridade reflete valor comercial, não hierarquia de menu:
- * /urgencias é a página de maior intenção de conversão do site.
+ * /dor-de-dentes é a página de maior intenção de conversão do site.
  */
 export const STATIC_PAGES = [
   { path: '/', changefreq: 'weekly', priority: '1.0' },
-  { path: '/urgencias', changefreq: 'weekly', priority: '0.9' },
+  { path: '/dor-de-dentes', changefreq: 'weekly', priority: '0.9' },
   { path: '/corpo-clinico', changefreq: 'monthly', priority: '0.8' },
   { path: '/faq', changefreq: 'monthly', priority: '0.6' },
   { path: '/politica-privacidade', changefreq: 'yearly', priority: '0.3' },

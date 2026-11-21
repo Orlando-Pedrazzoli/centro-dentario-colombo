@@ -1,16 +1,16 @@
-// client/src/pages/UrgenciasPage.tsx
+// client/src/pages/DorDeDentesPage.tsx
 
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { SEO } from '../components/SEO';
 import {
   BreadcrumbJsonLd,
-  EmergencyServiceJsonLd,
+  ContactPageJsonLd,
   FaqJsonLd,
 } from '../components/JsonLd';
 import { useLanguage } from '../contexts/LanguageContext';
-import { SITE_CONFIG, isClinicOpenNow } from '../utils/seoConfig';
-import { getUrgenciasContent, type UrgencyLevel } from '../data/urgencias-data';
+import { SITE_CONFIG } from '../utils/seoConfig';
+import { getDorDeDentesContent } from '../data/dor-de-dentes-data';
 import Reveal from '../components/ui/Reveal';
 import {
   Phone,
@@ -20,19 +20,10 @@ import {
   Languages,
   ChevronRight,
   ChevronDown,
-  Check,
-  X,
-  AlertTriangle,
+  Info,
   ExternalLink,
   type LucideIcon,
 } from 'lucide-react';
-
-declare global {
-  interface Window {
-    /** Definida pelo scripts/prerender.cjs enquanto grava o HTML estático. */
-    __PRERENDER__?: boolean;
-  }
-}
 
 const { business } = SITE_CONFIG;
 
@@ -41,29 +32,22 @@ const formatLine = (tel: string) =>
   tel.replace('+351', '').replace(/(\d{3})(\d{3})(\d{3})/, '$1 $2 $3');
 
 const WHATSAPP_PT = `https://wa.me/${business.whatsapp}?text=${encodeURIComponent(
-  'Olá, tenho uma urgência dentária. Podem atender-me hoje?',
+  'Olá, estou com dor de dentes. Têm disponibilidade para uma consulta?',
 )}`;
 const WHATSAPP_EN = `https://wa.me/${business.whatsapp}?text=${encodeURIComponent(
-  'Hello, I have a dental emergency. Can you see me today?',
+  'Hello, I have a toothache. Do you have an appointment available?',
 )}`;
 const MAPS_HREF = business.socialMedia.googleMaps;
-
-const LEVEL_STYLES: Record<UrgencyLevel, string> = {
-  imediata: 'bg-red-50 text-red-700 border-red-200',
-  'mesmo-dia': 'bg-amber-50 text-amber-800 border-amber-200',
-  avaliar: 'bg-primary-50 text-primary-700 border-primary-200',
-};
+const PAGE_PATH = '/dor-de-dentes';
 
 /**
- * Painel único de linhas de urgência.
+ * Painel único de linhas telefónicas.
  *
- * Substitui o padrão anterior (botão "Ligar" + pills pequenas com as linhas
- * alternativas), que espalhava 4 números por 3 padrões visuais diferentes.
- * Quem chega em pânico precisa de UMA coisa: todos os números juntos, grandes
- * e tocáveis. Cada linha é um alvo de toque de ecrã inteiro (>56px), com o
- * número em destaque — a linha fixa primeiro, os telemóveis a seguir.
+ * Todos os números juntos, grandes e tocáveis — a linha fixa primeiro, os
+ * telemóveis a seguir. O objetivo da página é um só: que a pessoa LIGUE
+ * antes de se deslocar, para confirmarmos se há disponibilidade.
  */
-function EmergencyLinesPanel({
+function PhoneLinesPanel({
   title,
   sub,
   landlineLabel,
@@ -81,7 +65,7 @@ function EmergencyLinesPanel({
       label: landlineLabel,
       primary: true,
     },
-    ...business.emergencyLines.map(line => ({
+    ...business.additionalLines.map(line => ({
       tel: line,
       display: formatLine(line),
       label: mobileLabel,
@@ -137,147 +121,104 @@ function EmergencyLinesPanel({
   );
 }
 
-export default function UrgenciasPage() {
+export default function DorDeDentesPage() {
   const { language } = useLanguage();
   const isEN = language === 'en';
-  const content = getUrgenciasContent(language);
+  const content = getDorDeDentesContent(language);
 
-  /**
-   * null = ainda não sabemos (é o estado do HTML pré-renderizado).
-   *
-   * Isto é deliberado. O prerender é um Chrome a sério: monta o React e corre
-   * os efeitos antes de gravar o HTML. Se o estado fosse calculado aqui — ou
-   * mesmo no useEffect sem guarda — o Google indexaria para sempre o
-   * "aberto/fechado" que calhou ao build (o Vercel constrói em UTC, muitas
-   * vezes de madrugada: sairia "Fechado").
-   *
-   * Por isso o useEffect abaixo não faz nada quando window.__PRERENDER__ está
-   * definida. O crawler fica com o horário, sempre verdadeiro; o utilizador
-   * recebe o estado ao vivo na hidratação.
-   */
-  const [isOpen, setIsOpen] = useState<boolean | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // O estado "aberto agora" é a informação nº1 para quem tem dor às 22h.
-  useEffect(() => {
-    // Durante o prerender ficamos em null: o HTML gravado mostra o horário,
-    // que é verdade a qualquer hora, em vez de um "Fechado" fossilizado.
-    if (window.__PRERENDER__) return;
-
-    setIsOpen(isClinicOpenNow());
-    const id = window.setInterval(() => setIsOpen(isClinicOpenNow()), 60000);
-    return () => window.clearInterval(id);
-  }, []);
-
+  /**
+   * REGRA DE CONTEÚDO (pedido da clínica, Nov/2026): esta página não pode
+   * falar em "urgências", prometer atendimento imediato / sem marcação, nem
+   * dar orientações clínicas. Ver nota em data/dor-de-dentes-data.ts.
+   */
   const copy = isEN
     ? {
-        seoTitle: 'Emergency Dentist in Lisbon | Open Every Day, 09:00–23:00',
+        seoTitle: 'In a Lot of Pain? Call Us First | Centro Dentário Colombo',
         seoDescription:
-          'Dental emergency in Lisbon? We see toothache, abscesses, broken and knocked-out teeth every day from 09:00 to 23:00, including weekends and holidays. Colombo Shopping Centre. Call +351 21 604 13 55.',
+          'Toothache in Lisbon? Call Centro Dentário Colombo before you come: we confirm availability and offer you the earliest possible appointment. Colombo Shopping Centre. +351 21 604 13 55.',
         seoKeywords:
-          'emergency dentist lisbon, dental emergency lisbon, dentist open sunday lisbon, toothache lisbon, dentist colombo',
-        eyebrow: 'Dental emergencies',
-        h1: 'Emergency dentist in Lisbon, every day until 23:00',
-        lead: 'Toothache, an abscess, a broken tooth or a crown that came off. We triage on arrival and relieve the pain the same day — 365 days a year, inside Colombo Shopping Centre.',
-        statusUnknown: 'Open every day, 09:00–23:00',
-        openNow: 'Open now — come in or call',
-        closedNow: 'Closed right now — we open at 09:00',
-        linesTitle: 'Emergency lines — call any of them',
-        linesSub: 'If one line is busy, call the next one.',
+          'toothache lisbon, dentist lisbon, dentist open sunday lisbon, dentist colombo, book dentist lisbon',
+        eyebrow: 'Toothache',
+        h1: 'In a lot of pain? Call us first',
+        lead: 'Contact us by phone or WhatsApp before travelling to the clinic. We check the schedule and offer you the earliest possible appointment.',
+        notice:
+          'Appointments depend on availability — always call before you come.',
+        linesTitle: 'Call before you come',
+        linesSub: 'If one line is busy, try the next one.',
         landlineLabel: 'Main line',
-        mobileLabel: 'Direct mobile',
+        mobileLabel: 'Mobile',
         whatsapp: 'WhatsApp us',
-        hours: 'Every day, 09:00–23:00',
-        hoursSub: 'Weekends and public holidays included',
+        hours: 'Clinic hours: every day, 09:00–23:00',
+        hoursSub: 'Appointments subject to availability',
         where: 'Colombo Shopping Centre, Level -1, Unit 507',
         whereSub: 'Av. Lusíada 2, 1500-392 Lisbon',
-        triage: 'Free triage on arrival',
-        triageSub: 'Pain and trauma take priority',
-        casesTitle: 'Is what you have an emergency?',
-        casesLead:
-          'Find your situation below. If it is not listed, call us anyway — a two-minute call tells you whether you should come now or wait.',
-        whatWeDoLabel: 'What we do',
-        readMore: 'More about',
-        protocolTitle: 'What happens when you arrive',
-        protocolLead:
-          'No surprises. This is the exact sequence, and you know the cost before anything starts.',
-        firstAidTitle: 'What to do before you get here',
-        firstAidLead:
-          'These steps do not replace the appointment — they stop the situation getting worse on the way.',
-        doLabel: 'Do this',
-        dontLabel: 'Avoid this',
+        booking: 'By appointment',
+        bookingSub: 'Confirm by phone before travelling',
+        stepsTitle: 'How it works',
+        stepsLead:
+          'One phone call saves you a wasted trip: you know whether we can see you, and when, before leaving home.',
         locationTitle: 'Getting here',
         locationLead:
-          'We are inside the shopping centre, so you have covered parking at the door and a metro station two minutes away — at 22:00 on a Sunday, that matters.',
+          'We are inside the shopping centre, with covered parking and a metro station a few minutes away.',
         directions: 'Open in Google Maps',
         parking: 'Colombo car park, direct access to Level -1',
         metro: 'Colégio Militar/Luz metro, blue line',
         languages: 'We see patients in Portuguese and English',
         faqTitle: 'Frequently asked questions',
-        finalTitle: 'In pain right now?',
+        finalTitle: 'In a lot of pain?',
         finalLead:
-          'Do not wait for Monday. Call us — if we can help you today, we will tell you straight away.',
+          'Call us before you come. We will tell you the earliest availability.',
         disclaimer:
-          'Life-threatening situations — severe facial swelling affecting breathing or swallowing, trauma with loss of consciousness, or uncontrolled bleeding — should go to a hospital emergency department or call 112.',
+          'This website does not provide clinical advice and does not replace an assessment by a dentist. Centro Dentário Colombo is not an emergency service: being seen depends on schedule and dentist availability. If the clinic is closed or has no availability, or in any serious situation, contact SNS 24 (808 24 24 24) or call 112.',
         breadcrumbHome: 'Home',
-        breadcrumbEmergency: 'Emergencies',
+        breadcrumbCurrent: 'Toothache',
       }
     : {
-        seoTitle:
-          'Urgências Dentárias em Lisboa | Aberto Todos os Dias, 09:00–23:00',
+        seoTitle: 'Está com Muita Dor? Ligue-nos | Centro Dentário Colombo',
         seoDescription:
-          'Urgência dentária em Lisboa? Atendemos dor de dentes, abcessos, dentes partidos e traumatismos todos os dias das 09:00 às 23:00, incluindo fins de semana e feriados. C.C. Colombo. Ligue +351 21 604 13 55.',
+          'Dor de dentes em Lisboa? Ligue ao Centro Dentário Colombo antes de vir: confirmamos a disponibilidade e indicamos-lhe a consulta mais próxima possível. C.C. Colombo. +351 21 604 13 55.',
         seoKeywords:
-          'urgência dentária lisboa, dentista urgência lisboa, dentista aberto ao domingo lisboa, dor de dentes lisboa, dentista colombo, urgências dentárias',
-        eyebrow: 'Urgências dentárias',
-        h1: 'Urgências dentárias em Lisboa, todos os dias até às 23:00',
-        lead: 'Dor de dentes, abcesso, dente partido ou coroa que caiu. Fazemos triagem à chegada e tiramos a dor no próprio dia — 365 dias por ano, dentro do Centro Comercial Colombo.',
-        statusUnknown: 'Aberto todos os dias, 09:00–23:00',
-        openNow: 'Aberto agora — venha ou ligue',
-        closedNow: 'Fechado neste momento — abrimos às 09:00',
-        linesTitle: 'Linhas de urgência — ligue para qualquer uma',
-        linesSub: 'Se uma linha estiver ocupada, ligue para a seguinte.',
+          'dor de dentes lisboa, dentista lisboa, dentista aberto ao domingo lisboa, dentista colombo, marcar consulta dentista lisboa',
+        eyebrow: 'Dor de dentes',
+        h1: 'Está com muita dor? Ligue-nos primeiro',
+        lead: 'Fale connosco por telefone ou WhatsApp antes de se deslocar à clínica. Verificamos a agenda e indicamos-lhe a consulta mais próxima possível.',
+        notice:
+          'Atendimento sujeito a disponibilidade — ligue sempre antes de vir.',
+        linesTitle: 'Ligue antes de vir',
+        linesSub: 'Se uma linha estiver ocupada, tente a seguinte.',
         landlineLabel: 'Linha principal',
-        mobileLabel: 'Telemóvel direto',
+        mobileLabel: 'Telemóvel',
         whatsapp: 'Falar por WhatsApp',
-        hours: 'Todos os dias, 09:00–23:00',
-        hoursSub: 'Fins de semana e feriados incluídos',
+        hours: 'Horário da clínica: todos os dias, 09:00–23:00',
+        hoursSub: 'Atendimento sujeito a disponibilidade',
         where: 'C.C. Colombo, Piso -1, Loja 507',
         whereSub: 'Av. Lusíada 2, 1500-392 Lisboa',
-        triage: 'Triagem à chegada',
-        triageSub: 'Dor e traumatismo têm prioridade',
-        casesTitle: 'O que tem é uma urgência?',
-        casesLead:
-          'Encontre a sua situação abaixo. Se não estiver na lista, ligue à mesma — dois minutos ao telefone dizem-lhe se deve vir agora ou se pode esperar.',
-        whatWeDoLabel: 'O que fazemos',
-        readMore: 'Saber mais sobre',
-        protocolTitle: 'O que acontece quando chega',
-        protocolLead:
-          'Sem surpresas. Esta é a sequência exata, e sabe o custo antes de começar seja o que for.',
-        firstAidTitle: 'O que fazer até chegar cá',
-        firstAidLead:
-          'Estes passos não substituem a consulta — evitam que a situação piore pelo caminho.',
-        doLabel: 'Faça',
-        dontLabel: 'Evite',
+        booking: 'Consulta por marcação',
+        bookingSub: 'Confirme por telefone antes de se deslocar',
+        stepsTitle: 'Como funciona',
+        stepsLead:
+          'Um telefonema evita-lhe uma deslocação em vão: fica a saber se o podemos receber, e quando, antes de sair de casa.',
         locationTitle: 'Como chegar',
         locationLead:
-          'Estamos dentro do centro comercial, por isso tem estacionamento coberto à porta e metro a dois minutos — às 22h de um domingo, isso faz diferença.',
+          'Estamos dentro do centro comercial, com estacionamento coberto e metro a poucos minutos.',
         directions: 'Abrir no Google Maps',
         parking: 'Parque do Colombo, acesso direto ao Piso -1',
         metro: 'Metro Colégio Militar/Luz, linha azul',
         languages: 'Atendemos em português e em inglês',
         faqTitle: 'Perguntas frequentes',
-        finalTitle: 'Está com dor neste momento?',
+        finalTitle: 'Está com muita dor?',
         finalLead:
-          'Não espere por segunda-feira. Ligue-nos — se pudermos atendê-lo hoje, dizemos-lhe já.',
+          'Ligue-nos antes de vir. Dizemos-lhe qual é a disponibilidade mais próxima.',
         disclaimer:
-          'Situações com risco de vida — inchaço grave da face que afete a respiração ou a deglutição, traumatismo com perda de consciência, ou hemorragia incontrolável — devem ser encaminhadas para uma urgência hospitalar ou para o 112.',
+          'Este website não presta aconselhamento clínico nem substitui a avaliação por um médico dentista. O Centro Dentário Colombo não é um serviço de urgência: o atendimento depende da disponibilidade de agenda e de médico dentista. Se a clínica estiver fechada ou sem disponibilidade, ou em qualquer situação grave, contacte o SNS 24 (808 24 24 24) ou ligue 112.',
         breadcrumbHome: 'Início',
-        breadcrumbEmergency: 'Urgências',
+        breadcrumbCurrent: 'Dor de dentes',
       };
 
   return (
@@ -287,22 +228,19 @@ export default function UrgenciasPage() {
         titleAsIs
         description={copy.seoDescription}
         keywords={copy.seoKeywords}
-        path='/urgencias'
+        path={PAGE_PATH}
       />
 
-      <EmergencyServiceJsonLd
-        name={
-          isEN
-            ? 'Dental emergencies, 09:00–23:00 — Centro Dentário Colombo'
-            : 'Urgências dentárias, 09:00–23:00 — Centro Dentário Colombo'
-        }
+      <ContactPageJsonLd
+        name={copy.seoTitle}
         description={copy.seoDescription}
+        path={PAGE_PATH}
         language={language}
       />
       <BreadcrumbJsonLd
         items={[
           { name: copy.breadcrumbHome, path: '/' },
-          { name: copy.breadcrumbEmergency, path: '/urgencias' },
+          { name: copy.breadcrumbCurrent, path: PAGE_PATH },
         ]}
       />
       <FaqJsonLd items={content.faq} />
@@ -319,7 +257,7 @@ export default function UrgenciasPage() {
               {copy.breadcrumbHome}
             </Link>
             <span aria-hidden='true'>/</span>
-            <span className='text-white'>{copy.breadcrumbEmergency}</span>
+            <span className='text-white'>{copy.breadcrumbCurrent}</span>
           </nav>
 
           <div className='grid lg:grid-cols-12 gap-10 items-start'>
@@ -336,40 +274,20 @@ export default function UrgenciasPage() {
                 {copy.lead}
               </p>
 
-              {/* Estado em tempo real: a pergunta nº1 de quem tem dor */}
-              <div
-                className={`inline-flex items-center gap-2.5 rounded-full px-4 py-2 mb-7 border ${
-                  isOpen === true
-                    ? 'bg-green-500/15 border-green-400/40'
-                    : 'bg-white/10 border-white/25'
-                }`}
-                role='status'
-                aria-live='polite'
-              >
-                <span className='relative flex h-2.5 w-2.5'>
-                  {isOpen === true && (
-                    <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75'></span>
-                  )}
-                  <span
-                    className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
-                      isOpen === true ? 'bg-green-400' : 'bg-gray-300'
-                    }`}
-                  ></span>
-                </span>
-                <span className='text-white text-sm font-semibold'>
-                  {isOpen === null
-                    ? copy.statusUnknown
-                    : isOpen
-                      ? copy.openNow
-                      : copy.closedNow}
+              {/* Aviso fixo (sem estado "aberto agora"): o horário de
+                  funcionamento não garante disponibilidade de consulta. */}
+              <div className='inline-flex items-start gap-2.5 rounded-2xl px-4 py-2.5 mb-7 border bg-white/10 border-white/25 max-w-md'>
+                <Info
+                  className='w-4 h-4 text-white flex-shrink-0 mt-0.5'
+                  aria-hidden='true'
+                />
+                <span className='text-white text-sm font-semibold leading-snug'>
+                  {copy.notice}
                 </span>
               </div>
 
-              {/* Painel único com as 4 linhas — o elemento nº1 da página.
-                  Substitui o antigo par botão "Ligar" + pills de linhas
-                  alternativas, que duplicava o número principal na primeira
-                  dobra e escondia as alternativas em alvos de toque pequenos. */}
-              <EmergencyLinesPanel
+              {/* Painel único com as 4 linhas — o elemento nº1 da página. */}
+              <PhoneLinesPanel
                 title={copy.linesTitle}
                 sub={copy.linesSub}
                 landlineLabel={copy.landlineLabel}
@@ -402,8 +320,8 @@ export default function UrgenciasPage() {
                 <FactRow label={copy.hours} sub={copy.hoursSub} icon={Clock} />
                 <FactRow label={copy.where} sub={copy.whereSub} icon={MapPin} />
                 <FactRow
-                  label={copy.triage}
-                  sub={copy.triageSub}
+                  label={copy.booking}
+                  sub={copy.bookingSub}
                   icon={BadgeCheck}
                 />
                 <FactRow label={copy.languages} icon={Languages} />
@@ -413,166 +331,45 @@ export default function UrgenciasPage() {
         </div>
       </header>
 
-      {/* ============ CASOS / TRIAGEM ============ */}
+      {/* ============ COMO FUNCIONA ============ */}
       <section className='py-16 sm:py-20 bg-gray-50'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           <Reveal className='max-w-3xl mb-10'>
             <h2 className='text-heading text-gray-900 mb-4'>
-              {copy.casesTitle}
+              {copy.stepsTitle}
             </h2>
-            <p className='text-gray-600 leading-relaxed'>{copy.casesLead}</p>
-          </Reveal>
-
-          <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-5'>
-            {content.cases.map((c, i) => (
-              <Reveal key={c.id} delay={(i % 3) * 90}>
-                <article className='h-full bg-white rounded-2xl border border-gray-200 p-6 flex flex-col hover:shadow-card-hover hover:border-primary-200 hover:-translate-y-0.5 transition-all duration-300'>
-                  <span
-                    className={`self-start text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border mb-4 ${
-                      LEVEL_STYLES[c.level]
-                    }`}
-                  >
-                    {content.levelLabels[c.level]}
-                  </span>
-
-                  <h3 className='text-lg font-bold text-gray-900 mb-2'>
-                    {c.title}
-                  </h3>
-                  <p className='text-sm text-gray-600 leading-relaxed mb-4'>
-                    {c.symptom}
-                  </p>
-
-                  <div className='mt-auto pt-4 border-t border-gray-100'>
-                    <p className='text-[11px] font-bold uppercase tracking-wider text-primary-600 mb-1.5'>
-                      {copy.whatWeDoLabel}
-                    </p>
-                    <p className='text-sm text-gray-700 leading-relaxed'>
-                      {c.whatWeDo}
-                    </p>
-
-                    {c.relatedSlug && (
-                      <Link
-                        to={`/tratamentos/${c.relatedSlug}`}
-                        className='inline-flex items-center gap-1 text-sm font-semibold text-primary-600 hover:text-primary-800 mt-3 transition-colors'
-                      >
-                        {copy.readMore} {c.title.toLowerCase()}
-                        <ChevronRight
-                          className='w-3.5 h-3.5'
-                          aria-hidden='true'
-                        />
-                      </Link>
-                    )}
-                  </div>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============ PROTOCOLO ============ */}
-      <section className='py-16 sm:py-20 bg-white'>
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <Reveal className='max-w-3xl mb-10'>
-            <h2 className='text-heading text-gray-900 mb-4'>
-              {copy.protocolTitle}
-            </h2>
-            <p className='text-gray-600 leading-relaxed'>{copy.protocolLead}</p>
+            <p className='text-gray-600 leading-relaxed'>{copy.stepsLead}</p>
           </Reveal>
 
           <ol className='relative border-l-2 border-primary-100 ml-4 sm:ml-6 space-y-8'>
-            {content.protocol.map((step, i) => (
+            {content.steps.map((step, i) => (
               <Reveal
                 as='li'
                 key={step.order}
                 delay={i * 80}
                 className='pl-8 sm:pl-10 relative'
               >
-                <span className='absolute -left-[17px] top-0 flex items-center justify-center w-8 h-8 rounded-full bg-primary-600 text-white text-sm font-bold ring-4 ring-white'>
+                <span className='absolute -left-[17px] top-0 flex items-center justify-center w-8 h-8 rounded-full bg-primary-600 text-white text-sm font-bold ring-4 ring-gray-50'>
                   {step.order}
                 </span>
-                <div className='flex flex-wrap items-center gap-3 mb-1.5'>
-                  <h3 className='text-lg font-bold text-gray-900'>
-                    {step.title}
-                  </h3>
-                  <span className='text-xs font-semibold text-primary-700 bg-primary-50 px-2.5 py-1 rounded-full'>
-                    {step.duration}
-                  </span>
-                </div>
+                <h3 className='text-lg font-bold text-gray-900 mb-1.5'>
+                  {step.title}
+                </h3>
                 <p className='text-gray-600 leading-relaxed max-w-2xl'>
                   {step.description}
                 </p>
               </Reveal>
             ))}
           </ol>
-        </div>
-      </section>
 
-      {/* ============ PRIMEIROS SOCORROS ============ */}
-      <section className='py-16 sm:py-20 bg-gray-50'>
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <Reveal className='max-w-3xl mb-10'>
-            <h2 className='text-heading text-gray-900 mb-4'>
-              {copy.firstAidTitle}
-            </h2>
-            <p className='text-gray-600 leading-relaxed'>{copy.firstAidLead}</p>
-          </Reveal>
-
-          <div className='grid lg:grid-cols-3 gap-5'>
-            {content.firstAid.map((block, i) => (
-              <Reveal key={block.id} delay={i * 90} className='h-full'>
-                <div className='h-full bg-white rounded-2xl border border-gray-200 p-6'>
-                  <h3 className='text-lg font-bold text-gray-900 mb-5'>
-                    {block.title}
-                  </h3>
-
-                  <p className='text-[11px] font-bold uppercase tracking-wider text-green-700 mb-2.5'>
-                    {copy.doLabel}
-                  </p>
-                  <ul className='space-y-2.5 mb-6'>
-                    {block.do.map((item, i) => (
-                      <li
-                        key={i}
-                        className='flex gap-2.5 text-sm text-gray-700'
-                      >
-                        <Check
-                          className='w-4 h-4 text-green-600 flex-shrink-0 mt-0.5'
-                          aria-hidden='true'
-                        />
-                        <span className='leading-relaxed'>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <p className='text-[11px] font-bold uppercase tracking-wider text-red-700 mb-2.5'>
-                    {copy.dontLabel}
-                  </p>
-                  <ul className='space-y-2.5'>
-                    {block.dont.map((item, i) => (
-                      <li
-                        key={i}
-                        className='flex gap-2.5 text-sm text-gray-700'
-                      >
-                        <X
-                          className='w-4 h-4 text-red-600 flex-shrink-0 mt-0.5'
-                          aria-hidden='true'
-                        />
-                        <span className='leading-relaxed'>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-
-          {/* Limite de competência — sinal E-E-A-T e responsabilidade clínica */}
-          <div className='mt-8 flex gap-3 bg-red-50 border border-red-200 rounded-xl p-5'>
-            <AlertTriangle
-              className='w-5 h-5 text-red-600 flex-shrink-0 mt-0.5'
+          {/* Aviso legal: o site não presta aconselhamento clínico.
+              NÃO acrescentar aqui orientações do tipo "o que fazer". */}
+          <div className='mt-10 flex gap-3 bg-white border border-gray-200 rounded-xl p-5'>
+            <Info
+              className='w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5'
               aria-hidden='true'
             />
-            <p className='text-sm text-red-900 leading-relaxed'>
+            <p className='text-sm text-gray-700 leading-relaxed'>
               {copy.disclaimer}
             </p>
           </div>
@@ -704,11 +501,10 @@ export default function UrgenciasPage() {
             {copy.finalLead}
           </p>
 
-          {/* O mesmo painel do hero — quem rolou a página inteira reencontra
-              os 4 números no mesmo formato, sem reaprender o layout. */}
+          {/* O mesmo painel do hero, no mesmo formato. */}
           <div className='flex justify-center mb-4'>
             <div className='w-full max-w-md text-left'>
-              <EmergencyLinesPanel
+              <PhoneLinesPanel
                 title={copy.linesTitle}
                 sub={copy.linesSub}
                 landlineLabel={copy.landlineLabel}

@@ -18,17 +18,17 @@ export default function NotFoundPage() {
         title: 'Page not found',
         lead: 'The page you are looking for does not exist or has been moved.',
         home: 'Back to home',
-        emergency: 'Dental emergency',
+        pain: 'In a lot of pain?',
         team: 'Clinical team',
-        callLead: 'Need help now?',
+        callLead: 'Need to talk to us?',
       }
     : {
         title: 'Página não encontrada',
         lead: 'A página que procura não existe ou foi movida.',
         home: 'Voltar ao início',
-        emergency: 'Urgências dentárias',
+        pain: 'Está com muita dor?',
         team: 'Corpo clínico',
-        callLead: 'Precisa de ajuda agora?',
+        callLead: 'Precisa de falar connosco?',
       };
 
   return (
@@ -50,10 +50,10 @@ export default function NotFoundPage() {
             {copy.home}
           </Link>
           <Link
-            to='/urgencias'
+            to='/dor-de-dentes'
             className='inline-flex items-center justify-center border-2 border-gray-200 text-gray-700 px-6 py-3 rounded-full font-semibold hover:border-blue-600 hover:text-blue-600 transition-colors'
           >
-            {copy.emergency}
+            {copy.pain}
           </Link>
           <Link
             to='/corpo-clinico'

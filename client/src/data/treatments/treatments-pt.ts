@@ -104,7 +104,7 @@ export const treatmentsPT: Treatment[] = [
       'Equipa experiente em reabilitação oral.',
       'Soluções adaptadas a cada paciente.',
       'Acompanhamento em todas as fases do tratamento.',
-      'Abertos até às 23h — incluindo atendimento de urgência.',
+      'Abertos todos os dias, até às 23h.',
     ],
     ctaHeadline:
       'Recupere o conforto, a função e a confiança para voltar a sorrir.',
@@ -261,7 +261,7 @@ export const treatmentsPT: Treatment[] = [
       'Diferentes opções de tratamento adaptadas a cada caso.',
       'Acompanhamento contínuo incluindo contenção pós-tratamento.',
       'Soluções para crianças, adolescentes e adultos.',
-      'Abertos até às 23h para situações de urgência.',
+      'Abertos todos os dias, até às 23h.',
     ],
     ctaHeadline:
       'Um sorriso alinhado pode transformar muito mais do que a aparência.',
@@ -1014,7 +1014,7 @@ export const treatmentsPT: Treatment[] = [
       'Equipa experiente em reabilitação oral completa.',
       'Soluções adaptadas a cada paciente.',
       'Acompanhamento em todas as fases do tratamento.',
-      'Abertos até às 23h — incluindo atendimento de urgência.',
+      'Abertos todos os dias, até às 23h.',
     ],
     ctaHeadline:
       'Um sorriso completo e fixo pode mudar muito mais do que aparenta.',
@@ -1344,7 +1344,7 @@ export const treatmentsPT: Treatment[] = [
       {
         question: 'O que fazer em caso de traumatismo dentário?',
         answer:
-          'Em caso de queda ou batida com envolvimento de dentes, deve contactar-nos o mais rapidamente possível. Se o dente permanente sair da boca, guarde-o em leite ou soro fisiológico e venha de imediato à clínica — em muitos casos é possível reimplantá-lo.',
+          'Em caso de queda ou batida com envolvimento de dentes, ligue-nos para confirmarmos a disponibilidade e marcarmos a avaliação pelo médico dentista. Não damos orientações clínicas pelo website; se a clínica estiver fechada ou em situações graves, contacte o SNS 24 (808 24 24 24) ou o 112.',
       },
     ],
     bannerImage: '/images/odontopediatria.jpg',

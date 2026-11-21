@@ -14,7 +14,7 @@ const TEL_HREF = `tel:${business.telephone}`;
  * Em todas as outras é sólida desde o início — antes disto, a /corpo-clinico
  * tinha texto branco sobre fundo branco: navegação invisível.
  */
-const OVERLAY_ROUTES = ['/', '/urgencias', '/corpo-clinico'];
+const OVERLAY_ROUTES = ['/', '/dor-de-dentes', '/corpo-clinico'];
 
 export default function Navbar() {
   const { language, setLanguage, t } = useLanguage();
@@ -235,17 +235,13 @@ export default function Navbar() {
                 <span className='xl:hidden'>{t('navbar.call')}</span>
               </a>
 
-              {/* Urgências é o CTA primário: é o caminho de maior intenção do
-                  site e o único que responde a "estão abertos agora?". */}
+              {/* "Está com dor?" — leva à página que pede para ligar antes de
+                  vir. Sem linguagem de urgência nem indicador a piscar. */}
               <Link
-                to='/urgencias'
+                to='/dor-de-dentes'
                 className='flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-full text-sm font-semibold shadow-lg shadow-red-600/20 transition-colors'
               >
-                <span className='relative flex h-2 w-2'>
-                  <span className='motion-safe:animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-60' />
-                  <span className='relative inline-flex rounded-full h-2 w-2 bg-white' />
-                </span>
-                {t('navbar.emergencies')}
+                {t('navbar.pain')}
               </Link>
             </div>
 
@@ -347,22 +343,19 @@ export default function Navbar() {
             </div>
 
             <div className='flex-1 overflow-y-auto overscroll-contain px-4 py-5'>
-              {/* Urgências primeiro e como cartão: quem abre este menu com dor
-                  tem de encontrar isto sem procurar. */}
+              {/* Primeiro e como cartão: quem abre este menu com dor tem de
+                  encontrar isto sem procurar. */}
               <Link
-                to='/urgencias'
+                to='/dor-de-dentes'
                 className='flex items-start gap-3 bg-red-50 border border-red-200 rounded-2xl p-4 mb-5'
               >
-                <span className='relative flex h-2.5 w-2.5 mt-1.5 flex-shrink-0'>
-                  <span className='motion-safe:animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-60' />
-                  <span className='relative inline-flex rounded-full h-2.5 w-2.5 bg-red-600' />
-                </span>
+                <span className='inline-flex rounded-full h-2.5 w-2.5 mt-1.5 flex-shrink-0 bg-red-600' />
                 <span className='min-w-0'>
                   <span className='block font-bold text-red-700'>
-                    {t('navbar.emergenciesMobile')}
+                    {t('navbar.painMobile')}
                   </span>
                   <span className='block text-sm text-red-900/70 mt-0.5'>
-                    {t('navbar.openHours')}
+                    {t('navbar.painSub')}
                   </span>
                 </span>
               </Link>

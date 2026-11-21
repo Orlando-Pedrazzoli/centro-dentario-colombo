@@ -19,7 +19,7 @@ function normalizeUrl(urlPath) {
 // Mantido em sincronia com STATIC_PAGES em src/utils/seoConfig.ts
 const STATIC_PAGES = [
   { path: '/', changefreq: 'weekly', priority: '1.0' },
-  { path: '/urgencias', changefreq: 'weekly', priority: '0.9' },
+  { path: '/dor-de-dentes', changefreq: 'weekly', priority: '0.9' },
   { path: '/corpo-clinico', changefreq: 'monthly', priority: '0.8' },
   { path: '/faq', changefreq: 'monthly', priority: '0.6' },
   { path: '/politica-privacidade', changefreq: 'yearly', priority: '0.3' },

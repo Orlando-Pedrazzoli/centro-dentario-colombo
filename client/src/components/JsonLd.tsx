@@ -74,13 +74,6 @@ export function OrganizationJsonLd() {
       'PediatricDentistry',
       'OralSurgery',
     ],
-    availableService: [
-      {
-        '@type': 'MedicalProcedure',
-        name: 'Urgência dentária',
-        url: normalizeUrl('/urgencias'),
-      },
-    ],
   };
 
   return (
@@ -168,80 +161,37 @@ export function TreatmentJsonLd({
 }
 
 /**
- * Schema da página de urgências.
- * EmergencyService + MedicalWebPage é o par que o Google associa a intenção
- * "dentista de urgência aberto agora".
+ * Schema da página /dor-de-dentes ("Está com muita dor?").
+ *
+ * Deliberadamente SEM EmergencyService nem contactType 'emergency': a clínica
+ * não é um serviço de urgência e não pode ser apresentada como tal (pedido da
+ * clínica, Nov/2026). É apenas uma página de contacto.
  */
-interface EmergencyServiceJsonLdProps {
+interface ContactPageJsonLdProps {
   name: string;
   description: string;
-  path?: string;
+  path: string;
   language?: 'pt' | 'en';
 }
 
-export function EmergencyServiceJsonLd({
+export function ContactPageJsonLd({
   name,
   description,
-  path = '/urgencias',
+  path,
   language = 'pt',
-}: EmergencyServiceJsonLdProps) {
+}: ContactPageJsonLdProps) {
   const url = normalizeUrl(path);
 
   const schema = {
     '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'EmergencyService',
-        '@id': `${url}#servico-urgencia`,
-        name,
-        description,
-        url,
-        telephone: business.telephone,
-        // Todas as linhas de urgência — a principal primeiro, depois as
-        // de reforço. O Google pode apresentar qualquer uma como contacto.
-        contactPoint: [business.telephone, ...business.emergencyLines].map(
-          phone => ({
-            '@type': 'ContactPoint',
-            telephone: phone,
-            contactType: 'emergency',
-            availableLanguage: ['pt', 'en'],
-          }),
-        ),
-        email: business.email,
-        address: postalAddress,
-        geo: geoCoordinates,
-        hasMap: business.socialMedia.googleMaps,
-        openingHoursSpecification,
-        areaServed: [
-          { '@type': 'City', name: 'Lisboa' },
-          { '@type': 'City', name: 'Odivelas' },
-          { '@type': 'City', name: 'Amadora' },
-          { '@type': 'City', name: 'Loures' },
-        ],
-        parentOrganization: { '@id': `${normalizeUrl('')}/#clinica` },
-        potentialAction: {
-          '@type': 'ReserveAction',
-          target: `tel:${business.telephone}`,
-          name: language === 'en' ? 'Call the clinic' : 'Ligar para a clínica',
-        },
-      },
-      {
-        '@type': 'MedicalWebPage',
-        '@id': `${url}#pagina`,
-        url,
-        name,
-        description,
-        inLanguage: language === 'en' ? 'en' : 'pt-PT',
-        about: {
-          '@type': 'MedicalCondition',
-          name: language === 'en' ? 'Dental emergency' : 'Urgência dentária',
-        },
-        audience: { '@type': 'Patient' },
-        isPartOf: { '@id': `${normalizeUrl('')}/#website` },
-        lastReviewed: new Date().toISOString().split('T')[0],
-        specialty: 'Dentistry',
-      },
-    ],
+    '@type': 'ContactPage',
+    '@id': `${url}#pagina`,
+    url,
+    name,
+    description,
+    inLanguage: language === 'en' ? 'en' : 'pt-PT',
+    isPartOf: { '@id': `${normalizeUrl('')}/#website` },
+    about: { '@id': `${normalizeUrl('')}/#clinica` },
   };
 
   return (

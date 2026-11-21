@@ -103,7 +103,7 @@ export const treatmentsEN: Treatment[] = [
       'Team experienced in oral rehabilitation.',
       'Solutions tailored to each patient.',
       'Support at every stage of the treatment.',
-      'Open until 11pm — including emergency care.',
+      'Open every day, until 11pm.',
     ],
     ctaHeadline: 'Regain the comfort, function and confidence to smile again.',
     faq: [
@@ -259,7 +259,7 @@ export const treatmentsEN: Treatment[] = [
       'Different treatment options adapted to each case.',
       'Continuous follow-up including post-treatment retention.',
       'Solutions for children, teenagers and adults.',
-      'Open until 11pm for emergencies.',
+      'Open every day, until 11pm.',
     ],
     ctaHeadline:
       'An aligned smile can transform much more than your appearance.',
@@ -1003,7 +1003,7 @@ export const treatmentsEN: Treatment[] = [
       'Team experienced in complete oral rehabilitation.',
       'Solutions tailored to each patient.',
       'Support at every stage of the treatment.',
-      'Open until 11pm — including emergency care.',
+      'Open every day, until 11pm.',
     ],
     ctaHeadline: 'A complete, fixed smile can change much more than it seems.',
     faq: [
@@ -1331,7 +1331,7 @@ export const treatmentsEN: Treatment[] = [
       {
         question: 'What should I do in case of dental trauma?',
         answer:
-          'In case of a fall or blow involving teeth, contact us as quickly as possible. If a permanent tooth comes out of the mouth, keep it in milk or saline solution and come to the clinic immediately — in many cases it can be reimplanted.',
+          'In case of a fall or blow involving teeth, call us so we can confirm availability and book an assessment with the dentist. We do not give clinical advice through the website; if the clinic is closed or in serious situations, contact SNS 24 (808 24 24 24) or 112.',
       },
     ],
     bannerImage: '/images/odontopediatria.jpg',

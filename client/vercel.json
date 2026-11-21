@@ -6,18 +6,28 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/urgencias",
+      "destination": "/dor-de-dentes",
+      "permanent": true
+    },
+    {
       "source": "/urgencias-dentarias",
-      "destination": "/urgencias",
+      "destination": "/dor-de-dentes",
       "permanent": true
     },
     {
       "source": "/urgencia-dentaria",
-      "destination": "/urgencias",
+      "destination": "/dor-de-dentes",
       "permanent": true
     },
     {
       "source": "/dental-emergency",
-      "destination": "/urgencias",
+      "destination": "/dor-de-dentes",
+      "permanent": true
+    },
+    {
+      "source": "/emergency",
+      "destination": "/dor-de-dentes",
       "permanent": true
     },
     {

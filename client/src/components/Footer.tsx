@@ -82,12 +82,12 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to='/urgencias'
+                  to='/dor-de-dentes'
                   onClick={() => window.scrollTo(0, 0)}
                   className='text-red-400 hover:text-red-300 transition-colors font-medium flex items-center gap-2'
                 >
                   <span className='w-1.5 h-1.5 bg-red-500 rounded-full'></span>
-                  {t('footer.emergencies')}
+                  {t('footer.pain')}
                 </Link>
               </li>
               <li>

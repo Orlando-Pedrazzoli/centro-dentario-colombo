@@ -7,7 +7,7 @@ import HomePage from './pages/home';
 import TreatmentPage from './pages/TreatmentPage';
 import CorpoClinicoPage from './pages/CorpoClinicoPage';
 import FAQPage from './pages/FAQPage';
-import UrgenciasPage from './pages/UrgenciasPage';
+import DorDeDentesPage from './pages/DorDeDentesPage';
 import NotFoundPage from './pages/NotFoundPage';
 import PoliticaPrivacidadePage from './pages/PoliticaPrivacidadePage';
 import PoliticaCookiesPage from './pages/PoliticaCookiesPage';
@@ -60,7 +60,7 @@ export default function App() {
         {/* ==================== ROTAS PUBLICAS COM LAYOUT ==================== */}
         <Route element={<Layout />}>
           <Route path='/' element={<HomePage />} />
-          <Route path='/urgencias' element={<UrgenciasPage />} />
+          <Route path='/dor-de-dentes' element={<DorDeDentesPage />} />
           <Route path='/tratamentos/:slug' element={<TreatmentPage />} />
           <Route path='/corpo-clinico' element={<CorpoClinicoPage />} />
           <Route path='/faq' element={<FAQPage />} />
@@ -71,23 +71,29 @@ export default function App() {
           <Route path='/politica-cookies' element={<PoliticaCookiesPage />} />
 
           {/* ---------- Redirects 301 lógicos ----------
-              Variantes que as pessoas escrevem e que outros sites já linkam.
-              Todos apontam para o canónico /urgencias — nunca duplicar a página. */}
+              A antiga página /urgencias foi substituída por /dor-de-dentes
+              (a clínica não se pode apresentar como serviço de urgência).
+              Os URLs antigos, já indexados e linkados, redirecionam para a
+              nova página — o 301 real está em vercel.json. */}
+          <Route
+            path='/urgencias'
+            element={<Navigate to='/dor-de-dentes' replace />}
+          />
           <Route
             path='/urgencias-dentarias'
-            element={<Navigate to='/urgencias' replace />}
+            element={<Navigate to='/dor-de-dentes' replace />}
           />
           <Route
             path='/urgencia-dentaria'
-            element={<Navigate to='/urgencias' replace />}
+            element={<Navigate to='/dor-de-dentes' replace />}
           />
           <Route
             path='/emergency'
-            element={<Navigate to='/urgencias' replace />}
+            element={<Navigate to='/dor-de-dentes' replace />}
           />
           <Route
             path='/dental-emergency'
-            element={<Navigate to='/urgencias' replace />}
+            element={<Navigate to='/dor-de-dentes' replace />}
           />
 
           {/* Slugs de tratamentos que o rodapé antigo linkava e não existem */}

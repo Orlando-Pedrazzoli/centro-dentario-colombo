@@ -17,7 +17,7 @@ Disallow: /googleca1f51d61a311fc4.html
 
 # =====================================================
 # Crawlers de IA — permitidos.
-# Uma pesquisa por "dentista de urgência aberto agora em Lisboa" no ChatGPT
+# Uma pesquisa por "dentista aberto ao domingo em Lisboa" no ChatGPT
 # ou no Perplexity é a mesma intenção de quem liga. Bloquear estes bots
 # retira a clínica dessas respostas sem qualquer ganho.
 # =====================================================

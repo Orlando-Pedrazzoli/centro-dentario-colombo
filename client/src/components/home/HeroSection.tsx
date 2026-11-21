@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import { Phone, ArrowRight, ChevronRight, Siren } from 'lucide-react';
+import { Phone, ArrowRight, ChevronRight, PhoneCall } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { SITE_CONFIG, isClinicOpenNow } from '../../utils/seoConfig';
 
@@ -22,8 +22,8 @@ const formatMobile = (tel: string) =>
  *   de máximo contraste sobre o fundo escuro.
  * - 1 secundário: ghost com o NÚMERO visível ("21 604 13 55") — labels
  *   específicos convertem melhor que verbos vagos ("Ligar Agora").
- * - Urgências: painel próprio com acento vermelho (semântica de urgência,
- *   separada do azul da marca) com as 4 linhas telefónicas.
+ * - "Está com muita dor?": faixa neutra com as 4 linhas telefónicas. Sem
+ *   vermelho nem linguagem de urgência — a mensagem é "ligue antes de vir".
  * - Trust row: sinais de confiança ACIONÁVEIS (rating, localização,
  *   equipa) em vez de afirmações genéricas.
  */
@@ -31,7 +31,7 @@ export default function HeroSection() {
   const { t } = useLanguage();
 
   // Estado aberto/fechado real. Fica null durante o prerender para não
-  // gravar um estado errado no HTML estático (mesmo padrão de /urgencias).
+  // gravar um estado errado no HTML estático (o prerender corre num Chrome real).
   const [isOpen, setIsOpen] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -135,28 +135,31 @@ export default function HeroSection() {
             </a>
           </div>
 
-          {/* ============ FAIXA DE URGÊNCIAS ============
+          {/* ============ FAIXA "ESTÁ COM MUITA DOR?" ============
               Mobile: uma linha compacta (título + link) — os números
-              vivem na página de urgências e na MobileCtaBar.
+              vivem na página /dor-de-dentes e na MobileCtaBar.
               >=sm: descrição + as 4 linhas telefónicas. */}
           <div
-            className='animate-fade-up rounded-2xl bg-red-500/15 border border-red-300/30 backdrop-blur-sm px-4 py-3 sm:px-5 sm:py-4'
+            className='animate-fade-up rounded-2xl bg-white/10 border border-white/25 backdrop-blur-sm px-4 py-3 sm:px-5 sm:py-4'
             style={{ animationDelay: '400ms' }}
           >
             <div className='flex flex-wrap items-center gap-x-3 gap-y-1.5 sm:mb-3'>
               <span className='inline-flex items-center gap-2 text-white font-bold'>
-                <Siren className='w-5 h-5 text-red-300' aria-hidden='true' />
-                {t('hero.urgencyTitle')}
+                <PhoneCall
+                  className='w-5 h-5 text-primary-200'
+                  aria-hidden='true'
+                />
+                {t('hero.painTitle')}
               </span>
               <span className='hidden sm:inline text-gray-200 text-sm'>
-                {t('hero.urgencyDesc')}
+                {t('hero.painDesc')}
               </span>
               <Link
-                to='/urgencias'
+                to='/dor-de-dentes'
                 onClick={() => window.scrollTo(0, 0)}
-                className='inline-flex items-center gap-0.5 text-red-200 hover:text-white text-sm font-semibold transition-colors ml-auto'
+                className='inline-flex items-center gap-0.5 text-primary-200 hover:text-white text-sm font-semibold transition-colors ml-auto'
               >
-                {t('hero.urgencyLink')}
+                {t('hero.painLink')}
                 <ChevronRight className='w-4 h-4' aria-hidden='true' />
               </Link>
             </div>
@@ -169,20 +172,20 @@ export default function HeroSection() {
                   className='inline-flex items-center gap-1.5 bg-white/10 border border-white/25 rounded-full px-3.5 py-1.5 text-white text-xs sm:text-sm font-semibold hover:bg-white/20 transition-colors'
                 >
                   <Phone
-                    className='w-3.5 h-3.5 text-red-200'
+                    className='w-3.5 h-3.5 text-primary-200'
                     aria-hidden='true'
                   />
                   {TEL_DISPLAY}
                 </a>
               </li>
-              {business.emergencyLines.map(line => (
+              {business.additionalLines.map(line => (
                 <li key={line}>
                   <a
                     href={`tel:${line}`}
                     className='inline-flex items-center gap-1.5 bg-white/10 border border-white/25 rounded-full px-3.5 py-1.5 text-white text-xs sm:text-sm font-semibold hover:bg-white/20 transition-colors'
                   >
                     <Phone
-                      className='w-3.5 h-3.5 text-red-200'
+                      className='w-3.5 h-3.5 text-primary-200'
                       aria-hidden='true'
                     />
                     {formatMobile(line)}
