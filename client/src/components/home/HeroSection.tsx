@@ -18,10 +18,10 @@ const formatMobile = (tel: string) =>
 
 /**
  * Hierarquia de CTAs (boas práticas de conversão):
- * - 1 primário: "Marcar Consulta" — branco sólido, o único elemento
+ * - 1 primário: "Marcar consulta" — branco sólido, o único elemento
  *   de máximo contraste sobre o fundo escuro.
- * - 1 secundário: ghost com o NÚMERO visível ("21 604 13 55") — labels
- *   específicos convertem melhor que verbos vagos ("Ligar Agora").
+ * - 1 secundário: vidro translúcido com o NÚMERO visível ("21 604 13 55")
+ *   — labels específicos convertem melhor que verbos vagos.
  * - "Está com muita dor?": faixa neutra com as 4 linhas telefónicas. Sem
  *   vermelho nem linguagem de urgência — a mensagem é "ligue antes de vir".
  * - Trust row: sinais de confiança ACIONÁVEIS (rating, localização,
@@ -104,33 +104,40 @@ export default function HeroSection() {
             {t('hero.description')}
           </p>
 
-          {/* ============ CTAs — hierarquia clara ============
-              Mobile: ~48px de altura (py-3 + text-base), alvo de toque
-              recomendado (Apple HIG 44pt / Material 48dp) sem dominar o hero.
-              ≥sm: escala para o tamanho original (py-4 + text-lg). */}
+          {/* ============ CTAs — um sistema, duas hierarquias ============
+              Mesma altura, mesmo raio (rounded-lg) e mesmo "chip" de ícone:
+              - Primário: sólido branco, chip azul com a seta à direita.
+              - Secundário: vidro translúcido com contorno, chip do telefone
+                à esquerda.
+              Alturas iguais às anteriores (~48px mobile / ~60px ≥sm), para
+              não mexer no ritmo vertical do hero. */}
           <div
             className='animate-fade-up flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8 sm:mb-12'
             style={{ animationDelay: '300ms' }}
           >
-            {/* Primário: branco sólido — o elemento de maior contraste */}
+            {/* Primário */}
             <a
               href='#contacto'
-              className='group inline-flex items-center justify-center gap-2 sm:gap-2.5 bg-white text-primary-700 px-6 py-3 sm:px-8 sm:py-4 rounded-full font-bold text-base sm:text-lg shadow-cta hover:bg-primary-50 hover:scale-[1.02] transition-all duration-300'
+              className='group inline-flex items-center justify-center gap-3 sm:gap-4 bg-white border border-white text-primary-800 pl-6 pr-2.5 py-2.5 sm:pl-7 sm:pr-3.5 sm:py-3.5 rounded-lg font-semibold text-base sm:text-lg shadow-cta hover:bg-primary-50 transition-colors duration-300'
             >
               {t('hero.cta1')}
-              <ArrowRight
-                className='w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform'
-                aria-hidden='true'
-              />
+              <span className='flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-md bg-primary-600 text-white group-hover:bg-primary-700 transition-colors duration-300'>
+                <ArrowRight
+                  className='w-4 h-4 group-hover:translate-x-0.5 transition-transform'
+                  aria-hidden='true'
+                />
+              </span>
             </a>
 
-            {/* Secundário: ghost com o número visível */}
+            {/* Secundário: o número visível, não um verbo vago */}
             <a
               href={TEL_HREF}
               aria-label={`${t('hero.cta2')}: ${business.telephoneDisplay}`}
-              className='inline-flex items-center justify-center gap-2 sm:gap-2.5 border-2 border-white/40 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full font-bold text-base sm:text-lg hover:bg-white/10 hover:border-white/70 transition-all duration-300'
+              className='group inline-flex items-center justify-center gap-3 sm:gap-4 bg-white/10 backdrop-blur-sm border border-white/40 text-white pl-2.5 pr-6 py-2.5 sm:pl-3.5 sm:pr-7 sm:py-3.5 rounded-lg font-semibold text-base sm:text-lg tabular-nums hover:bg-white/20 hover:border-white/70 transition-colors duration-300'
             >
-              <Phone className='w-4 h-4 sm:w-5 sm:h-5' aria-hidden='true' />
+              <span className='flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-md bg-white/15 group-hover:bg-white/25 transition-colors duration-300'>
+                <Phone className='w-4 h-4' aria-hidden='true' />
+              </span>
               {TEL_DISPLAY}
             </a>
           </div>
